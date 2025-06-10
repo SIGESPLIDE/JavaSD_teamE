@@ -1,5 +1,5 @@
 package dao;
 
 public class dao {
-	DAOだお
+	//"DAOだお"
 }
