@@ -5,8 +5,7 @@ import java.sql.PreparedStatement;
 
 
 
-
-public class SubjectDao {
+public class SubjectDao  extends dao {
 
 	public void delete(int id) throws Exception {
 		try (Connection con = getConnection()) {
@@ -15,11 +14,6 @@ public class SubjectDao {
 			st.setInt(1, id);
 			st.executeUpdate();
 		}
-	}
-
-	private Connection getConnection() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
 	}
 
 }
