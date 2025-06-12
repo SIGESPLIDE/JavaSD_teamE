@@ -2,6 +2,11 @@ package bean;
 
 import java.io.Serializable;
 
+/**
+ * 
+ * @author s_saito
+ *
+ */
 public class ExamListStudent implements Serializable {
 	private String subjectName;
 	private String subjectCd;
