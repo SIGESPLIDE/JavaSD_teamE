@@ -4,7 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 /**
- * 
+ *
+ * @author r_katabe
  * @author y_yasui
  *
  */
