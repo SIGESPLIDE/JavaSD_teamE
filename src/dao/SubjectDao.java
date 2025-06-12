@@ -1,18 +1,13 @@
 package dao;
 
-<<<<<<< HEAD
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
 /**
  * 
  * @author y_yasui
  *
  */
-public class SubjectDao {
-=======
-import java.sql.Connection;
-import java.sql.PreparedStatement;
->>>>>>> branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
-
-
 
 public class SubjectDao  extends dao {
 
