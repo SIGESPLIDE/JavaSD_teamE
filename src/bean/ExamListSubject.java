@@ -7,14 +7,19 @@ import java.util.Map;
 /**
  * 試験の科目情報を格納するbean
  * jspファイルのExamListSubject.*** にそれぞれ対応
- *  * @author s_saito
+ *  @param entYear 学生の入学した年
+ *  @param studentNo 学生番号
+ *  @param studentName 学生名
+ *  @param classNum  学生の所属クラス名
+ *  @param points 成績
+ *  @author s_saito
  */
 public class ExamListSubject implements Serializable {
 	private int entYear;
 	private String studentNo;
 	private String studentName;
 	private String classNum;
-	private Map<Integer,Integer > points;
+	private Map<Integer,Integer> points;
 
 	/**
 	 * 
