@@ -32,7 +32,7 @@ public class Teacher implements Serializable {
 
     /**
      * 教員IDを設定する
-     * @param id
+     * @param i
      */
     public void setId(String id) {
         this.id = id;
