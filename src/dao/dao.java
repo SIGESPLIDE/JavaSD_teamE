@@ -11,9 +11,10 @@ public class dao {
 	 public Connection getConnection() throws Exception {
 		 if (ds == null) {
 			 InitialContext ic = new InitialContext();
-			 ds=(DataSource)ic.lookup("java:/comp/env/jdbc/");
+
+			 ds=(DataSource)ic.lookup("java:/comp/env/jdbc/TEAM_E");
 		 }
-		 
+
 		 return ds.getConnection();
 	 }
 }
