@@ -10,7 +10,7 @@ import java.util.List;
 import bean.School;
 import bean.Student;
 
-public class StudentDAO extends dao {
+public class StudentDao extends dao {
     private String baseSql = "SELECT no, name, ent_year, class_num, is_attend, school_id, school_year FROM STUDENT";
 
     public Student get(String no) throws SQLException {
