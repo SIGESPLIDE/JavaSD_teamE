@@ -16,9 +16,17 @@
 
     <%-- 未ログインの場合（セッションにユーザー情報がない） --%>
     <c:otherwise>
-        <a href="${pageContext.request.contextPath}/#">#</a>
-        <a href="${pageContext.request.contextPath}/#">#</a>
+<nav class="side-menu">
+    <ul>
+        <li><a href="#">学生管理</a></li>
+        <li><a href="#">成績管理</a></li>
+        <li><a href="#">成績登録</a></li>
+        <li><a href="#">成績参照</a></li>
+        <li><a href="#">科目管理</a></li>
+    </ul>
+</nav>
     </c:otherwise>
+
 
 </c:choose>
 
