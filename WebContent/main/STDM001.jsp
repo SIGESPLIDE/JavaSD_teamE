@@ -3,16 +3,12 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:import url="/BASE001.jsp/">
-<html>
-<head>
+<c:import url="/BASE001.jsp">
+<c:param name="head">
     <title>学生管理</title>
-    <style>
-        table, th, td { border: 1px solid #ccc; border-collapse: collapse; padding: 8px; }
-        .search-area, .result-area { margin: 20px 0; }
-    </style>
-</head>
-<body>
+
+</c:param>
+<c:param name="body">
     <h2>学生管理</h2>
 
     <!-- 検索条件 -->
@@ -81,6 +77,5 @@
             </c:otherwise>
         </c:choose>
     </div>
-</body>
-</html>
+</c:param>
 </c:import>
