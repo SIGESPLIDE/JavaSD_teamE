@@ -305,7 +305,7 @@ public class ExamDao extends dao {
 
     /**
      * 複数の成績情報を一括で削除する
-     * このメソッド内でトランザクション管理を行う
+     * このメソッド内でトランザクション管理を行う。
      *
      * @param list 削除するExamオブジェクトのリスト
      * @return すべての削除が成功した場合はtrue, 失敗した場合はfalse
