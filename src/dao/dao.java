@@ -6,6 +6,11 @@ import javax.naming.InitialContext;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
 
+/**
+ * 
+ * @author s_saito, k_nohara
+ *
+ */
 public class dao {
 	static DataSource ds;
 	 public Connection getConnection() throws Exception {
