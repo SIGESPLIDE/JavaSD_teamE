@@ -1,39 +1,23 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager; // DriverManagerをインポート
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException; // SQLExceptionをインポート
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import bean.ExamListStudent; // ExamListStudentクラスが存在すると仮定
+import bean.Student;         // Studentクラスが存在すると仮定
 
-import bean.ExamListStudent; // ExamListStudentクラスが存在すると仮󠁴
-import bean.Student; // Studentクラスが存在すると仮定
-import tool.CommonServlet;
+/**
+ * 学生ごとの成績一覧を扱うためのDAOクラス。
+ * DAOクラスを継承しています。
+ */
+public class ExamListStudentDao extends dao{
 
-public class ExamListStudentDao extends CommonServlet {
-
-    // データベース接続情報 (適宜修正してください)
-    private static final String JDBC_URL = "jdbc:postgresql://localhost:5432/TEAM_E"; // データベースURL
-    private static final String DB_USER = "your_username"; // データベースユーザー名
-    private static final String DB_PASSWORD = "your_password"; // データベースパスワード
-
-    // クラスのプロパティとしてbaseSqlを定義
-    private String baseSql = "SELECT * FROM EXAM_LIST_STUDENT"; // テーブル名をExamListStudentに合わせて修正
-
-    @Override
-    protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        // GETリクエスト時の処理（今回は実装不要ですが、例として空のまま残します）
-    }
-
-    @Override
-    protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        // POSTリクエスト時の処理（今回は実装不要ですが、例として空のまま残します）
-    }
+    // ベースとなるSQLクエリ
+    private String baseSql = "SELECT * FROM EXAM_LIST_STUDENT"; // ビューまたはテーブル名を指定
 
     /**
      * ResultSetからExamListStudentのリストを生成します。
@@ -42,73 +26,95 @@ public class ExamListStudentDao extends CommonServlet {
      * @throws SQLException データベースアクセスエラー
      */
     public List<ExamListStudent> postFilter(ResultSet rSet) throws SQLException {
-        List<ExamListStudent> examListStudents = new ArrayList<>();
-        while (rSet.next()) {
-            ExamListStudent els = new ExamListStudent();
+        List<ExamListStudent> list = new ArrayList<>();
+        try {
+            // ResultSetをループしてデータを取得
+            while (rSet.next()) {
+                ExamListStudent els = new ExamListStudent();
+                // ResultSetから各列の値を取得し、ExamListStudentオブジェクトにセット
+                // ※カラム名は実際のテーブル/ビュー定義に合わせて修正してください
+                els.setSubjectName(rSet.getString("subject_name"));
+                els.setSubjectCd(rSet.getString("subject_cd"));
+                els.setNum(rSet.getInt("num"));
+                els.setPoint(rSet.getInt("point"));
 
-            examListStudents.add(els);
+                list.add(els);
+            }
+        } catch (SQLException e) {
+            // エラーをログに出力するなど、適切なエラーハンドリングを行う
+            e.printStackTrace();
+            throw e; // 例外を呼び出し元にスロー
         }
-        return examListStudents;
+        return list;
     }
 
     /**
-     * 指定された学生情報に基づいてExamListStudentのリストをフィルタリングします。
+     * 指定された学生番号に基づいて成績一覧をフィルタリングします。
      * @param studentNo フィルタリングの基準となる学生番号
      * @return フィルタリングされたExamListStudentのリスト
-     * @throws SQLException データベースアクセスエラー
+     * @throws Exception データベースアクセスエラーなど
      */
-    public List<ExamListStudent> filter(String studentNo) throws SQLException {
-        List<ExamListStudent> filteredList = new ArrayList<>();
+    public List<ExamListStudent> filter(String studentNo) throws Exception {
+        List<ExamListStudent> list = new ArrayList<>();
         Connection con = null;
         PreparedStatement st = null;
         ResultSet rs = null;
 
         try {
-            // データベース接続の確立
-            con = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+            // スーパークラスDAOからデータベース接続を取得
+            con = getConnection();
 
-            // baseSqlに加えて、学生番号でフィルタリングする条件を追加
-            String sql = baseSql + " WHERE student_no = ?"; // 適宜SQLを修正してください
+            // SQLクエリを準備 (学生番号で絞り込み)
+            String sql = baseSql + " WHERE student_no = ?";
             st = con.prepareStatement(sql);
-            st.setString(1, studentNo); // 直接学生番号をセット
+            st.setString(1, studentNo);
 
+            // クエリを実行
             rs = st.executeQuery();
-            filteredList = postFilter(rs); // postFilterメソッドを再利用してResultSetからリストを生成
 
-        } catch (SQLException e) {
-            // エラーをログに記録するか、より詳細なハンドリングを行う
+            // ResultSetからリストを生成
+            list = postFilter(rs);
+
+        } catch (Exception e) {
             e.printStackTrace();
-            throw e; // 例外を再スロー
+            throw e;
         } finally {
-            // リソースのクローズ処理
+            // リソースをクローズ
             if (rs != null) {
                 try {
                     rs.close();
-                } catch (SQLException ignore) { /* ignore */ }
+                } catch (SQLException sqle) {
+                    sqle.printStackTrace();
+                }
             }
             if (st != null) {
                 try {
                     st.close();
-                } catch (SQLException ignore) { /* ignore */ }
+                } catch (SQLException sqle) {
+                    sqle.printStackTrace();
+                }
             }
             if (con != null) {
                 try {
                     con.close();
-                } catch (SQLException ignore) { /* ignore */ }
+                } catch (SQLException sqle) {
+                    sqle.printStackTrace();
+                }
             }
         }
-        return filteredList;
+        return list;
     }
 
     /**
-     * 指定されたStudentオブジェクトに基づいてExamListStudentのリストをフィルタリングします。
+     * 指定されたStudentオブジェクトに基づいて成績一覧をフィルタリングします。
      * (オーバーロードされたメソッド)
      * @param student フィルタリングの基準となる学生オブジェクト
      * @return フィルタリングされたExamListStudentのリスト
-     * @throws SQLException データベースアクセスエラー
+     * @throws Exception データベースアクセスエラーなど
      */
-    public List<ExamListStudent> filter(Student student) throws SQLException {
+    public List<ExamListStudent> filter(Student student) throws Exception {
         // Studentオブジェクトから学生番号を取得し、filter(String studentNo)を呼び出す
         return filter(student.getNo());
     }
 }
+
