@@ -2,6 +2,8 @@ package dao;
 
 import java.util.List;
 
+import bean.School;
+
 /**
  * 
  * @author s_saito
@@ -9,8 +11,9 @@ import java.util.List;
  */
 public class ClassNumDao extends dao {
 
-	public List<String> filter() throws Exception {
-		return null;
+	public List<String> filter(School school) throws Exception {
+		
+		return class_list;
 		
 	}
 }

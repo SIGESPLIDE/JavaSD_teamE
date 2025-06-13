@@ -2,9 +2,10 @@ package dao;
 
 /**
  * 
- * @author y_yasui
+ * @author s_saito, k_nohara
  *
  */
 public class ExamListSubjectDao extends dao {
-
+	
+	private String baseSql = "SELECT"
 }
