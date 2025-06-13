@@ -3,85 +3,111 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
+import bean.School;
 import bean.Teacher;
 
 /**
- *
- * @author k_takahashi
- *
+ * TEACHERテーブルへのアクセスを管理するDAOクラス。
  */
+
+/**
+*
+* @author k_takahashi
+*
+*/
 public class TeacherDao extends dao {
-	/**
-	 *
-	 * @param id
-	 * @return
-	 * @throws Exception
-	 */
-	public Teacher get(String id) throws Exception {
-		Teacher Teacher = null;
 
-		try (Connection con = getConnection()) {
-			String sql = "SELECT * FROM TEACHER WHERE NAME = ?";
-			PreparedStatement st = con.prepareStatement(sql);
-			st.setString(1, id);
-			ResultSet rs = st.executeQuery();
+    /**
+     * IDを基に教員情報を1件取得する。
+     * 関連する学校情報も同時に取得する。
+     *
+     * @param id 検索する教員のID (String)
+     * @return Teacherオブジェクト。該当データがない場合はnullを返す。
+     * @throws Exception データベース接続やSQL実行時例外
+     */
+    public Teacher get(String id) throws Exception {
+        Teacher teacher = null;
+        // SQL文: TEACHERテーブルとSCHOOLテーブルを結合して必要な情報をすべて取得
+        String sql = "SELECT T.ID, T.PASSWORD, T.NAME, T.SCHOOL_CD, S.NAME AS SCHOOL_NAME " +
+                     "FROM TEACHER T " +
+                     "LEFT JOIN SCHOOL S ON T.SCHOOL_CD = S.CD " + // LEFT JOINで学校情報がなくても教員は取得可能に
+                     "WHERE T.ID = ?";
 
-			if (rs.next()) {
-				Teacher = new Teacher();
-				Teacher.setId(rs.getString("id"));
-				Teacher.setPassword(rs.getString("password"));
+        // try-with-resources ですべてのリソースを自動クローズする
+        try (
+            Connection con = getConnection();
+            PreparedStatement st = con.prepareStatement(sql);
+        ) {
+            st.setString(1, id);
 
-	}
-		}
-		return Teacher;
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    // 結果が見つかった場合、Teacherオブジェクトを生成
+                    teacher = new Teacher();
+                    teacher.setId(rs.getString("ID"));
+                    teacher.setPassword(rs.getString("PASSWORD"));
+                    teacher.setName(rs.getString("NAME"));
 
-	}
-	/**
-	 *
-	 * @param id
-	 * @return
-	 * @throws Exception
-	 */
-	public Teacher findById(String id) throws Exception{
-		Teacher Teacher = null;
+                    // 関連するSchoolオブジェクトも生成してセットする
+                    School school = new School();
+                    school.setCd(rs.getString("SCHOOL_CD"));
+                    school.setName(rs.getString("SCHOOL_NAME"));
+                    teacher.setSchool(school);
+                }
+            }
+        } catch (SQLException e) {
+            // エラーログを出力するなど
+            e.printStackTrace();
+            throw e; // 例外を呼び出し元にスローする
+        }
 
-		try (Connection con = getConnection()) {
-			String sql = "SELECT * FROM TEACHER WHERE NAME = ?";
-			PreparedStatement st = con.prepareStatement(sql);
-			st.setString(1, id);
-			ResultSet rs = st.executeQuery();
+        return teacher;
+    }
 
-			if (rs.next()) {
-				Teacher = new Teacher();
-				Teacher.setId(rs.getString("id"));
-				Teacher.setPassword(rs.getString("password"));
+    /**
+     * IDとパスワードを使用してログイン認証を行う。
+     * 認証が成功した場合、完全な教員情報（学校情報を含む）を返す。
+     *
+     * @param id 教員ID (String)
+     * @param password パスワード (String)
+     * @return Teacherオブジェクト。認証に失敗した場合はnullを返す。
+     * @throws Exception データベース接続やSQL実行時例外
+     */
+    public Teacher login(String id, String password) throws Exception {
+        Teacher teacher = null;
+        String sql = "SELECT T.ID, T.PASSWORD, T.NAME, T.SCHOOL_CD, S.NAME AS SCHOOL_NAME " +
+                     "FROM TEACHER T " +
+                     "LEFT JOIN SCHOOL S ON T.SCHOOL_CD = S.CD " +
+                     "WHERE T.ID = ? AND T.PASSWORD = ?";
 
-			}
-		}
+        try (
+            Connection con = getConnection();
+            PreparedStatement st = con.prepareStatement(sql);
+        ) {
+            st.setString(1, id);
+            st.setString(2, password);
 
-		return Teacher;
-	}
-	/**
-	 *
-	 * @param id
-	 * @return
-	 * @throws Exception
-	 */
-	public boolean existsid(String id) throws Exception {
-		boolean exists = false;
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    // 認証成功
+                    teacher = new Teacher();
+                    teacher.setId(rs.getString("ID"));
+                    teacher.setPassword(rs.getString("PASSWORD"));
+                    teacher.setName(rs.getString("NAME"));
 
-		try (Connection con = getConnection()) {
-			String sql = "SELECT COUNT(*) FROM TEACHER WHERE NAME = ?";
-			PreparedStatement st = con.prepareStatement(sql);
-			st.setString(1, id);
-			ResultSet rs = st.executeQuery();
+                    School school = new School();
+                    school.setCd(rs.getString("SCHOOL_CD"));
+                    school.setName(rs.getString("SCHOOL_NAME"));
+                    teacher.setSchool(school);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
 
-			if (rs.next() && rs.getInt(1) > 0) {
-				exists = true;
-			}
-		}
-
-		return exists;
-	}
+        return teacher;
+    }
 }
