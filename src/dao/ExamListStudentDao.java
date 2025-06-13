@@ -45,13 +45,7 @@ public class ExamListStudentDao extends CommonServlet {
         List<ExamListStudent> examListStudents = new ArrayList<>();
         while (rSet.next()) {
             ExamListStudent els = new ExamListStudent();
-            // ResultSetから各カラムの値を取得し、ExamListStudentオブジェクトにセット
-            // 例:
-            // els.setStudentNo(rSet.getString("student_no"));
-            // els.setStudentName(rSet.getString("student_name"));
-            // els.setTestName(rSet.getString("test_name"));
-            // els.setScore(rSet.getInt("score"));
-            // ... (ExamListStudentクラスのプロパティに合わせて適宜追加)
+
             examListStudents.add(els);
         }
         return examListStudents;
