@@ -12,6 +12,12 @@ import bean.School;
 import bean.Student;
 import bean.Subject;
 
+/**
+ *
+ * @author a_suzuki
+ *
+ */
+
 public class ExamDao extends dao {
 
     /**
