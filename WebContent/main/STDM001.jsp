@@ -1,12 +1,86 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:import url="/BASE001.jsp/">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+    <title>学生管理</title>
+    <style>
+        table, th, td { border: 1px solid #ccc; border-collapse: collapse; padding: 8px; }
+        .search-area, .result-area { margin: 20px 0; }
+    </style>
 </head>
 <body>
+    <h2>学生管理</h2>
 
+    <!-- 検索条件 -->
+    <div class="search-area">
+        <form action="StudentListServlet" method="get">
+            <label>入学年度</label>
+            <select name="entYear">
+                <option value="">--</option>
+                <c:forEach var="year" items="${entYearList}">
+                    <option value="${year}" ${param.entYear == year ? 'selected' : ''}>${year}</option>
+                </c:forEach>
+            </select>
+
+            <label>クラス</label>
+            <select name="classId">
+                <option value="">--</option>
+                <c:forEach var="cls" items="${classList}">
+                    <option value="${cls.id}" ${param.classId == cls.id ? 'selected' : ''}>${cls.name}</option>
+                </c:forEach>
+            </select>
+
+            <label><input type="checkbox" name="isEnrolled" value="1" ${param.isEnrolled == '1' ? 'checked' : ''}/>在学中</label>
+
+            <button type="submit">絞り込み</button>
+        </form>
+        <a href="StudentRegisterServlet">新規登録</a>
+    </div>
+
+    <!-- 検索結果 -->
+    <div class="result-area">
+        <c:choose>
+            <c:when test="${not empty studentList}">
+                <div>検索結果：${fn:length(studentList)}件</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>入学年度</th>
+                            <th>学生番号</th>
+                            <th>氏名</th>
+                            <th>クラス</th>
+                            <th>在学中</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="stu" items="${studentList}">
+                            <tr>
+                                <td>${stu.entYear}</td>
+                                <td>${stu.studentNo}</td>
+                                <td>${stu.name}</td>
+                                <td>${stu.className}</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${stu.isEnrolled}">○</c:when>
+                                        <c:otherwise></c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td><a href="StudentEditServlet?studentNo=${stu.studentNo}">変更</a></td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </c:when>
+            <c:otherwise>
+                <div>学生情報は存在しませんでした</div>
+            </c:otherwise>
+        </c:choose>
+    </div>
 </body>
 </html>
+</c:import>
