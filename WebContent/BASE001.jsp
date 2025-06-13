@@ -7,11 +7,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>得点管理システム</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/styles.css">
 </head>
 
 <body>
 <c:import url="/HEAD001.jsp"/>
+${ param.body }
     
 
 	
@@ -20,5 +21,4 @@
 <%-- 変数：param.bodyに格納されている値を画面の要素として使う --%>
 <c:import url="/FOOT001.jsp"/>
 
-${ param.body }
 </body>
