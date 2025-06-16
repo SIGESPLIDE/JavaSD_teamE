@@ -52,5 +52,6 @@ public class SubjectUpdateExcuteController extends CommonServlet {
             RequestDispatcher rd = req.getRequestDispatcher("SBJM005.jsp");
             rd.forward(req, resp);
         }
+
     }
 }

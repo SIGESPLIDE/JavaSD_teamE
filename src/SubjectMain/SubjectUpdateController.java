@@ -35,6 +35,7 @@ public class SubjectUpdateController extends CommonServlet {
 
 	    } catch (Exception e) {
 	        throw new ServletException(e);
+
 	    }
 	}
 }

@@ -148,4 +148,32 @@ public class StudentDao extends dao {
             return st.executeUpdate() > 0;
         }
     }
+
+    /**
+     *
+     * @param student
+     * @return
+     * @throws Exception
+     * @author  s_saito k_nohara
+     */
+    public boolean update(Student student) throws Exception {
+        boolean success = false;
+        // NOを条件に、NAME, CLASS_NUM, ATTENDを更新するSQL
+        String sql = "UPDATE STUDENT SET NAME = ?, CLASS_NUM = ?, ATTEND = ? WHERE NO = ?";
+
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
+
+            st.setString(1, student.getName());
+            st.setInt(2, Integer.parseInt(student.getClassNum()));
+            st.setBoolean(3, student.isAttend());
+            st.setInt(4, Integer.parseInt(student.getNo())); // WHERE句の条件
+
+            int rowsAffected = st.executeUpdate();
+            if (rowsAffected > 0) {
+                success = true;
+            }
+        }
+        return success;
+    }
 }
