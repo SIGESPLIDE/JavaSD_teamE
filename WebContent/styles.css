@@ -1,6 +1,5 @@
 body {
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	margin: 0;
 	background-color: #f0f2f5;
 	display: flex;
 	flex-direction: column;
@@ -33,7 +32,6 @@ h2 {
 	justify-content: center;
 	align-items: flex-start; /* フォームを上部に寄せる */
 	padding-top: 50px; /* ヘッダーの下に少しスペースを作る */
-	width: 100%;
 }
 
 .login-container {
@@ -135,6 +133,11 @@ table, th, td {
 	border-top: 1px solid #eee;
 }
 
+.m_side {
+	padding-left: 50px;
+	padding-right: 50px;
+	margin: 50px;
+}
 .footer p {
 	margin: 5px 0;
 }
