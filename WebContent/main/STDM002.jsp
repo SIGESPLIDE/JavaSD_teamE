@@ -1,12 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 <%--
   ファイル名：STDM002.jsp
   機能概要：学生登録画面
@@ -14,76 +5,73 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%-- 画面タイトル --%>
-<h2>学生情報登録</h2>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>得点管理システム</title>
+    <%-- style.cssファイルを読み込む（cssフォルダに配置されている前提） --%>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/styles.css">
+</head>
+<body>
 
-<%-- サーバーサイドで発生したエラーメッセージを表示する領域 --%>
-<%-- Actionクラスで request.setAttribute("error", "エラーメッセージ") されている場合に表示 --%>
-<c:if test="${not empty error}">
-    <div style="color: red; margin-bottom: 15px;">
-        <c:out value="${error}" />
-    </div>
-</c:if>
+    <%-- フォーム全体を login-container で囲む --%>
+    <div class="login-container">
+        <%-- 画面タイトル --%>
+        <h2>学生情報登録</h2>
 
-<%-- 学生情報登録フォーム --%>
-<form action="StudentCreateExecute.action" method="post">
-    <%-- 入学年度 --%>
-    <div>
-        <label for="ent_year">入学年度</label>
-        <div>
-            <select name="ent_year" id="ent_year" required>
-                <option value="">---------</option>
-                <%-- Actionクラスから渡された ent_year_list (年のリスト) をループで表示 --%>
-                <c:forEach var="year" items="${ent_year_list}">
-                    <%-- エラーで再表示された際に、入力されていた値を選択状態にする --%>
-                    <option value="${year}" <c:if test="${year eq ent_year}">selected</c:if>>
-                        <c:out value="${year}" />
-                    </option>
-                </c:forEach>
-            </select>
-        </div>
-    </div>
+        <%-- サーバーサイドで発生したエラーメッセージを表示する領域 --%>
+        <c:if test="${not empty error}">
+            <%-- CSSでエラーメッセージ用のスタイルを定義するとより良い (例: .error-message) --%>
+            <div style="color: red; background-color: #ffebee; border: 1px solid #e57373; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                <c:out value="${error}" />
+            </div>
+        </c:if>
 
-    <%-- 学生番号 --%>
-    <div style="margin-top: 15px;">
-        <label for="no">学生番号</label>
-        <div>
-            <%-- エラーで再表示された際に、入力されていた値を value 属性で復元 --%>
-            <input type="text" name="no" id="no" placeholder="学生番号を入力してください" value="<c:out value='${no}'/>" required maxlength="10">
-        </div>
-    </div>
+        <%-- 学生情報登録フォーム --%>
+        <form action="StudentCreateExecute.action" method="post">
+            <%-- 各項目を input-group で囲む --%>
+            <div class="input-group">
+                 <label for="ent_year">入学年度<br></label>
+                 <select name="ent_year" id="ent_year" required>
+                      <option value="">---------</option>
+                      <c:forEach var="year" items="${ent_year_list}">
+                           <option value="${year}" <c:if test="${year eq ent_year}">selected</c:if>>
+                                <c:out value="${year}" />
+                           </option>
+                      </c:forEach>
+                 </select>
+            </div>
 
-    <%-- 氏名 --%>
-    <div style="margin-top: 15px;">
-        <label for="name">氏名</label>
-        <div>
-            <%-- エラーで再表示された際に、入力されていた値を value 属性で復元 --%>
-            <input type="text" name="name" id="name" placeholder="氏名を入力してください" value="<c:out value='${name}'/>" required maxlength="30">
-        </div>
-    </div>
+            <div class="input-group">
+                 <label for="no">学生番号<br></label>
+                 <input type="text" name="no" id="no" placeholder="学生番号を入力してください" value="<c:out value='${no}'/>" required maxlength="10">
+            </div>
 
-    <%-- クラス --%>
-    <div style="margin-top: 15px;">
-        <label for="class_num">クラス</label>
-        <div>
-            <select name="class_num" id="class_num" required>
-                 <%-- Actionクラスから渡された class_num_list (クラス番号のリスト) をループで表示 --%>
-                <c:forEach var="classVal" items="${class_num_list}">
-                     <%-- エラーで再表示された際に、入力されていた値を選択状態にする --%>
-                    <option value="${classVal}" <c:if test="${classVal eq class_num}">selected</c:if>>
-                        <c:out value="${classVal}" />
-                    </option>
-                </c:forEach>
-            </select>
-        </div>
-    </div>
+            <div class="input-group">
+                 <label for="name">氏名<br></label>
+                 <input type="text" name="name" id="name" placeholder="氏名を入力してください" value="<c:out value='${name}'/>" required maxlength="30">
+            </div>
 
-    <%-- ボタンとリンク --%>
-    <div style="margin-top: 20px;">
-        <button type="submit">登録して終了</button>
-        <%-- 「戻る」は学生管理一覧画面へ遷移する想定 --%>
-        <a href="StudentList.action" style="margin-left: 10px;">戻る</a>
+            <div class="input-group">
+                 <label for="class_num">クラス<br></label>
+                 <select name="class_num" id="class_num" required>
+                       <c:forEach var="classVal" items="${class_num_list}">
+                             <option value="${classVal}" <c:if test="${classVal eq class_num}">selected</c:if>>
+                                   <c:out value="${classVal}" />
+                             </option>
+                       </c:forEach>
+                 </select>
+            </div>
+
+            <%-- ボタンに login-button クラスを適用 --%>
+            <button type="submit" class="login-button">登録して終了</button>
+
+            <%-- 戻るリンクもスタイルを整える --%>
+            <div class="login-link">
+                <a href="StudentList.action">戻る</a>
+            </div>
+        </form>
     </div>
-</form>
 </body>
 </html>
