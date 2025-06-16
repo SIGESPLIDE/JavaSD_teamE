@@ -203,7 +203,7 @@ public class ExamDao extends dao {
      * @return 保存に成功した場合はtrue, 失敗した場合はfalse
      * @throws Exception
      */
-    public boolean save(Exam exam, Connection connection) throws Exception {
+    private boolean save(Exam exam, Connection connection) throws Exception {
         PreparedStatement statement = null;
         int count = 0;
 
