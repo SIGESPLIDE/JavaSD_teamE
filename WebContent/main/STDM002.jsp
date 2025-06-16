@@ -69,7 +69,7 @@
 
             <%-- 戻るリンクもスタイルを整える --%>
             <div class="login-link">
-                <a href="StudentList.action">戻る</a>
+                <a href="STDM001.jsp">戻る</a>
             </div>
         </form>
     </div>
