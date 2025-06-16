@@ -13,15 +13,15 @@
 </head>
 
 <body>
-<c:import url="/HEAD001.jsp"/>
 <div class="m_side">
+<c:import url="/HEAD001.jsp"/>
 ${ param.body }
-</div>
 
 	
 <%-- 同一フォルダ内のMENU001.jspをインポートして画面に表示する --%>
 <c:import url="/MENU001.jsp"/>
 <%-- 変数：param.bodyに格納されている値を画面の要素として使う --%>
 <c:import url="/FOOT001.jsp"/>
+</div>
 
 </body>

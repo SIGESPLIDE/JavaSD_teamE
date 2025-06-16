@@ -134,9 +134,8 @@ table, th, td {
 }
 
 .m_side {
-	padding-left: 50px;
-	padding-right: 50px;
-	margin: 50px;
+	padding-left: 10%;
+	padding-right: 10%;
 }
 .footer p {
 	margin: 5px 0;
