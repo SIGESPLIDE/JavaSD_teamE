@@ -16,7 +16,7 @@ public class Subject implements Serializable {
     private String name;
 
     /** 所属する学校情報 */
-    private String school;
+    private School school;
 
     /**
      * 教科コードを取得する
@@ -54,7 +54,7 @@ public class Subject implements Serializable {
      * 所属する学校情報を取得する
      * @return Subject.school
      */
-    public String getSchool() {
+    public School getSchool() {
         return school;
     }
 
@@ -62,7 +62,7 @@ public class Subject implements Serializable {
      * 所属する学校情報を設定する
      * @param school
      */
-    public void setSchool(String school) {
+    public void setSchool(School school) {
         this.school = school;
     }
 }
