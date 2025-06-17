@@ -1,10 +1,5 @@
 <%@page contentType="text/html; charset=UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<a href="${pageContext.request.contextPath}/#"></a>
-<a href="${pageContext.request.contextPath}/#"></a>
-
-
 <c:choose>
 
     <%-- ログインしている場合（セッションにユーザー情報がある） --%>
@@ -16,8 +11,9 @@
 
     <%-- 未ログインの場合（セッションにユーザー情報がない） --%>
     <c:otherwise>
-<nav class="side-menu">
+<nav class="sidebar">
     <ul>
+        <li><a href="#" class="active">メニュー</a></li>
         <li><a href="#">学生管理</a></li>
         <li><a href="#">成績管理</a></li>
         <li><a href="#">成績登録</a></li>
@@ -30,4 +26,4 @@
 
 </c:choose>
 
-<hr>
+<hr class="line_aligner">

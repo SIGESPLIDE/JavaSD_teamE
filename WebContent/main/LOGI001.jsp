@@ -2,7 +2,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:import url="/BASE001.jsp">
 	<c:param name="head">
-	    <link rel="stylesheet" href="styles.css">
 	</c:param>
 	<c:param name="body">
 		<div class="login-container">
