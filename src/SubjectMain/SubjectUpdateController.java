@@ -2,6 +2,7 @@ package SubjectMain;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,6 +10,7 @@ import bean.Subject;
 import dao.SubjectDao;
 import tool.CommonServlet;
 
+@WebServlet(urlPatterns = { "/SBJM001" })
 public class SubjectUpdateController extends CommonServlet {
 
 	@Override
@@ -30,7 +32,7 @@ public class SubjectUpdateController extends CommonServlet {
 	        req.setAttribute("subject", subject);
 
 	        // JSPへフォワード（パスは適切に変更）
-	        RequestDispatcher rd = req.getRequestDispatcher("SBJM1.jsp");
+	        RequestDispatcher rd = req.getRequestDispatcher("SBJM001.jsp");
 	        rd.forward(req, resp);
 
 	    } catch (Exception e) {
