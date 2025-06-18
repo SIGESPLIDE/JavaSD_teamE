@@ -12,7 +12,10 @@ import tool.CommonServlet;
 
 
 
+
 @WebServlet(urlPatterns = { "/main/SBJM001" })
+
+
 public class SubjectUpdateController extends CommonServlet {
 
     @Override
@@ -32,6 +35,7 @@ public class SubjectUpdateController extends CommonServlet {
             SubjectDao dao = new SubjectDao();
             Subject subject = dao.findByCd(cd);
 
+
             req.setAttribute("subject", subject);
             RequestDispatcher rd = req.getRequestDispatcher("/SBJM001.jsp");
             rd.forward(req, resp);
@@ -39,5 +43,8 @@ public class SubjectUpdateController extends CommonServlet {
             e.printStackTrace();
             throw new ServletException(e);
         }
+
+
     }
+
 }
