@@ -1,22 +1,15 @@
 <%@page contentType="text/html; charset=UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<!-- 作成者のはら -->
 <c:import url="/BASE001.jsp">
- <c:param name="head">
+    <c:param name="head">
         <title>科目管理</title>
     </c:param>
     <c:param name="body">
-<c:if test="${not empty errorMessage}">
-    <div style="color: red; margin-bottom: 10px;">
-        ${errorMessage}
-    </div>
-</c:if>
+        <h2>科目情報変更完了</h2>
 
-<!-- 科目名入力エラーの表示 -->
-<c:if test="${not empty subjectNameError}">
-    <span style="color: orange; font-size: 0.9em;">
-        ${subjectNameError}
-    </span>
-</c:if>
-</c:param>
+        <p>科目の情報を更新しました。</p>
+
+        <a href="/JavaSD/main/subject">科目一覧へ</a>
+    </c:param>
 </c:import>

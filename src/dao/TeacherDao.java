@@ -23,8 +23,8 @@ public class TeacherDao extends dao {
      * IDを基に教員情報を1件取得する。
      * 関連する学校情報も同時に取得する。
      *
-     * @param id 検索する教員のID (String)
-     * @return Teacherオブジェクト。該当データがない場合はnullを返す。
+     * @param <id> 検索する教員のID
+     * @return Teacher: Teacherオブジェクト。該当データがない場合はnullを返す。
      * @throws Exception データベース接続やSQL実行時例外
      */
     public Teacher get(String id) throws Exception {
@@ -70,9 +70,9 @@ public class TeacherDao extends dao {
      * IDとパスワードを使用してログイン認証を行う。
      * 認証が成功した場合、完全な教員情報（学校情報を含む）を返す。
      *
-     * @param id 教員ID (String)
-     * @param password パスワード (String)
-     * @return Teacherオブジェクト。認証に失敗した場合はnullを返す。
+     * @param <id> 教員ID
+     * @param <password> パスワード
+     * @return Teacher: Teacherオブジェクト。認証に失敗した場合はnullを返す。
      * @throws Exception データベース接続やSQL実行時例外
      */
     public Teacher login(String id, String password) throws Exception {
