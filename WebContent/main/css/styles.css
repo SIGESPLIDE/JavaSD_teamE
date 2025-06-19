@@ -13,7 +13,6 @@ body {
     color: #333;
     padding: 15px 20px;
     width: 100%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     border-bottom: 1px solid #cceeff;
     flex-shrink: 0; /* ヘッダーは縮まない */
 }
@@ -48,6 +47,11 @@ body {
     text-decoration: underline;
 }
 
+/*画面設計にあわせるための余白を持たせる用のスタイル */
+.yohaku {
+	padding: 0px 15% 0px 15%;
+}
+
 /* メインコンテナのスタイル (サイドバーとコンテンツエリアを保持) */
 .main-container {
     display: flex; /* Flexboxでサイドバーとコンテンツを横並びにする */
@@ -63,7 +67,6 @@ body {
 .sidebar {
     width: 200px; /* サイドバーの固定幅 */
     background-color: #ffffff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     padding: 20px 0;
     border-radius: 5px;
     flex-shrink: 0; /* サイドバーは縮まない */
@@ -102,9 +105,8 @@ body {
 .content-area {
     flex-grow: 1; /* 残りのスペースを全て使う */
     background-color: #ffffff;
+    border-left: 2px solid #CCC;
     padding: 30px; /* 空の状態でも内側の余白を確保 */
-    border-radius: 5px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     min-height: 200px; /* コンテンツが空でも最低限の高さを保持（必要であれば） */
 }
 
@@ -112,7 +114,7 @@ body {
 .footer {
     width: 100%;
     text-align: center;
-    padding: 20px 0;
+    padding: 3px 0;
     background-color: #f8f8f8;
     color: #777;
     font-size: 14px;
