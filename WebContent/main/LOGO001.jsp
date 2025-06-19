@@ -6,8 +6,10 @@
 </c:param>
 
 <c:param name="body">
-	<h2>ログアウト</h2>
-	<p class="logout-message">ログアウトしました</p>
+    <%-- 画面タイトル --%>
+	<h2 class="alert alert-secondary">ログアウト</h2>
+	<p class="alert alert-success text-center">ログアウトしました</p>
+	<%-- ログイン画面ヘ --%>
 	<div class="login-link">
 		<a href="LOGI001.jsp">ログイン</a>
 		<%-- **Placeholder: Replace "login.jsp" with your actual login page URL** --%>

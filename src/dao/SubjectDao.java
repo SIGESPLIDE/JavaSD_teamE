@@ -3,6 +3,8 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import bean.School;
 import bean.Subject;
@@ -24,6 +26,30 @@ public class SubjectDao  extends dao {
 	 * @author k_nohara
 	 */
 
+	public List<Subject> findAll() throws Exception {
+	    List<Subject> list = new ArrayList<>();
+	    String sql = "SELECT * FROM SUBJECT";
+
+	    try (Connection con = getConnection();
+	         PreparedStatement st = con.prepareStatement(sql);
+	         ResultSet rs = st.executeQuery()) {
+
+	        while (rs.next()) {
+	            Subject subject = new Subject();
+	            subject.setCd(rs.getString("CD"));
+	            subject.setName(rs.getString("NAME"));
+
+	            School school = new School();
+	            school.setCd(rs.getString("SCHOOL_CD"));
+	            subject.setSchool(school);
+
+	            list.add(subject);
+	        }
+	    }
+	    return list;
+	}
+
+
 	public Subject findByCd(String cd) throws Exception {
 	    Subject subject = null;
 	    String sql = "SELECT * FROM SUBJECT WHERE CD = ?";
@@ -41,7 +67,7 @@ public class SubjectDao  extends dao {
 
 	            // School を生成してセット
 	            School school = new School();
-	            school.setCd(rs.getString("SHCOOL_CD"));  // カラム名要確認
+	            school.setCd(rs.getString("SCHOOL_CD"));
 	            subject.setSchool(school);
 	        }
 
@@ -69,18 +95,22 @@ public class SubjectDao  extends dao {
      * @throws Exception
      * @author s_saito, k_nohara
      */
-    public int update(Subject subject) throws Exception {
-        int rows = 0;
-        String sql = "UPDATE SUBJECT SET NAME = ? WHERE SHCOOL_CD = ?";
-        try (Connection con = getConnection();
-             PreparedStatement st = con.prepareStatement(sql)) {
+	public int update(Subject subject) throws Exception {
+	    int rows = 0;
+	    String sql = "UPDATE SUBJECT SET NAME = ?, SCHOOL_CD = ? WHERE CD = ?";
 
-            st.setString(1, subject.getName());
-            st.setString(2, subject.getSchool().toString());
+	    try (Connection con = getConnection();
+	         PreparedStatement st = con.prepareStatement(sql)) {
 
-            rows = st.executeUpdate();
-        }
-        return rows;
-    }
+	        st.setString(1, subject.getName());
+	        st.setString(2, subject.getSchool().getCd());
+	        st.setString(3, subject.getCd());
+
+	        rows = st.executeUpdate();
+	    }
+
+	    return rows;
+	}
+
 
 }

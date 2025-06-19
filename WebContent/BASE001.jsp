@@ -15,19 +15,18 @@
 </head>
 
 <body>
-	<div class="yohaku">
+<div class="yohaku">
 		${ param.head }
-		<c:import url="/HEAD001.jsp" />
-
+<c:import url="/HEAD001.jsp" />
 
 
 		<%-- 同一フォルダ内のMENU001.jspをインポートして画面に表示する --%>
-		<div class="main-container">
-			<c:import url="/MENU001.jsp" />
+<div class="main-container">
+<c:import url="/MENU001.jsp" />
 
 			<div class="content-area">${ param.body }</div>
-		</div>
-		<%-- 変数：param.bodyに格納されている値を画面の要素として使う --%>
-		<c:import url="/FOOT001.jsp" />
-	</div>
+</div>
+<%-- 変数：param.bodyに格納されている値を画面の要素として使う --%>
+<c:import url="/FOOT001.jsp" />
+</div>
 </body>
