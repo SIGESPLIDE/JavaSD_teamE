@@ -1,21 +1,8 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="JavaSD">
+    <wb-module deploy-name="JavaSD">Add commentMore actions
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/"/>
         <property name="context-root" value="JavaSD"/>
         <property name="java-output-path" value="/JavaSD/build/classes"/>
     </wb-module>
 </project-modules>
-=======
-<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="JavaSD">
-        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/"/>
-        <property name="context-root" value="JavaSD"/>
-        <property name="java-output-path" value="/JavaSD/build/classes"/>
-    </wb-module>
-</project-modules>
->>>>>>> branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
