@@ -195,23 +195,104 @@ public class ExamDao extends dao {
     }
 
     /**
-     * 成績情報を保存または更新する（単一レコード）
-     * このメソッドは外部から渡されたConnectionを使用し、トランザクション管理は呼び出し元で行う
+     * Examオブジェクトのリストを一括で保存（INSERTまたはUPDATE）する。
+     * このメソッド内でトランザクション管理を完結させる。
+     *
+     * @param list 保存するExamオブジェクトのリスト
+     * @return すべての保存処理が成功した場合にtrueを返す
+     * @throws Exception
+     */
+    public boolean save(List<Exam> list) throws Exception {
+        Connection connection = null;
+        boolean allSuccess = true;
+
+        try {
+            // 1. データベース接続を取得
+            connection = getConnection();
+            // 2. トランザクションを開始 (オートコミットを無効化)
+            connection.setAutoCommit(false);
+
+            // リスト内の各Examオブジェクトを処理
+            for (Exam exam : list) {
+                // 1件ずつ保存する内部メソッドを呼び出す
+                if (!saveSingle(exam, connection)) {
+                    // 1件でも失敗したら、フラグをfalseにしてループを抜ける
+                    allSuccess = false;
+                    break;
+                }
+            }
+
+            // 3. 最終的な結果に応じてコミットまたはロールバック
+            if (allSuccess) {
+                connection.commit(); // すべて成功したら、変更を確定
+            } else {
+                connection.rollback(); // 失敗があったら、すべての変更を取り消し
+            }
+        } catch (Exception e) {
+            // 4. 例外発生時もロールバック
+            if (connection != null) {
+                connection.rollback();
+            }
+            throw e; // エラーを呼び出し元に通知
+        } finally {
+            // 5. データベース接続を必ず閉じる
+            if (connection != null) {
+                try {
+                    // オートコミット設定を元に戻す
+                    connection.setAutoCommit(true);
+                    // コネクションを閉じる
+                    connection.close();
+                } catch (SQLException sqle) {
+                    sqle.printStackTrace();
+                }
+            }
+        }
+        return allSuccess;
+    }
+
+    /**
+     * Examオブジェクト1件を保存する内部メソッド (private)。
+     * 既存データがあればUPDATE、なければINSERTを行う。
+     * トランザクション管理のため、Connectionを引数で受け取る。
      *
      * @param exam 保存するExamオブジェクト
      * @param connection データベース接続
-     * @return 保存に成功した場合はtrue, 失敗した場合はfalse
+     * @return 処理が成功した場合にtrueを返す
      * @throws Exception
      */
-    private boolean save(Exam exam, Connection connection) throws Exception {
+    private boolean saveSingle(Exam exam, Connection connection) throws Exception {
         PreparedStatement statement = null;
+        ResultSet rs = null;
         int count = 0;
 
         try {
-            // まずは既存のレコードがあるか確認
-            Exam oldExam = this.get(exam.getStudent(), exam.getSubject(), exam.getSchool(), exam.getNo());
+            // 【変更点①】既存レコードの確認を get() から SELECT COUNT(*) に変更
+            String checkSql = "SELECT COUNT(*) FROM test WHERE student_no = ? AND subject_cd = ? AND school_cd = ? AND no = ?";
+            statement = connection.prepareStatement(checkSql);
+            statement.setString(1, exam.getStudent().getNo());
+            statement.setString(2, exam.getSubject().getCd());
+            statement.setString(3, exam.getSchool().getCd());
+            statement.setInt(4, exam.getNo());
 
-            if (oldExam == null) {
+            rs = statement.executeQuery();
+            rs.next();
+            int recordCount = rs.getInt(1);
+
+            // 使用済みのPreparedStatementとResultSetを閉じる
+            rs.close();
+            statement.close();
+
+            if (recordCount > 0) {
+                // レコードが存在する場合：UPDATE
+                String sql = "UPDATE test SET point = ?, class_num = ? WHERE student_no = ? AND subject_cd = ? AND school_cd = ? AND no = ?";
+                statement = connection.prepareStatement(sql);
+                statement.setInt(1, exam.getPoint());
+                statement.setString(2, exam.getClassNum());
+                statement.setString(3, exam.getStudent().getNo());
+                statement.setString(4, exam.getSubject().getCd());
+                statement.setString(5, exam.getSchool().getCd());
+                statement.setInt(6, exam.getNo());
+            } else {
                 // レコードが存在しない場合：INSERT
                 String sql = "INSERT INTO test(student_no, subject_cd, school_cd, no, point, class_num) VALUES(?, ?, ?, ?, ?, ?)";
                 statement = connection.prepareStatement(sql);
@@ -221,15 +302,6 @@ public class ExamDao extends dao {
                 statement.setInt(4, exam.getNo());
                 statement.setInt(5, exam.getPoint());
                 statement.setString(6, exam.getClassNum());
-            } else {
-                // レコードが存在する場合：UPDATE
-                String sql = "UPDATE test SET point = ? WHERE student_no = ? AND subject_cd = ? AND school_cd = ? AND no = ?";
-                statement = connection.prepareStatement(sql);
-                statement.setInt(1, exam.getPoint());
-                statement.setString(2, exam.getStudent().getNo());
-                statement.setString(3, exam.getSubject().getCd());
-                statement.setString(4, exam.getSchool().getCd());
-                statement.setInt(5, exam.getNo());
             }
 
             // SQLの実行
@@ -246,29 +318,7 @@ public class ExamDao extends dao {
                 }
             }
         }
-
-        // 1件以上更新されたら成功
         return count > 0;
-    }
-
-    /**
-     * 複数の成績情報を一括で保存または更新する
-     *
-     * @param list 保存するExamオブジェクトのリスト
-     * @param connection データベース接続
-     * @return すべての保存が成功した場合はtrue
-     * @throws Exception
-     */
-    public boolean save(List<Exam> list, Connection connection) throws Exception {
-        // リスト内の各Examオブジェクトに対してsaveメソッドを呼び出す
-        for (Exam exam : list) {
-            if (!save(exam, connection)) {
-                // 1件でも失敗したらfalseを返す
-                // トランザクションは呼び出し元でロールバックされることを想定
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
@@ -367,5 +417,5 @@ public class ExamDao extends dao {
 
         return result;
     }
-    
+
 }
