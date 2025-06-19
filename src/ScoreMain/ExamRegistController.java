@@ -1,22 +1,24 @@
 package ScoreMain;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import bean.Exam;
 import bean.School;
 import bean.Student;
 import bean.Subject;
 import bean.Teacher;
+import bean.Exam;
 import dao.ClassNumDao;
-import dao.ExamDao;
 import dao.StudentDao;
 import dao.SubjectDao;
+import dao.ExamDao;
 import tool.CommonServlet;
 
 @WebServlet("/exam/regist")

@@ -164,4 +164,89 @@ public class SubjectDao  extends dao {
         return list;
     }
 
+    /**
+     *
+     * @param subject
+     * @return
+     * @throws Exception
+     * @author a_suzuki
+     */
+
+    public boolean save(Subject subject) throws Exception {
+        // データベースリソースの変数を定義
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        int line = 0; // 更新された行数
+
+        try {
+            // データベースに接続
+            connection = getConnection();
+
+            // 1. 最初に同じ主キーのデータが存在するか確認
+            String checkSql = "SELECT COUNT(*) FROM subject WHERE cd = ? AND school_cd = ?";
+            statement = connection.prepareStatement(checkSql);
+            statement.setString(1, subject.getCd());
+            statement.setString(2, subject.getSchool().getCd());
+
+            rs = statement.executeQuery();
+            rs.next();
+            int recordCount = rs.getInt(1);
+
+            // 使用済みのリソースを一度閉じる
+            rs.close();
+            statement.close();
+
+            // 2. 存在有無に応じてINSERTまたはUPDATEを実行
+            if (recordCount > 0) {
+                // データが存在する場合: UPDATE
+                String updateSql = "UPDATE subject SET name = ? WHERE cd = ? AND school_cd = ?";
+                statement = connection.prepareStatement(updateSql);
+                statement.setString(1, subject.getName());
+                statement.setString(2, subject.getCd());
+                statement.setString(3, subject.getSchool().getCd());
+            } else {
+                // データが存在しない場合: INSERT
+                String insertSql = "INSERT INTO subject(cd, name, school_cd) VALUES(?, ?, ?)";
+                statement = connection.prepareStatement(insertSql);
+                statement.setString(1, subject.getCd());
+                statement.setString(2, subject.getName());
+                statement.setString(3, subject.getSchool().getCd());
+            }
+
+            // SQLを実行し、更新された行数を取得
+            line = statement.executeUpdate();
+
+        } catch (Exception e) {
+            // エラーが発生した場合は、呼び出し元に例外をスロー
+            throw e;
+        } finally {
+            // データベースリソースを解放
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException sqle) {
+                    sqle.printStackTrace();
+                }
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException sqle) {
+                    sqle.printStackTrace();
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException sqle) {
+                    sqle.printStackTrace();
+                }
+            }
+        }
+
+        // 更新された行数が1以上であれば成功
+        return line > 0;
+    }
+
 }
