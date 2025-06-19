@@ -3,11 +3,12 @@ package dao;
 import java.sql.Connection;
 
 import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
-import org.apache.tomcat.jdbc.pool.DataSource;
+
 
 /**
- * 
+ *
  * @author s_saito, k_nohara
  *
  */
