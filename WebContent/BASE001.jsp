@@ -29,7 +29,7 @@
 <%-- 変数：param.bodyに格納されている値を画面の要素として使う --%>
 <c:import url="/FOOT001.jsp" />
 </div>
-=======
+
 <%@page contentType="text/html; charset=UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
@@ -61,5 +61,4 @@
 <%-- 変数：param.bodyに格納されている値を画面の要素として使う --%>
 <c:import url="/FOOT001.jsp" />
 </div>
->>>>>>> branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
 </body>
