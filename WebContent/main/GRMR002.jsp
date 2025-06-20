@@ -7,7 +7,7 @@
     <c:param name="body">
         <div class="container mt-4">
             <!-- タイトル -->
-            <h3 class="mb-4">成績参照</h3>
+            <h3 class="mb-4">成績一覧（科目）</h3>
 
             <!-- 検索フォーム -->
             <div class="card">
