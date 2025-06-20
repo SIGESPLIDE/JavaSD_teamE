@@ -23,7 +23,7 @@ public class SubjectListController extends CommonServlet {
 	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 
 		SubjectDao dao = new SubjectDao();
-		List<Subject> list = dao.findAll();
+		List<Subject> list = dao.filter();
 
 		req.setAttribute("subjects", list);
 

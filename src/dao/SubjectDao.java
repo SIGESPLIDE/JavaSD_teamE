@@ -3,7 +3,6 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class SubjectDao extends dao {
 
 				// School を生成してセット
 				School school = new School();
-				school.setCd(rs.getString("SHCOOL_CD")); // カラム名要確認
+				school.setCd(rs.getString("SCHOOL_CD")); // カラム名要確認
 				subject.setSchool(school);
 			}
 
@@ -60,187 +59,51 @@ public class SubjectDao extends dao {
 		}
 	}
 
-	/**
-	 * 学生情報を更新する
-	 *
-	 * @param student
-	 *            更新する学生情報
-	 * @return 更新に成功した行数
-	 * @throws Exception
-	 * @author s_saito, k_nohara
-	 */
-	public int update(Subject subject) throws Exception {
-		int rows = 0;
-		String sql = "UPDATE SUBJECT SET NAME = ? WHERE SHCOOL_CD = ?";
-		try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql)) {
+	 /**
+     * 科目情報を更新する
+     * @param subject 更新対象の科目
+     * @return 更新行数
+     * @throws Exception
+     */
+    public int save(Subject subject) throws Exception {
+        int rows = 0;
+        String sql = "UPDATE SUBJECT SET NAME = ? WHERE SCHOOL_CD = ?"; // ← 修正済み
 
-			st.setString(1, subject.getName());
-			st.setString(2, subject.getSchool().toString());
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
 
-			rows = st.executeUpdate();
-		}
-		return rows;
-	}
+            st.setString(1, subject.getName());
+            st.setString(2, subject.getSchool().getCd()); // ← 修正済み（toString → getCd）
+            rows = st.executeUpdate();
+        }
+        return rows;
+    }
 
-	/**
-	 *
-	 * @param school
-	 * @return
-	 * @throws Exception
-	 */
-
-	public List<Subject> filter(School school) throws Exception {
-        // 結果を格納するリストを初期化
+    /**
+     * 全科目を取得する
+     * @return 科目リスト
+     * @throws Exception
+     */
+    public List<Subject> filter() throws Exception {
         List<Subject> list = new ArrayList<>();
+        String sql = "SELECT * FROM SUBJECT";
 
-        // データベースリソースの変数を定義
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(sql);
+             ResultSet rs = st.executeQuery()) {
 
-        try {
-            // データベースに接続
-            connection = getConnection();
-
-            // SQL文を準備 (指定された学校コードの科目をすべて選択)
-            String sql = "SELECT * FROM subject WHERE school_cd = ?";
-            statement = connection.prepareStatement(sql);
-
-            // プレースホルダに学校コードをセット
-            statement.setString(1, school.getCd());
-
-            // SQLを実行し、結果セットを取得
-            rs = statement.executeQuery();
-
-            // 結果セットをループ処理
             while (rs.next()) {
-                // 1件分の科目データを持つSubjectオブジェクトを生成
                 Subject subject = new Subject();
+                subject.setCd(rs.getString("CD"));
+                subject.setName(rs.getString("NAME"));
 
-                // ResultSetから各カラムの値を取得し、Subjectオブジェクトにセット
-                subject.setCd(rs.getString("cd"));
-                subject.setName(rs.getString("name"));
-
-                // 引数で受け取ったSchoolオブジェクトをセット
+                School school = new School();
+                school.setCd(rs.getString("SCHOOL_CD")); // ← 修正済み
                 subject.setSchool(school);
 
-                // リストにSubjectオブジェクトを追加
                 list.add(subject);
             }
-        } catch (Exception e) {
-            // エラーが発生した場合は、呼び出し元に例外をスロー
-            throw e;
-        } finally {
-            // データベースリソースを解放
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException sqle) {
-                    sqle.printStackTrace();
-                }
-            }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException sqle) {
-                    sqle.printStackTrace();
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException sqle) {
-                    sqle.printStackTrace();
-                }
-            }
         }
-
-        // 取得した科目のリストを返す
         return list;
     }
-
-	/**
-	 *
-	 * @param subject
-	 * @return
-	 * @throws Exception
-	 */
-
-    public boolean save(Subject subject) throws Exception {
-        // データベースリソースの変数を定義
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        int line = 0; // 更新された行数
-
-        try {
-            // データベースに接続
-            connection = getConnection();
-
-            // 1. 最初に同じ主キーのデータが存在するか確認
-            String checkSql = "SELECT COUNT(*) FROM subject WHERE cd = ? AND school_cd = ?";
-            statement = connection.prepareStatement(checkSql);
-            statement.setString(1, subject.getCd());
-            statement.setString(2, subject.getSchool().getCd());
-
-            rs = statement.executeQuery();
-            rs.next();
-            int recordCount = rs.getInt(1);
-
-            // 使用済みのリソースを一度閉じる
-            rs.close();
-            statement.close();
-
-            // 2. 存在有無に応じてINSERTまたはUPDATEを実行
-            if (recordCount > 0) {
-                // データが存在する場合: UPDATE
-                String updateSql = "UPDATE subject SET name = ? WHERE cd = ? AND school_cd = ?";
-                statement = connection.prepareStatement(updateSql);
-                statement.setString(1, subject.getName());
-                statement.setString(2, subject.getCd());
-                statement.setString(3, subject.getSchool().getCd());
-            } else {
-                // データが存在しない場合: INSERT
-                String insertSql = "INSERT INTO subject(cd, name, school_cd) VALUES(?, ?, ?)";
-                statement = connection.prepareStatement(insertSql);
-                statement.setString(1, subject.getCd());
-                statement.setString(2, subject.getName());
-                statement.setString(3, subject.getSchool().getCd());
-            }
-
-            // SQLを実行し、更新された行数を取得
-            line = statement.executeUpdate();
-
-        } catch (Exception e) {
-            // エラーが発生した場合は、呼び出し元に例外をスロー
-            throw e;
-        } finally {
-            // データベースリソースを解放
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException sqle) {
-                    sqle.printStackTrace();
-                }
-            }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException sqle) {
-                    sqle.printStackTrace();
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException sqle) {
-                    sqle.printStackTrace();
-                }
-            }
-        }
-
-        // 更新された行数が1以上であれば成功
-        return line > 0;
-    }
-
 }
