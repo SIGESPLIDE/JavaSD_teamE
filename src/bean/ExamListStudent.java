@@ -20,6 +20,7 @@ public class ExamListStudent implements Serializable {
 	public String getSubjectName() {
 		return subjectName;
 	}
+
 	/**
 	 * 
 	 * @param subjectName
@@ -35,6 +36,7 @@ public class ExamListStudent implements Serializable {
 	public String getSubjectCd() {
 		return subjectCd;
 	}
+
 	/**
 	 * 
 	 * @param subjectCd
@@ -51,6 +53,7 @@ public class ExamListStudent implements Serializable {
 	public int getNum() {
 		return num;
 	}
+
 	/**
 	 * 
 	 * @param num
@@ -66,6 +69,7 @@ public class ExamListStudent implements Serializable {
 	public int getPoint() {
 		return point;
 	}
+
 	/**
 	 * 
 	 * @param point

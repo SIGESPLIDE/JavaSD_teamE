@@ -19,4 +19,3 @@ public class SubjectDeleteDoneController extends CommonServlet {
 
 	}
 }
-

@@ -3,23 +3,27 @@ package bean;
 import java.io.Serializable;
 import java.util.Map;
 
-
 /**
- * 試験の科目情報を格納するbean
- * jspファイルのExamListSubject.*** にそれぞれ対応
- *  @param entYear 学生の入学した年
- *  @param studentNo 学生番号
- *  @param studentName 学生名
- *  @param classNum  学生の所属クラス名
- *  @param points 成績
- *  @author s_saito
+ * 試験の科目情報を格納するbean jspファイルのExamListSubject.*** にそれぞれ対応
+ * 
+ * @param entYear
+ *            学生の入学した年
+ * @param studentNo
+ *            学生番号
+ * @param studentName
+ *            学生名
+ * @param classNum
+ *            学生の所属クラス名
+ * @param points
+ *            成績
+ * @author s_saito
  */
 public class ExamListSubject implements Serializable {
 	private int entYear;
 	private String studentNo;
 	private String studentName;
 	private String classNum;
-	private Map<Integer,Integer> points;
+	private Map<Integer, Integer> points;
 
 	/**
 	 * 
@@ -28,6 +32,7 @@ public class ExamListSubject implements Serializable {
 	public int getEntYear() {
 		return entYear;
 	}
+
 	/**
 	 * 
 	 * @param entYear
@@ -43,6 +48,7 @@ public class ExamListSubject implements Serializable {
 	public String getStudentNo() {
 		return studentNo;
 	}
+
 	/**
 	 * 
 	 * @param studentNo
@@ -58,6 +64,7 @@ public class ExamListSubject implements Serializable {
 	public String getStudentName() {
 		return studentName;
 	}
+
 	/**
 	 * 
 	 * @param studentName
@@ -73,6 +80,7 @@ public class ExamListSubject implements Serializable {
 	public String getClassNum() {
 		return classNum;
 	}
+
 	/**
 	 * 
 	 * @param classNum
@@ -88,6 +96,7 @@ public class ExamListSubject implements Serializable {
 	public Map<Integer, Integer> getPoints() {
 		return points;
 	}
+
 	/**
 	 * 
 	 * @param points

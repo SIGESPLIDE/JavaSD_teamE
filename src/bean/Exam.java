@@ -3,9 +3,8 @@ package bean;
 import java.io.Serializable;
 
 /**
- * 試験情報を格納するbean
- * 対応テーブル：TEST
- * jspファイルのExam.*** にそれぞれ対応
+ * 試験情報を格納するbean 対応テーブル：TEST jspファイルのExam.*** にそれぞれ対応
+ * 
  * @author s_saito
  */
 public class Exam implements Serializable {
@@ -23,6 +22,7 @@ public class Exam implements Serializable {
 	public Student getStudent() {
 		return student;
 	}
+
 	/**
 	 * @param student
 	 */
@@ -31,11 +31,12 @@ public class Exam implements Serializable {
 	}
 
 	/**
-	 *  @return Exam.classNum
+	 * @return Exam.classNum
 	 */
 	public String getClassNum() {
 		return classNum;
 	}
+
 	/**
 	 * @param classNum
 	 */
@@ -44,11 +45,12 @@ public class Exam implements Serializable {
 	}
 
 	/**
-	 *  @return Exam.subject
+	 * @return Exam.subject
 	 */
 	public Subject getSubject() {
 		return subject;
 	}
+
 	/**
 	 * @param subject
 	 */
@@ -57,11 +59,12 @@ public class Exam implements Serializable {
 	}
 
 	/**
-	 *  @return Exam.school
+	 * @return Exam.school
 	 */
 	public School getSchool() {
 		return school;
 	}
+
 	/**
 	 * @param school
 	 */
@@ -70,11 +73,12 @@ public class Exam implements Serializable {
 	}
 
 	/**
-	 *  @return Exam.no
+	 * @return Exam.no
 	 */
 	public int getNo() {
 		return no;
 	}
+
 	/**
 	 * @param no
 	 */
@@ -83,11 +87,12 @@ public class Exam implements Serializable {
 	}
 
 	/**
-	 *  @return Exam.point
+	 * @return Exam.point
 	 */
 	public int getPoint() {
 		return point;
 	}
+
 	/**
 	 * @param point
 	 */

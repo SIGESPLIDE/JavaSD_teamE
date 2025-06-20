@@ -13,17 +13,17 @@ import bean.Subject;
  *
  */
 public class ExamListSubjectDao extends dao {
-	
+
 	/**
 	 * 
 	 * @param 工事中
 	 */
-	//private String baseSql = "SELECT ENT_YEAR, CLASS_NUM,  "
-			
+	// private String baseSql = "SELECT ENT_YEAR, CLASS_NUM, "
+
 	public List<ExamListSubject> postFilter(ResultSet rSet) {
 		return null;
 	}
-	
+
 	public List<ExamListSubject> filter(int entYear, String classNum, Subject subject, School school) {
 		return null;
 	}
