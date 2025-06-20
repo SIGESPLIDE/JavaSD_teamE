@@ -87,7 +87,6 @@ public class SubjectDao extends dao {
 	 * @param school
 	 * @return
 	 * @throws Exception
-	 *
 	 */
 
 	public List<Subject> filter(School school) throws Exception {
