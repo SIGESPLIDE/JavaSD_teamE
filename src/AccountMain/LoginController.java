@@ -10,6 +10,11 @@ import bean.Teacher;
 import dao.TeacherDao;
 import tool.CommonServlet; // CommonServletをインポート
 
+/**
+ *
+ * @author k_takahashi
+ *
+ */
 @WebServlet("/login.action")
 public class LoginController extends CommonServlet {
 
