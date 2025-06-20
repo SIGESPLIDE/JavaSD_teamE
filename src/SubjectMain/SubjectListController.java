@@ -1,7 +1,7 @@
 package SubjectMain;
 
 /**
- * 
+ *
  * @author k_nohara
  */
 import java.util.List;
