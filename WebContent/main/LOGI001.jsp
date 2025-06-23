@@ -5,7 +5,7 @@
 	</c:param>
 	<c:param name="body">
 		<div class="login-container">
-        <form action="${pageContext.request.contextPath}/login.action" method="post">
+        <form action="${pageContext.request.contextPath}/login-execute.action" method="post">
 				<h2>ログイン</h2>
 
     <c:if test="${not empty errorMessage}">
