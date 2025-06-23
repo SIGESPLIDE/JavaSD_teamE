@@ -107,4 +107,15 @@ public class StudentDao extends dao {
         }
         return list;
     }
+    
+    /**
+     * 
+     * @param student
+     * @return
+     * @throws Exception
+     * @author s_saito
+     */
+    public boolean save(Student student) throws Exception {
+    	return false; // テスト用　消してもいいよ
+    }
 }
