@@ -40,7 +40,28 @@ public abstract class CommonServlet extends HttpServlet {
 
 			// 本番用エラー表示
 			// e.printStackTrace();
-			// resp.sendRedirect("/shop/error");
+			// resp.sendRedirect("/main/ERRO001.jsp");
+		}
+	}
+	
+	/**
+	 * @param req
+	 * @param resp
+	 * @throws ServletException
+	 * @throws IOException
+	 * @author s_saito
+	 */
+	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		try {
+			execute(req, resp);
+		} catch (Exception e) {
+			// 開発用エラー表示
+			PrintWriter out = resp.getWriter();
+			e.printStackTrace(out);
+
+			// 本番用エラー表示
+			// e.printStackTrace();
+			// resp.sendRedirect("/main/ERRO001.jsp");
 		}
 	}
 
@@ -63,3 +84,4 @@ public abstract class CommonServlet extends HttpServlet {
 	protected abstract void post(HttpServletRequest req, HttpServletResponse resp) throws Exception;
 
 }
+
