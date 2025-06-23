@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import bean.School;
 import bean.Subject;
@@ -84,163 +82,73 @@ public class SubjectDao extends dao {
 
 	/**
 	 *
-	 * @param school
-	 * @return
-	 * @throws Exception
-	 */
-
-	public List<Subject> filter(School school) throws Exception {
-        // 結果を格納するリストを初期化
-        List<Subject> list = new ArrayList<>();
-
-        // データベースリソースの変数を定義
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-
-        try {
-            // データベースに接続
-            connection = getConnection();
-
-            // SQL文を準備 (指定された学校コードの科目をすべて選択)
-            String sql = "SELECT * FROM subject WHERE school_cd = ?";
-            statement = connection.prepareStatement(sql);
-
-            // プレースホルダに学校コードをセット
-            statement.setString(1, school.getCd());
-
-            // SQLを実行し、結果セットを取得
-            rs = statement.executeQuery();
-
-            // 結果セットをループ処理
-            while (rs.next()) {
-                // 1件分の科目データを持つSubjectオブジェクトを生成
-                Subject subject = new Subject();
-
-                // ResultSetから各カラムの値を取得し、Subjectオブジェクトにセット
-                subject.setCd(rs.getString("cd"));
-                subject.setName(rs.getString("name"));
-
-                // 引数で受け取ったSchoolオブジェクトをセット
-                subject.setSchool(school);
-
-                // リストにSubjectオブジェクトを追加
-                list.add(subject);
-            }
-        } catch (Exception e) {
-            // エラーが発生した場合は、呼び出し元に例外をスロー
-            throw e;
-        } finally {
-            // データベースリソースを解放
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException sqle) {
-                    sqle.printStackTrace();
-                }
-            }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException sqle) {
-                    sqle.printStackTrace();
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException sqle) {
-                    sqle.printStackTrace();
-                }
-            }
-        }
-
-        // 取得した科目のリストを返す
-        return list;
-    }
-
-	/**
-	 *
 	 * @param subject
 	 * @return
 	 * @throws Exception
+	 * @author a_suzuki
+	 *
 	 */
 
-    public boolean save(Subject subject) throws Exception {
-        // データベースリソースの変数を定義
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-        int line = 0; // 更新された行数
+	public boolean save(Subject subject) throws Exception {
+	    Connection connection = null;
+	    PreparedStatement statement = null;
+	    int line = 0;
 
-        try {
-            // データベースに接続
-            connection = getConnection();
+	    // 常にINSERT文を実行する
+	    String insertSql = "INSERT INTO subject(cd, name, school_cd) VALUES(?, ?, ?)";
 
-            // 1. 最初に同じ主キーのデータが存在するか確認
-            String checkSql = "SELECT COUNT(*) FROM subject WHERE cd = ? AND school_cd = ?";
-            statement = connection.prepareStatement(checkSql);
-            statement.setString(1, subject.getCd());
-            statement.setString(2, subject.getSchool().getCd());
+	    try {
+	        connection = getConnection();
+	        // ★改善点1: INSERTのみなので、1文のSQLなら自動コミットのままでも良い。
+	        // ただし、明示的なトランザクション管理は堅牢なコードの基本なので、
+	        // このまま残すことを推奨します。
+	        connection.setAutoCommit(false);
 
-            rs = statement.executeQuery();
-            rs.next();
-            int recordCount = rs.getInt(1);
+	        statement = connection.prepareStatement(insertSql);
 
-            // 使用済みのリソースを一度閉じる
-            rs.close();
-            statement.close();
+	        // プレースホルダ (?) に値をセット
+	        statement.setString(1, subject.getCd());
+	        statement.setString(2, subject.getName());
+	        statement.setString(3, subject.getSchool().getCd());
 
-            // 2. 存在有無に応じてINSERTまたはUPDATEを実行
-            if (recordCount > 0) {
-                // データが存在する場合: UPDATE
-                String updateSql = "UPDATE subject SET name = ? WHERE cd = ? AND school_cd = ?";
-                statement = connection.prepareStatement(updateSql);
-                statement.setString(1, subject.getName());
-                statement.setString(2, subject.getCd());
-                statement.setString(3, subject.getSchool().getCd());
-            } else {
-                // データが存在しない場合: INSERT
-                String insertSql = "INSERT INTO subject(cd, name, school_cd) VALUES(?, ?, ?)";
-                statement = connection.prepareStatement(insertSql);
-                statement.setString(1, subject.getCd());
-                statement.setString(2, subject.getName());
-                statement.setString(3, subject.getSchool().getCd());
-            }
+	        // INSERT文を実行
+	        line = statement.executeUpdate();
 
-            // SQLを実行し、更新された行数を取得
-            line = statement.executeUpdate();
+	        // ★改善点2: 処理が成功したので、トランザクションをコミット
+	        connection.commit();
 
-        } catch (Exception e) {
-            // エラーが発生した場合は、呼び出し元に例外をスロー
-            throw e;
-        } finally {
-            // データベースリソースを解放
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException sqle) {
-                    sqle.printStackTrace();
-                }
-            }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException sqle) {
-                    sqle.printStackTrace();
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException sqle) {
-                    sqle.printStackTrace();
-                }
-            }
-        }
+	    } catch (Exception e) {
+	        // ★改善点3: エラーが発生したら、変更をロールバック
+	        if (connection != null) {
+	            try {
+	                connection.rollback();
+	            } catch (SQLException sqle) {
+	                sqle.printStackTrace(); // ロールバック失敗時のエラーもログに残す
+	            }
+	        }
+	        // エラーを呼び出し元にスローして通知
+	        throw e;
+	    } finally {
+	        // ★改善点4: リソースを確実に解放する
+	        if (statement != null) {
+	            try {
+	                statement.close();
+	            } catch (SQLException sqle) {
+	                sqle.printStackTrace();
+	            }
+	        }
+	        if (connection != null) {
+	            try {
+	                // 自動コミットモードを元に戻す（コネクションプール利用時に重要）
+	                connection.setAutoCommit(true);
+	                connection.close();
+	            } catch (SQLException sqle) {
+	                sqle.printStackTrace();
+	            }
+	        }
+	    }
 
-        // 更新された行数が1以上であれば成功
-        return line > 0;
-    }
-
+	    // 1件以上のデータが登録されたかを返す
+	    return line > 0;
+	}
 }
