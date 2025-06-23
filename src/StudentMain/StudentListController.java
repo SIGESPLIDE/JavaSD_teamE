@@ -12,6 +12,12 @@ import bean.Student;
 import dao.StudentDao;
 import tool.CommonServlet;
 
+
+/**
+ *
+ * @author y_yasui
+ *
+ */
 @WebServlet(urlPatterns = { "/main/STDM001" })
 public class StudentListController extends CommonServlet {
 
