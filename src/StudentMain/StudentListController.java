@@ -27,7 +27,7 @@ public class StudentListController extends CommonServlet {
 		// DAOとSchool準備
 		StudentDao studentDao = new StudentDao();
 		School school = new School();
-		school.setCd(schoolCd != null ? schoolCd : ""); // ← 修正
+		school.setCd(schoolCd != null ? schoolCd : schoolCd); // ← 修正
 
 		boolean isAttend = (isAttendStr != null && isAttendStr.equals("true"));
 		List<Student> studentList;
