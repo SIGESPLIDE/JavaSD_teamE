@@ -107,9 +107,21 @@ public class StudentDao extends dao {
         }
         return list;
     }
-    
+    public void update(Student student) throws Exception {
+    	String sql = "UPDATE STUDENT SET NAME=?, ENT_YEAR=?, CLASS_NUM=?, IS_ATTEND=?, SCHOOL_CD=? WHERE NO=?";
+    	try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql)) {
+    		st.setString(1, student.getName());
+    		st.setInt(2, student.getEntYear());
+    		st.setString(3, student.getClassNum());
+    		st.setBoolean(4, student.isAttend());
+    		st.setString(5, student.getSchool().getCd());
+    		st.setString(6, student.getNo());
+    		st.executeUpdate();
+    	}
+    }
+
     /**
-     * 
+     *
      * @param student
      * @return
      * @throws Exception
