@@ -11,7 +11,7 @@
 <h2>科目管理</h2>
 
 <div>
-    <a href="SMJM2.jsp">新規登録</a>
+    <a href="${pageContext.request.contextPath}/main/SBJM002.jsp">新規登録</a>
 </div>
 
 <c:choose>

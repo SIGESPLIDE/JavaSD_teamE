@@ -3,7 +3,8 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import bean.School;
 import bean.Subject;
@@ -40,7 +41,7 @@ public class SubjectDao extends dao {
 
 				// School を生成してセット
 				School school = new School();
-				school.setCd(rs.getString("SHCOOL_CD")); // カラム名要確認
+				school.setCd(rs.getString("SCHOOL_CD")); // カラム名要確認
 				subject.setSchool(school);
 			}
 
@@ -59,96 +60,50 @@ public class SubjectDao extends dao {
 	}
 
 	/**
-	 * 学生情報を更新する
-	 *
-	 * @param student
-	 *            更新する学生情報
-	 * @return 更新に成功した行数
+     * 科目情報を更新する
+     * @param subject 更新対象の科目
+     * @return 更新行数
 	 * @throws Exception
-	 * @author s_saito, k_nohara
 	 */
-	public int update(Subject subject) throws Exception {
+    public int save(Subject subject) throws Exception {
 		int rows = 0;
-		String sql = "UPDATE SUBJECT SET NAME = ? WHERE SHCOOL_CD = ?";
-		try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql)) {
+        String sql = "UPDATE SUBJECT SET NAME = ? WHERE SCHOOL_CD = ?"; // ← 修正済み
+
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(sql)) {
 
 			st.setString(1, subject.getName());
-			st.setString(2, subject.getSchool().toString());
-
+            st.setString(2, subject.getSchool().getCd()); // ← 修正済み（toString → getCd）
 			rows = st.executeUpdate();
 		}
 		return rows;
 	}
 
-	/**
-	 *
-	 * @param subject
-	 * @return
-	 * @throws Exception
-	 * @author a_suzuki
-	 *
-	 */
+    /**
+     * 全科目を取得する
+     * @return 科目リスト
+     * @throws Exception
+     */
+    public List<Subject> filter() throws Exception {
+        List<Subject> list = new ArrayList<>();
+        String sql = "SELECT * FROM SUBJECT";
 
-	public boolean save(Subject subject) throws Exception {
-	    Connection connection = null;
-	    PreparedStatement statement = null;
-	    int line = 0;
+        try (Connection con = getConnection();
+             PreparedStatement st = con.prepareStatement(sql);
+             ResultSet rs = st.executeQuery()) {
 
-	    // 常にINSERT文を実行する
-	    String insertSql = "INSERT INTO subject(cd, name, school_cd) VALUES(?, ?, ?)";
+            while (rs.next()) {
+                Subject subject = new Subject();
+                subject.setCd(rs.getString("CD"));
+                subject.setName(rs.getString("NAME"));
 
-	    try {
-	        connection = getConnection();
-	        // ★改善点1: INSERTのみなので、1文のSQLなら自動コミットのままでも良い。
-	        // ただし、明示的なトランザクション管理は堅牢なコードの基本なので、
-	        // このまま残すことを推奨します。
-	        connection.setAutoCommit(false);
+                School school = new School();
+                school.setCd(rs.getString("SCHOOL_CD")); // ← 修正済み
+                subject.setSchool(school);
 
-	        statement = connection.prepareStatement(insertSql);
-
-	        // プレースホルダ (?) に値をセット
-	        statement.setString(1, subject.getCd());
-	        statement.setString(2, subject.getName());
-	        statement.setString(3, subject.getSchool().getCd());
-
-	        // INSERT文を実行
-	        line = statement.executeUpdate();
-
-	        // ★改善点2: 処理が成功したので、トランザクションをコミット
-	        connection.commit();
-
-	    } catch (Exception e) {
-	        // ★改善点3: エラーが発生したら、変更をロールバック
-	        if (connection != null) {
-	            try {
-	                connection.rollback();
-	            } catch (SQLException sqle) {
-	                sqle.printStackTrace(); // ロールバック失敗時のエラーもログに残す
-	            }
-	        }
-	        // エラーを呼び出し元にスローして通知
-	        throw e;
-	    } finally {
-	        // ★改善点4: リソースを確実に解放する
-	        if (statement != null) {
-	            try {
-	                statement.close();
-	            } catch (SQLException sqle) {
-	                sqle.printStackTrace();
-	            }
-	        }
-	        if (connection != null) {
-	            try {
-	                // 自動コミットモードを元に戻す（コネクションプール利用時に重要）
-	                connection.setAutoCommit(true);
-	                connection.close();
-	            } catch (SQLException sqle) {
-	                sqle.printStackTrace();
-	            }
-	        }
-	    }
-
-	    // 1件以上のデータが登録されたかを返す
-	    return line > 0;
-	}
+                list.add(subject);
+            }
+        }
+        return list;
+    }
 }
