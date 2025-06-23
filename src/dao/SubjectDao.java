@@ -59,20 +59,7 @@ public class SubjectDao extends dao {
 		}
 	}
 
-<<<<<<< HEAD
-	/**
-     * 科目情報を更新する
-     * @param subject 更新対象の科目
-     * @return 更新行数
-	 * @throws Exception
-	 */
-    public int save(Subject subject) throws Exception {
-		int rows = 0;
-        String sql = "UPDATE SUBJECT SET NAME = ? WHERE SCHOOL_CD = ?"; // ← 修正済み
 
-        try (Connection con = getConnection();
-             PreparedStatement st = con.prepareStatement(sql)) {
-=======
 	 /**
      * 科目情報を更新する
      * @param subject 更新対象の科目
@@ -82,16 +69,7 @@ public class SubjectDao extends dao {
     public int save(Subject subject) throws Exception {
         int rows = 0;
         String sql = "UPDATE SUBJECT SET NAME = ? WHERE SCHOOL_CD = ?"; // ← 修正済み
->>>>>>> branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
 
-<<<<<<< HEAD
-			st.setString(1, subject.getName());
-            st.setString(2, subject.getSchool().getCd()); // ← 修正済み（toString → getCd）
-			rows = st.executeUpdate();
-		}
-		return rows;
-	}
-=======
         try (Connection con = getConnection();
              PreparedStatement st = con.prepareStatement(sql)) {
 
@@ -101,7 +79,6 @@ public class SubjectDao extends dao {
         }
         return rows;
     }
->>>>>>> branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
 
     /**
      * 全科目を取得する
