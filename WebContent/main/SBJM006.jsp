@@ -10,27 +10,16 @@
 <!-- 作成者　潟辺　陸 -->
 <!-- まだ選択した科目が表示できません -->
 <h2>科目情報削除</h2>
-<div>
 
-<form action="subjectDelete" method="post">
-
-<div>
-    <p>科目ID: <%= id %></p>
-    <p>科目名: <%= getName %></p>
-
-    <form action="subjectDelete" method="post" onsubmit="return confirm('を削除してもよろしいですか？');">
-        <input type="hidden" name="id" value="<%= id %>">
-        <button type="submit">削除</button>
-    </form>
-</div>
+     <form action="DeleteServlet" method="post">
+        <label for="id">削除するデータのID:</label>
+        <input type="text" id="id" name="id" required>
 
 <button type="submit">削除</button>
 
-</form>
-
-</div>
-
 <a href="SBJM001.jsp">戻る</a>
+
+</form>
 
 </body>
 </html>
