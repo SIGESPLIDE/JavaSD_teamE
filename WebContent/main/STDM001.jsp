@@ -5,38 +5,43 @@
 <c:import url="/BASE001.jsp">
   <c:param name="head">
     <title>学生管理</title>
+
   </c:param>
 
   <c:param name="body">
     <h2>学生管理</h2>
 
-    <!-- 検索条件 -->
+    <c:if test="${not empty errorMessage}">
+      <p class="error-message">${errorMessage}</p>
+    </c:if>
+
     <div class="search-area">
-        <form action="StudentListServlet" method="get">
+        <form action="${pageContext.request.contextPath}/main/STDM001" method="get">
             <label>入学年度</label>
             <select name="entYear">
                 <option value="">--</option>
-                <c:forEach var="year" items="${entYearList}">
+                <c:forEach var="year" begin="2020" end="2025">
                     <option value="${year}" ${param.entYear == year ? 'selected' : ''}>${year}</option>
                 </c:forEach>
             </select>
 
             <label>クラス</label>
-            <select name="classId">
+            <select name="classId"> <%-- input type="text" から select に変更 --%>
                 <option value="">--</option>
-                <c:forEach var="cls" items="${classList}">
-                    <option value="${cls.id}" ${param.classId == cls.id ? 'selected' : ''}>${cls.name}</option>
+                <c:forEach var="cls" items="${classList}"> <%-- Servletから渡されたclassListを使用 --%>
+                    <option value="${cls}" ${param.classId == cls ? 'selected' : ''}>${cls}</option>
                 </c:forEach>
             </select>
 
-            <label><input type="checkbox" name="isEnrolled" value="1" ${param.isEnrolled == '1' ? 'checked' : ''}/>在学中</label>
+            <label>
+              <input type="checkbox" name="isEnrolled" value="1" ${param.isEnrolled == '1' ? 'checked' : ''}/>在学中
+            </label>
 
             <button type="submit">絞り込み</button>
         </form>
         <a href="StudentRegisterServlet">新規登録</a>
     </div>
 
-    <!-- 検索結果 -->
     <div class="result-area">
       <c:choose>
         <c:when test="${not empty students}">
@@ -55,13 +60,13 @@
             <tbody>
               <c:forEach var="stu" items="${students}">
                 <tr>
-                  <td>${student.entYear}</td>
-                  <td>${student.no}</td>
-                  <td>${student.name}</td>
-                  <td>${student.classNum}</td>
+                  <td>${stu.entYear}</td>
+                  <td>${stu.no}</td>
+                  <td>${stu.name}</td>
+                  <td>${stu.classNum}</td>
                   <td>
                     <c:choose>
-                      <c:when test="${student.attend}">○</c:when>
+                      <c:when test="${stu.attend}">○</c:when>
                       <c:otherwise></c:otherwise>
                     </c:choose>
                   </td>
