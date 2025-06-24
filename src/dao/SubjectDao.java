@@ -66,15 +66,14 @@ public class SubjectDao extends dao {
      * @return 更新行数
      * @throws Exception
      */
-    public int save(Subject subject) throws Exception {
+    public int update(Subject subject) throws Exception {
         int rows = 0;
-        String sql = "UPDATE SUBJECT SET NAME = ? WHERE SCHOOL_CD = ?"; // ← 修正済み
-
+        String sql = "UPDATE SUBJECT SET NAME = ? WHERE SCHOOL_CD = ?";
         try (Connection con = getConnection();
              PreparedStatement st = con.prepareStatement(sql)) {
 
             st.setString(1, subject.getName());
-            st.setString(2, subject.getSchool().getCd()); // ← 修正済み（toString → getCd）
+            st.setString(2, subject.getSchool().getCd());
             rows = st.executeUpdate();
         }
         return rows;
@@ -99,7 +98,7 @@ public class SubjectDao extends dao {
                 subject.setName(rs.getString("NAME"));
 
                 School school = new School();
-                school.setCd(rs.getString("SCHOOL_CD")); // ← 修正済み
+                school.setCd(rs.getString("SCHOOL_CD"));
                 subject.setSchool(school);
 
                 list.add(subject);
