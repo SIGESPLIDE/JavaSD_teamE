@@ -82,7 +82,6 @@ import bean.Subject;
            return rows;
 
 	   }
-
        /**
         * 全科目を取得する
         * @return 科目リスト
