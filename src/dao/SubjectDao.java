@@ -116,5 +116,57 @@ import bean.Subject;
 
 	   }
 
+	   /**
+	    *
+	    * @param subject
+	    * @return
+	    * @throws Exception
+	    */
+
+	   public boolean save(Subject subject) throws Exception {
+	        Connection connection = getConnection();
+	        PreparedStatement statement = null;
+	        int count = 0; // 実行結果（更新された行数）を格納する変数
+
+	        try {
+	            // SQLインジェクション対策のため、PreparedStatementを使用
+	            statement = connection.prepareStatement(
+	                "INSERT INTO subject(cd, name, school_cd) VALUES(?, ?, ?)");
+
+	            // プレースホルダ（?）に値をセット
+	            statement.setString(1, subject.getCd());
+	            statement.setString(2, subject.getName());
+	            statement.setString(3, subject.getSchool().getCd());
+
+	            // INSERT文を実行し、更新された行数を取得
+	            count = statement.executeUpdate();
+
+	        } catch (java.sql.SQLIntegrityConstraintViolationException e) {
+	            // 主キー(cd)が重複した場合にこの例外が発生することが多い
+	            // この場合はエラーとしてログに出力し、falseを返すことでコントローラーに失敗を伝える
+	            System.err.println("主キー制約違反: 科目コード " + subject.getCd() + " は既に存在します。");
+	            return false; // 登録失敗
+	        } catch (Exception e) {
+	            // その他のSQL例外や接続エラーなど
+	            e.printStackTrace();
+	            throw e; // 想定外のエラーは上位に投げる
+	        } finally {
+	            // リソースを解放
+	            if (statement != null) {
+	                try {
+	                    statement.close();
+	                } catch (Exception ignore) {}
+	            }
+	            if (connection != null) {
+	                try {
+	                    connection.close();
+	                } catch (Exception ignore) {}
+	            }
+	        }
+
+	        // countが1以上（1行が挿入された）であれば成功
+	        return count > 0;
+	   }
+
    }
 
