@@ -11,7 +11,7 @@
 	<p class="alert alert-success text-center">ログアウトしました</p>
 	<%-- ログイン画面ヘ --%>
 	<div class="login-link">
-		<a href="LOGI001.jsp">ログイン</a>
+    <a href="${pageContext.request.contextPath}/login.action">ログイン</a>
 		<%-- **Placeholder: Replace "login.jsp" with your actual login page URL** --%>
 	</div>
 </c:param>
