@@ -19,6 +19,7 @@ import tool.CommonServlet;
  *
  */
 
+
 // 実行(Execute)ではなく、この機能(Create)を統括するサーブレットなので、この名前とURLが適切
 @WebServlet(urlPatterns={"/main/SubjectCreate"})
 public class SubjectCreateController extends CommonServlet {

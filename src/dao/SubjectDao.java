@@ -90,6 +90,7 @@ public class SubjectDao extends dao { // 親クラスのDaoを継承
         return subject;
     }
 
+
     /**
      * 全科目を取得する。
      * （このメソッドは他の機能で使われる可能性があるため残しておきます）
