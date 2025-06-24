@@ -116,6 +116,13 @@ import bean.Subject;
 
 	   }
 
+	   /**
+	    *
+	    * @param subject
+	    * @return
+	    * @throws Exception
+	    */
+
 	   public boolean save(Subject subject) throws Exception {
 	        Connection connection = getConnection();
 	        PreparedStatement statement = null;
