@@ -19,7 +19,6 @@ import tool.CommonServlet;
  *
  */
 
-
 @WebServlet(urlPatterns={"/main/SubjectCreateExcute"})
 public class SubjectCreateExcuteController extends CommonServlet {
 
@@ -83,6 +82,6 @@ public class SubjectCreateExcuteController extends CommonServlet {
         // (SubjectCreateControllerのような画面表示用サーブレットが存在すると想定)
         System.out.println("DEBUG-003");
 
-        resp.sendRedirect(req.getContextPath() + "/main/SBJM002");
+        resp.sendRedirect(req.getContextPath() + "/JavaSD/main/SBJM002.jsp");
     }
 }

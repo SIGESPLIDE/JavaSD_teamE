@@ -38,7 +38,7 @@ public class SubjectCreateController extends CommonServlet {
         }
 
         // 登録画面へフォワード
-        req.getRequestDispatcher("/main/SBJM002.jsp").forward(req, resp);
+        req.getRequestDispatcher("/main/SubjectCreate").forward(req, resp);
     }
 
     /**
@@ -64,7 +64,7 @@ public class SubjectCreateController extends CommonServlet {
             req.setAttribute("error", "科目コードと科目名は必須です。");
             req.setAttribute("cd", cd); // 入力値をフォームに戻す
             req.setAttribute("name", name);
-            req.getRequestDispatcher("/main/SBJM002.jsp").forward(req, resp);
+            req.getRequestDispatcher("/main/SubjectCreate").forward(req, resp);
             return;
         }
 
