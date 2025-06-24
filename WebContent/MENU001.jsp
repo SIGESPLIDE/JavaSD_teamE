@@ -9,7 +9,7 @@
         <a href="${pageContext.request.contextPath}/accounts/logout">ログアウト</a>
     </c:when>
 
-    <%-- 未ログインの場合（セッションにユーザー情報がない） --%>
+    <%-- 未ログインの場合（セッションにユーザー情報がない.） --%>
     <c:otherwise>
 <nav class="sidebar">
     <ul>
