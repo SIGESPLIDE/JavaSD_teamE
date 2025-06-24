@@ -14,7 +14,7 @@
 
      <form action="DeleteServlet" method="post">
         <label for="id">${subjects}を削除してもよろしいですか:</label>
-        <input type="text" id="id" name="id" required>
+        <input type="text" id="id" name="id" subject >
 
 <button type="submit">削除</button>
 
