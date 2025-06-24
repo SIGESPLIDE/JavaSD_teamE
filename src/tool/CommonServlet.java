@@ -43,15 +43,16 @@ public abstract class CommonServlet extends HttpServlet {
 			// resp.sendRedirect("/main/ERRO001.jsp");
 		}
 	}
-	
+
 	/**
 	 * @param req
 	 * @param resp
 	 * @throws ServletException
 	 * @throws IOException
 	 * @author s_saito
+	 * @throws Exception
 	 */
-	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, Exception {
 		try {
 			execute(req, resp);
 		} catch (Exception e) {
