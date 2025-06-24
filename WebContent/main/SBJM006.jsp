@@ -13,7 +13,7 @@
 <h2>科目情報削除</h2>
 
      <form action="DeleteServlet" method="post">
-        <label for="id">削除するデータのID:</label>
+        <label for="id">${subjects}を削除してもよろしいですか:</label>
         <input type="text" id="id" name="id" required>
 
 <button type="submit">削除</button>
