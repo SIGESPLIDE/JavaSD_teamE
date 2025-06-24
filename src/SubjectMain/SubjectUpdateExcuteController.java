@@ -59,7 +59,7 @@ public class SubjectUpdateExcuteController extends CommonServlet {
             subject.setSchool(school);
 
             SubjectDao dao = new SubjectDao();
-            int result = dao.save(subject);
+            int result = dao.update(subject);
 
             req.setAttribute("updateResult", result);
 

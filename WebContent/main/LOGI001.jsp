@@ -5,15 +5,21 @@
 	</c:param>
 	<c:param name="body">
 		<div class="login-container">
-			<form action="login.action" method="post">
+        <form action="${pageContext.request.contextPath}/login-execute.action" method="post">
 				<h2>ログイン</h2>
 
-				<div class="form-group">
-					<label for="id">ID</label> <input type="text" id="id" name="id"
-						maxlength="20" required pattern="[A-Za-z0-9]+"
-						placeholder="半角でご入力ください" />
-				</div>
+    <c:if test="${not empty errorMessage}">
+        <div class="error-message">
+            ・${errorMessage}
+        </div>
+    </c:if>
 
+    <div class="form-group">
+        <label for="id">ID</label>
+        <input type="text" id="id" name="id"
+            maxlength="20" required pattern="[A-Za-z0-9]+"
+            placeholder="半角でご入力ください" value="<c:out value="${id}"/>" />
+    </div>
 				<div class="form-group">
 					<label for="password">パスワード</label> <input type="password"
 						id="password" name="password" maxlength="20" required
