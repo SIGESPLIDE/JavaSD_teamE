@@ -51,7 +51,7 @@ public abstract class CommonServlet extends HttpServlet {
 	 * @throws IOException
 	 * @author s_saito
 	 */
-	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		try {
 			execute(req, resp);
 		} catch (Exception e) {

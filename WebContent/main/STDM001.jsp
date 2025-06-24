@@ -12,7 +12,7 @@
 
     <!-- 検索条件 -->
     <div class="search-area">
-        <form action="StudentListServlet" method="get">
+        <form action="STDM002" method="get">
             <label>入学年度</label>
             <select name="entYear">
                 <option value="">--</option>
