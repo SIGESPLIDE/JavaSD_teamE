@@ -12,9 +12,9 @@
 <!-- 一部エラーあり -->
 <h2>科目情報削除</h2>
 
-     <form action="DeleteServlet" method="post">
-        <label for="id">${subjects}を削除してもよろしいですか:</label>
-        <input type="text" id="id" name="id" subject >
+   <form action="DeleteServlet" method="post">
+        <label for="id">を削除してもよろしいですか:</label>
+        <input type="text" id="id" name="id">
 
 <button type="submit">削除</button>
 
