@@ -55,7 +55,6 @@
                             </div>
                         </div>
                     </form>
-
                     <!-- 学生情報 ⑩ -->
                     <hr class="my-4">
                     <h5 class="card-title">学生情報</h5>

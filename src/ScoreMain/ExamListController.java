@@ -98,6 +98,7 @@ public class ExamListController extends CommonServlet {
         req.setAttribute("entYear", entYear);
         req.setAttribute("classNum", classNum);
         req.setAttribute("subjectCd", subjectCd);
+
     }
 
 
