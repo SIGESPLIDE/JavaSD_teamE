@@ -16,6 +16,12 @@ import javax.servlet.http.HttpSession;
 import bean.Teacher;
 import dao.StudentDao;
 
+/**
+ *
+ * @author a_suzuki
+ *
+ */
+
 @WebServlet(urlPatterns = {"/main/StudentCreateController"})
 public class StudentCreateController extends HttpServlet {
 
