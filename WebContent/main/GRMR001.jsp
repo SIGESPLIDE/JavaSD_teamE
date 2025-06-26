@@ -22,7 +22,7 @@
 
                                     <%-- データベースから情報を持ってきている --%>
                                     <c:forEach var="selectEntYear" items="${entYearList}">
-                                        <option value="${s.studentId}">${s.studentName}</option>
+                                        <option value="${selectEntYear}"<c:if test="${selectEntYear == entYear}">selected</c:if>>${selectEntYear}</option>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -32,8 +32,8 @@
                                 <label for="class" class="form-label">クラス</label> <!-- ④ -->
                                 <select class="form-select" id="class" name="class"> <!-- ⑦ -->
                                     <option value="">--------</option>
-                                    <c:forEach var="s" items="${list}">
-                                        <option value="${selectEntYear}"<c:if test="${selectEntYear == entYear}">selected</c:if>>${selectEntYear}</option>
+                                    <c:forEach var="course" items="${classNumList}">
+                                        <option value="${course.class_num}"<c:if test="${course.class_num == classNum}">selected</c:if>>${course.class_num}</option>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -43,8 +43,8 @@
                                 <label for="subject" class="form-label">科目</label> <!-- ⑤ -->
                                 <select class="form-select" id="subject" name="subject"> <!-- ⑧ -->
                                     <option value="">--------</option>
-                                    <c:forEach var="s" items="${list}">
-                                        <option value="${s.studentId}">${s.studentName}</option>
+                                    <c:forEach var="subject" items="${subjectList}">
+                                        <option value="${subject.cd}"<c:if test="${subject.cd == subjectCd}">selected</c:if>>${subject.cd}</option>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -55,7 +55,6 @@
                             </div>
                         </div>
                     </form>
-
                     <!-- 学生情報 ⑩ -->
                     <hr class="my-4">
                     <h5 class="card-title">学生情報</h5>
@@ -77,6 +76,7 @@
                     <div class="mt-3 text-muted">毎項目を選択または学生情報を入力して検索ボタンをクリックしてください</div> <!-- ⑭ -->
 
                 </div>
+
             </div>
         </div>
     </c:param>

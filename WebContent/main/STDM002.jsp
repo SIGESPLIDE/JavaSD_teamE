@@ -25,7 +25,7 @@
             </c:if>
 
             <%-- 学生情報登録フォーム --%>
-            <form action="StudentCreateExecute.action" method="post">
+            <form action="StudentCreateExecuteController" method="post">
                  <%-- 各項目を input-group で囲む --%>
                  <div class="input-group">
                       <label for="ent_year">入学年度<br></label>
