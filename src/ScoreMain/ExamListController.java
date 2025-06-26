@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import bean.ClassNum;
 import bean.School;
@@ -17,23 +16,29 @@ import bean.Teacher;
 import dao.ClassNumDao;
 import dao.StudentDao;
 import dao.SubjectDao;
+import dao.TeacherDao;
 import tool.CommonServlet;
 
 @WebServlet(urlPatterns={"/main/ExamList"})
 public class ExamListController extends CommonServlet {
 
-    @Override
-    protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
     	// 現在のセッションを取得（存在しない場合は新規作成）
-        HttpSession session = req.getSession();
-        // Teacherオブジェクトを取得
-        Teacher teacher = (Teacher) session.getAttribute("session_user");
+//        HttpSession session = req.getSession();
+//        // Teacherオブジェクトを取得
+//        Teacher teacher = (Teacher) session.getAttribute("session_user");
+//
+//        // teacherがnullの場合はログイン画面にリダイレクト
+//        if (teacher == null) {
+//            resp.sendRedirect(req.getContextPath() + "/login.action");
+//            return;
+//        }
 
-        // teacherがnullの場合はログイン画面にリダイレクト
-        if (teacher == null) {
-            resp.sendRedirect(req.getContextPath() + "/main/login");
-            return;
-        }
+
+    	// テスト用コード　あとで消してください
+    	TeacherDao teacherDao = new TeacherDao();
+    	Teacher teacher = new Teacher();
+    	teacher = teacherDao.get("admin");
 
         // 所属している学校をTeacherオブジェクトから取得
         School school = teacher.getSchool();
@@ -72,7 +77,29 @@ public class ExamListController extends CommonServlet {
 
         // 成績参照画面にjump！！！
         req.getRequestDispatcher("GRMR001.jsp").forward(req, resp);
+
+     // GETメソッドの最後に以下を追加
+
+        // パラメータ取得
+        String entYear = req.getParameter("enrollmentYear");
+        String classNum = req.getParameter("class");
+        String subjectCd = req.getParameter("subject");
+
+        // 学生をフィルタリング（簡易的にクラスと入学年度で絞る）
+        List<Student> filteredList = studentList.stream()
+            .filter(s -> (entYear == null || entYear.isEmpty() || String.valueOf(s.getEntYear()).equals(entYear)))
+            .filter(s -> (classNum == null || classNum.isEmpty() || s.getClassNum().equals(classNum)))
+            .collect(Collectors.toList());
+
+        // フィルタ済み学生リストをJSPへ
+        req.setAttribute("studentList", filteredList);
+
+        // 選択状態保持のためパラメータもセット
+        req.setAttribute("entYear", entYear);
+        req.setAttribute("classNum", classNum);
+        req.setAttribute("subjectCd", subjectCd);
     }
+
 
 
 
