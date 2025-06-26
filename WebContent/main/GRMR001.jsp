@@ -19,7 +19,9 @@
                                 <label for="enrollmentYear" class="form-label">入学年度</label> <!-- ③ -->
                                 <select class="form-select" id="enrollmentYear" name="enrollmentYear"> <!-- ⑥ -->
                                     <option value="">--------</option>
-                                    <c:forEach var="s" items="${list}">
+
+                                    <%-- データベースから情報を持ってきている --%>
+                                    <c:forEach var="selectEntYear" items="${entYearList}">
                                         <option value="${s.studentId}">${s.studentName}</option>
                                     </c:forEach>
                                 </select>
@@ -31,7 +33,7 @@
                                 <select class="form-select" id="class" name="class"> <!-- ⑦ -->
                                     <option value="">--------</option>
                                     <c:forEach var="s" items="${list}">
-                                        <option value="${s.studentId}">${s.studentName}</option>
+                                        <option value="${selectEntYear}"<c:if test="${selectEntYear == entYear}">selected</c:if>>${selectEntYear}</option>
                                     </c:forEach>
                                 </select>
                             </div>
