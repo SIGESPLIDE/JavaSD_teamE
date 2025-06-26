@@ -32,24 +32,16 @@ public class StudentCreateController extends HttpServlet {
         HttpSession session = req.getSession();
         Teacher teacher = (Teacher) session.getAttribute("user");
 
-        // 1. ログインチェック (必須)
-        if (teacher == null || teacher.getSchool() == null) {
-            // エラーメッセージをリクエストスコープにセットしてエラーページにフォワードする、などが望ましい
-            req.setAttribute("error", "ログイン情報が無効です。再度ログインしてください。");
-            req.getRequestDispatcher("/main/error.jsp").forward(req, res); // 例: エラー表示用JSP
-            return;
-        }
-
-        // 2. データの準備
-        // 入学年度リスト
+        // 入学年度のリストを作成
         LocalDate today = LocalDate.now();
         int currentYear = today.getYear();
-        List<Integer> entYearList = new ArrayList<>(); // JSPと名前を合わせる
+        List<Integer> entYearList = new ArrayList<>();
+        // 今年度から10年前までをリストに追加
         for (int i = 0; i < 11; i++) {
             entYearList.add(currentYear - i);
         }
 
-        // クラス番号リスト
+        // クラス番号のリストを取得
         List<String> classNumList = null;
         StudentDao studentDao = new StudentDao();
         try {
@@ -61,11 +53,11 @@ public class StudentCreateController extends HttpServlet {
             req.setAttribute("error", "クラス情報の取得中にエラーが発生しました。");
         }
 
-        // 3. リクエストスコープにデータをセット
+        // リクエストスコープに各種リストをセット
         req.setAttribute("ent_year_list", entYearList);
         req.setAttribute("class_num_list", classNumList);
 
-        // 4. JSPへフォワード
+        // JSPへフォワード
         req.getRequestDispatcher("/main/STDM002.jsp").forward(req, res);
     }
 }
