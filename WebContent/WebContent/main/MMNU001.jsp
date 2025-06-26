@@ -8,6 +8,5 @@
 	</c:param>
 	<c:param name="body">
 	<h2>仮メインメニュー</h2>
-	<a href="${pageContext.request.contextPath}/main/STDM001">学生管理一覧</a>
 	</c:param>
 </c:import>

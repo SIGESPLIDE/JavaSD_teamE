@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import bean.School;
 import bean.Student;
-import bean.Teacher;
 import dao.ClassNumDao; // ClassNumDaoをインポート
 import dao.StudentDao;
 import tool.CommonServlet;
@@ -24,17 +23,15 @@ public class StudentListController extends CommonServlet {
         String errorMessage = null;
 
         HttpSession session = req.getSession();
-        Teacher userSchool2 = (Teacher) session.getAttribute("user");
-        School test =  userSchool2.getSchool();
-        System.out.println(test);
+        School userSchool = (School) session.getAttribute("userSchool");
 
-        if (userSchool2 == null || userSchool2.getClass() == null) {
+        if (userSchool == null || userSchool.getCd() == null || userSchool.getCd().isEmpty()) {
             errorMessage = "学校情報が取得できませんでした。再度ログインしてください。";
             req.setAttribute("errorMessage", errorMessage);
-            RequestDispatcher rd = req.getRequestDispatcher("/main/ERRO001.jsp");
+            RequestDispatcher rd = req.getRequestDispatcher("/error.jsp");
             rd.forward(req, resp);
             return;
-        } 
+        }
 
         String entYearStr = req.getParameter("entYear");
         String classNum = req.getParameter("classId"); 
@@ -58,9 +55,7 @@ public class StudentListController extends CommonServlet {
         StudentDao studentDao = new StudentDao();
         List<Student> studentList = null;
 
-        School userSchool = (School) session.getAttribute("user");
         try {
-
             studentList = studentDao.filterAllCond(userSchool, entYear, classNum, isAttend);
         } catch (Exception e) {
             errorMessage = "学生情報の取得中にエラーが発生しました: " + e.getMessage();
