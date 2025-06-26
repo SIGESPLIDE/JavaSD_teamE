@@ -50,7 +50,7 @@ public class LoginExcuteController extends CommonServlet {
 
         try {
             // DAOのloginメソッドを呼び出し、認証を行う
-            teacher = dao.login(id, password);
+            teacher = (Teacher) dao.login(id, password);
         } catch (Exception e) {
             // データベース接続などでエラーが発生した場合
             e.printStackTrace();
