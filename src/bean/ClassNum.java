@@ -1,12 +1,12 @@
 package bean;
-
+ 
 import java.io.Serializable;
-
+ 
 public class ClassNum implements Serializable {
-
+ 
 	private String class_num;
 	private School school;
-
+ 
 	public String getClass_num() {
 		return class_num;
 	}
@@ -19,5 +19,5 @@ public class ClassNum implements Serializable {
 	public void setSchool(School school) {
 		this.school = school;
 	}
-
+ 
 }

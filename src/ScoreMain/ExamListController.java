@@ -2,6 +2,7 @@ package ScoreMain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +19,7 @@ import dao.StudentDao;
 import dao.SubjectDao;
 import tool.CommonServlet;
 
-@WebServlet(urlPatterns = { "/main/" })
+@WebServlet(urlPatterns={"/main/ExamList"})
 public class ExamListController extends CommonServlet {
 
     @Override
@@ -30,7 +31,7 @@ public class ExamListController extends CommonServlet {
 
         // teacherがnullの場合はログイン画面にリダイレクト
         if (teacher == null) {
-            resp.sendRedirect(req.getContextPath() + "/account/login");
+            resp.sendRedirect(req.getContextPath() + "/main/login");
             return;
         }
 
@@ -42,6 +43,12 @@ public class ExamListController extends CommonServlet {
          */
         StudentDao studentdao = new StudentDao();
         List<Student>studentList = studentdao.filterBasic(school, true);
+
+        //学生リストから入学年度を重複なく抽出してソートする
+        List<Integer> entYearList = studentList.stream().map(Student::getEntYear)
+        		.distinct()
+        		.sorted()
+        		.collect(Collectors.toList());
 
         // クラスの一覧をもらう
         ClassNumDao classNumDao = new ClassNumDao();
@@ -58,8 +65,13 @@ public class ExamListController extends CommonServlet {
         SubjectDao subjectDao = new SubjectDao();
         List<Subject> subjectList =  subjectDao.filter();
 
+        // 受け取った一覧をJSPに渡す
+        req.setAttribute("entYearList", entYearList);
+        req.setAttribute("classNumList", classNumList);
+        req.setAttribute("subjectList", subjectList);
 
-
+        // 成績参照画面にjump！！！
+        req.getRequestDispatcher("GRMR001.jsp").forward(req, resp);
     }
 
 
