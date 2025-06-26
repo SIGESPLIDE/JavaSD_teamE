@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import bean.School;
 import bean.Teacher;
@@ -79,11 +77,12 @@ public class TeacherDao extends dao {
 	 */
 	
 	// ※一時的に型をTeacherからList＜Teacher＞に変えています
-	public List<Teacher> login(String id, String password) throws Exception {
-		List<Teacher> list = new ArrayList<>();
+	public Teacher login(String id, String password) throws Exception {
+		//List<Teacher> list = new ArrayList<>();
+		Teacher teacher = new Teacher();
 		String sql = "SELECT T.ID, T.PASSWORD, T.NAME, T.SCHOOL_CD, S.NAME AS SCHOOL_NAME " + "FROM TEACHER T "
 				+ "LEFT JOIN SCHOOL S ON T.SCHOOL_CD = S.CD " + "WHERE T.ID = ? AND T.PASSWORD = ?";
-		try(Connection con = getConnection();
+		/**try(Connection con = getConnection();
 				PreparedStatement st = con.prepareStatement(sql);
 				ResultSet rs = st.executeQuery()) {
 					while (rs.next()) {
@@ -99,8 +98,7 @@ public class TeacherDao extends dao {
 						teacher.setSchool(school);
 						list.add(teacher);
 					}
-				}
-/** 一旦コメントアウトするわこれ
+				} */
 		try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql);) {
 			st.setString(1, id);
 			st.setString(2, password);
@@ -123,8 +121,7 @@ public class TeacherDao extends dao {
 			e.printStackTrace();
 			throw e;
 		}
-		*/
 
-		return list;
+		return teacher;
 	}
 }
