@@ -83,6 +83,7 @@ public class StudentListController extends CommonServlet {
         // クラスリストをリクエストスコープにセット
         req.setAttribute("classList", classList);
 
+
         RequestDispatcher rd = req.getRequestDispatcher("STDM001.jsp");
         rd.forward(req, resp);
     }
