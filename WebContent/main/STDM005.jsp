@@ -10,6 +10,6 @@
 
         <p>学生の情報を更新しました。</p>
 
-        <a href="/JavaSD/main/subject">学生一覧へ</a>
+        <a href="/JavaSD/main/STDM001">学生一覧へ</a>
     </c:param>
 </c:import>

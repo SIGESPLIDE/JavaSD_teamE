@@ -35,6 +35,7 @@ public class SubjectUpdateExcuteController extends CommonServlet {
             if (name == null || name.trim().isEmpty()) {
                 req.setAttribute("errorMessage", "科目名は必須項目です。");
 
+
                 // 入力内容を戻す
                 Subject subject = new Subject();
                 subject.setCd(cd);

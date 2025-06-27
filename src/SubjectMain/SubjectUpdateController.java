@@ -46,6 +46,7 @@ public class SubjectUpdateController extends CommonServlet {
 				throw new Exception("指定された科目が見つかりません");
 			}
 
+
 			req.setAttribute("subject", subject);
 
 			RequestDispatcher rd = req.getRequestDispatcher("SBJM004.jsp");
