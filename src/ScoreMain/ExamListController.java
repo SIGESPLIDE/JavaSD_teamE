@@ -31,7 +31,7 @@ public class ExamListController extends CommonServlet {
 
         // teacherがnullの場合はログイン画面にリダイレクト
         if (teacher == null) {
-            resp.sendRedirect(req.getContextPath() + "/main/login");
+            resp.sendRedirect(req.getContextPath() + "/main/LOGI001.jsp");
             return;
         }
 
@@ -71,7 +71,7 @@ public class ExamListController extends CommonServlet {
         req.setAttribute("subjectList", subjectList);
 
         // 成績参照画面にjump！！！
-        req.getRequestDispatcher("GRMR001.jsp").forward(req, resp);
+        req.getRequestDispatcher("/main/GRMR001.jsp").forward(req, resp);
     }
 
 
