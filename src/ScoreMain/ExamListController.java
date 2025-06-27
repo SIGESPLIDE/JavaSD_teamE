@@ -23,11 +23,18 @@ import tool.CommonServlet;
 @WebServlet(urlPatterns={"/main/ExamList"})
 public class ExamListController extends CommonServlet {
 
-	@Override
+    @Override
     protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         // テスト用コード（本番ではセッションから取得）
         TeacherDao teacherDao = new TeacherDao();
         Teacher teacher = teacherDao.get("admin");
+
+        // teacherがnullの場合はログイン画面にリダイレクト
+        if (teacher == null) {
+            resp.sendRedirect(req.getContextPath() + "/main/LOGI001.jsp");
+            return; // ★★★ 処理をここで中断させる return を追加 ★★★
+        } // ★★★ if文を閉じる } を追加 ★★★
+
         School school = teacher.getSchool();
 
         // マスタ取得
@@ -87,6 +94,8 @@ public class ExamListController extends CommonServlet {
             ExamListStudent ex = new ExamListStudent();
             ex.setSubjectCd(subjectCd);
             ex.setSubjectName(subjectName);
+            // ★★★ s.getNo()はStringなので、Integer.parseIntで変換する ★★★
+            // ただし、ExamListStudentのnumフィールドがString型なら変換不要
             ex.setNum(Integer.parseInt(s.getNo())); // 学生番号
             ex.setPoint(0); // 仮の点数（後でExamDao等で取得）
             scoreList.add(ex);
@@ -96,14 +105,15 @@ public class ExamListController extends CommonServlet {
         req.setAttribute("scoreList", scoreList);
         req.setAttribute("subjectName", subjectName);
 
-        req.getRequestDispatcher("GRMR002.jsp").forward(req, resp);
+        // 成績参照画面にjump！！！
+        req.getRequestDispatcher("/main/GRMR001.jsp").forward(req, resp);
     }
 
 
 
     @Override
     protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-//    ここには何も書かない。
+        // ここには何も書かない。
     }
 
     /**
@@ -111,7 +121,7 @@ public class ExamListController extends CommonServlet {
      * mode=subject → 科目別、 mode=student → 学生別、それ以外 → フィルタなし全件表示
      */
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-//    ここには何も書かない。
+        // ここには何も書かない。
     }
 
 }
