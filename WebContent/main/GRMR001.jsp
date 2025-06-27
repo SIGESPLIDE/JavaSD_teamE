@@ -69,6 +69,7 @@
                             <div class="col-md-auto">
                                 <button type="submit" class="btn btn-secondary">検索</button> <!-- ⑬ -->
                             </div>
+                            <input type="hidden" name="f" value="sj">
                         </div>
                     </form>
 
@@ -79,5 +80,13 @@
 
             </div>
         </div>
+        <c:if test="${not empty subject}">
+        <c:import url="/score/GRMR002.jsp"/>
+        </c:if>
+
+        <c:if test="${not empty student}">
+        <c:import url="/score/GRMR003.jsp"/>
+        </c:if>
     </c:param>
 </c:import>
+>>>>>>> refs/remotes/origin/master
