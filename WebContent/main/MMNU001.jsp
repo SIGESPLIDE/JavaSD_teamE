@@ -7,8 +7,6 @@
 		<title>メインメニュー</title>
 	</c:param>
 	<c:param name="body">
-		<div class="title">メニュー</div>
-
 		<div class="row justify-content-center">
 			<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
 				<div
