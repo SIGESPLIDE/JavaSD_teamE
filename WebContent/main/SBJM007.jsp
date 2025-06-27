@@ -12,7 +12,7 @@
 
 <label>削除が完了しました。</label>
 
-<a href="SBJM001.jsp">科目一覧</a>
+<a href="SBJM001.jsp">戻る</a>
 
 </body>
 </html>
