@@ -32,7 +32,7 @@
                 <div class="form-actions">
                     <input type="submit" value="登録" class="login-button" style="width: auto; padding: 10px 10px;">
                     <%-- 戻るリンクはメニューや一覧画面のサーブレットURLへ --%>
-                    <a href="SubjectCreate">戻る</a> <%-- 仮のメニュー画面URL --%>
+                    <a href="SBJM001.jsp">戻る</a> <%-- 仮のメニュー画面URL --%>
                 </div>
             </form>
         </section>
