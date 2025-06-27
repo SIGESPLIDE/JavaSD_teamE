@@ -172,4 +172,31 @@ public class StudentDao extends dao {
         }
         return list;
     }
+
+    public Student findByNo(String no) throws Exception {
+		   Student student = null;
+	       String sql = "SELECT * FROM STUDENT WHERE NO = ?";
+
+	       try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql)) {
+	    	   st.setString(1, no);
+	    	   ResultSet rs = st.executeQuery();
+
+	    	   if (rs.next()) {
+	    		   student = new Student();
+			       student.setNo(rs.getString("NO"));
+			       student.setName(rs.getString("NAME"));
+			       student.setEntYear(rs.getInt("ENT_YEAR"));
+                   student.setClassNum(rs.getString("CLASS_NUM"));
+                   student.setAttend(rs.getBoolean("IS_ATTEND"));
+
+			       // School を生成してセット
+			       School school = new School();
+			       school.setCd(rs.getString("SCHOOL_CD")); // カラム名要確認
+			       student.setSchool(school);
+
+	    	   }
+
+	       }
+	       return student;
+}
 }
