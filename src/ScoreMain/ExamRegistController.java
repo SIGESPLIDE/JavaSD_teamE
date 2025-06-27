@@ -41,7 +41,7 @@ public class ExamRegistController extends CommonServlet {
         // DAOのインスタンス化
         ClassNumDao classNumDao = new ClassNumDao();
         SubjectDao subjectDao = new SubjectDao();
-        ExamDao examDao = new ExamDao(); // TestDaoからExamDaoに変更
+        ExamDao examDao = new ExamDao();
         StudentDao studentDao = new StudentDao();
 
         // ドロップダウン用のリストを準備
