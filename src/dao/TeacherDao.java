@@ -75,11 +75,11 @@ public class TeacherDao extends dao {
 	 * @throws Exception
 	 *             データベース接続やSQL実行時例外
 	 */
-	
+
 	// ※一時的に型をTeacherからList＜Teacher＞に変えています
 	public Teacher login(String id, String password) throws Exception {
 		//List<Teacher> list = new ArrayList<>();
-		Teacher teacher = new Teacher();
+		Teacher teacher = null;
 		String sql = "SELECT T.ID, T.PASSWORD, T.NAME, T.SCHOOL_CD, S.NAME AS SCHOOL_NAME " + "FROM TEACHER T "
 				+ "LEFT JOIN SCHOOL S ON T.SCHOOL_CD = S.CD " + "WHERE T.ID = ? AND T.PASSWORD = ?";
 		/**try(Connection con = getConnection();
