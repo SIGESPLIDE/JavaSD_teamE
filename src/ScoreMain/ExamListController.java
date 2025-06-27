@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import bean.ClassNum;
+import bean.ExamListStudent;
 import bean.School;
 import bean.Student;
 import bean.Subject;
@@ -17,61 +17,97 @@ import bean.Teacher;
 import dao.ClassNumDao;
 import dao.StudentDao;
 import dao.SubjectDao;
+import dao.TeacherDao;
 import tool.CommonServlet;
 
 @WebServlet(urlPatterns={"/main/ExamList"})
 public class ExamListController extends CommonServlet {
 
-    @Override
+	@Override
     protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-    	// 現在のセッションを取得（存在しない場合は新規作成）
-        HttpSession session = req.getSession();
-        // Teacherオブジェクトを取得
-        Teacher teacher = (Teacher) session.getAttribute("session_user");
+        // テスト用コード（本番ではセッションから取得）
+        TeacherDao teacherDao = new TeacherDao();
+        Teacher teacher = teacherDao.get("admin");
+        School school = teacher.getSchool();
 
+<<<<<<< HEAD
         // teacherがnullの場合はログイン画面にリダイレクト
         if (teacher == null) {
             resp.sendRedirect(req.getContextPath() + "/main/LOGI001.jsp");
+=======
+        // マスタ取得
+        StudentDao studentDao = new StudentDao();
+        List<Student> allStudents = studentDao.filterBasic(school, true);
+
+        ClassNumDao classNumDao = new ClassNumDao();
+        List<String> classStrList = classNumDao.filter(school);
+        List<ClassNum> classNumList = classStrList.stream().map(s -> {
+            ClassNum c = new ClassNum();
+            c.setClass_num(s);
+            return c;
+        }).collect(Collectors.toList());
+
+        SubjectDao subjectDao = new SubjectDao();
+        List<Subject> subjectList = subjectDao.filter();
+
+        // 検索条件取得
+        String entYear = req.getParameter("enrollmentYear");
+        String classNum = req.getParameter("class");
+        String subjectCd = req.getParameter("subject");
+        String studentId = req.getParameter("studentId");
+
+        // 初期画面：条件なしならGRMR001へ
+        if ((entYear == null || entYear.isEmpty()) &&
+            (classNum == null || classNum.isEmpty()) &&
+            (subjectCd == null || subjectCd.isEmpty()) &&
+            (studentId == null || studentId.isEmpty())) {
+
+            req.setAttribute("classNumList", classNumList);
+            req.setAttribute("subjectList", subjectList);
+            req.setAttribute("entYearList", allStudents.stream()
+                .map(Student::getEntYear).distinct().sorted().collect(Collectors.toList()));
+            req.getRequestDispatcher("GRMR001.jsp").forward(req, resp);
+>>>>>>> branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
             return;
         }
 
-        // 所属している学校をTeacherオブジェクトから取得
-        School school = teacher.getSchool();
+        // フィルタ条件で学生抽出
+        List<Student> filtered = allStudents.stream()
+            .filter(s -> (entYear == null || entYear.isEmpty() || String.valueOf(s.getEntYear()).equals(entYear)))
+            .filter(s -> (classNum == null || classNum.isEmpty() || s.getClassNum().equals(classNum)))
+            .filter(s -> (studentId == null || studentId.isEmpty() || s.getNo().equals(studentId)))
+            .collect(Collectors.toList());
 
-        /**
-         * DB持ってくるよ
-         */
-        StudentDao studentdao = new StudentDao();
-        List<Student>studentList = studentdao.filterBasic(school, true);
-
-        //学生リストから入学年度を重複なく抽出してソートする
-        List<Integer> entYearList = studentList.stream().map(Student::getEntYear)
-        		.distinct()
-        		.sorted()
-        		.collect(Collectors.toList());
-
-        // クラスの一覧をもらう
-        ClassNumDao classNumDao = new ClassNumDao();
-        List<String> classList = classNumDao.filter(school);
-        // StringをclassNumにカエル
-        List<ClassNum> classNumList = new ArrayList<>();
-        for (String classNumStrs : classList){
-        	ClassNum classNum = new ClassNum();
-            classNum.setClass_num(classNumStrs);
-            classNumList.add(classNum);
+        // 科目名取得
+        String subjectName = "";
+        for (Subject sub : subjectList) {
+            if (sub.getCd().equals(subjectCd)) {
+                subjectName = sub.getName();
+                break;
+            }
         }
 
-        // 科目の一覧をもらう
-        SubjectDao subjectDao = new SubjectDao();
-        List<Subject> subjectList =  subjectDao.filter();
+        // 結果作成（点数は仮設定、DB接続部分はExamDaoなどで拡張可能）
+        List<ExamListStudent> scoreList = new ArrayList<>();
+        for (Student s : filtered) {
+            ExamListStudent ex = new ExamListStudent();
+            ex.setSubjectCd(subjectCd);
+            ex.setSubjectName(subjectName);
+            ex.setNum(Integer.parseInt(s.getNo())); // 学生番号
+            ex.setPoint(0); // 仮の点数（後でExamDao等で取得）
+            scoreList.add(ex);
+        }
 
-        // 受け取った一覧をJSPに渡す
-        req.setAttribute("entYearList", entYearList);
-        req.setAttribute("classNumList", classNumList);
-        req.setAttribute("subjectList", subjectList);
+        // JSPに渡す
+        req.setAttribute("scoreList", scoreList);
+        req.setAttribute("subjectName", subjectName);
 
+<<<<<<< HEAD
         // 成績参照画面にjump！！！
         req.getRequestDispatcher("/main/GRMR001.jsp").forward(req, resp);
+=======
+        req.getRequestDispatcher("GRMR002.jsp").forward(req, resp);
+>>>>>>> branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
     }
 
 

@@ -93,28 +93,58 @@ import bean.Subject;
         */
 
 	   public List<Subject> filter() throws Exception {
-		   List<Subject> list = new ArrayList<>();
-		   String sql = "SELECT * FROM SUBJECT";
+	        List<Subject> list = new ArrayList<>();
+	        String sql = "SELECT * FROM SUBJECT";
 
-		   try (Connection con = getConnection();
-				   PreparedStatement st = con.prepareStatement(sql);
-				   ResultSet rs = st.executeQuery()) {
+	        try (Connection con = getConnection();
+	             PreparedStatement st = con.prepareStatement(sql);
+	             ResultSet rs = st.executeQuery()) {
 
-			   while (rs.next()) {
-				   Subject subject = new Subject();
-				   subject.setCd(rs.getString("CD"));
-				   subject.setName(rs.getString("NAME"));
-				   School school = new School();
-                   school.setCd(rs.getString("SCHOOL_CD")); // ← 修正済み
-                   subject.setSchool(school);
-                   list.add(subject);
+	            while (rs.next()) {
+	                Subject subject = new Subject();
+	                subject.setCd(rs.getString("CD"));
+	                subject.setName(rs.getString("NAME"));
+	                School school = new School();
+	                school.setCd(rs.getString("SCHOOL_CD"));
+	                subject.setSchool(school);
+	                list.add(subject);
+	            }
+	        }
+	        return list;
+	    }
 
-			   }
+	    /**
+	     * 【★新規追加するメソッド★】
+	     * 指定された学校に所属する科目のみを取得する
+	     * ExamRegistController から呼び出される。
+	     * @param school 絞り込み対象の学校オブジェクト
+	     * @return 絞り込まれた科目リスト
+	     * @throws Exception
+	     */
+	    public List<Subject> filter(School school) throws Exception {
+	        List<Subject> list = new ArrayList<>();
+	        // SQLにWHERE句を追加して学校で絞り込む
+	        String sql = "SELECT * FROM SUBJECT WHERE SCHOOL_CD = ?";
 
-		   }
-		   return list;
+	        try (Connection con = getConnection();
+	             PreparedStatement st = con.prepareStatement(sql)) {
 
-	   }
+	            // プレースホルダに学校コードをセット
+	            st.setString(1, school.getCd());
+
+	            try (ResultSet rs = st.executeQuery()) {
+	                while (rs.next()) {
+	                    Subject subject = new Subject();
+	                    subject.setCd(rs.getString("CD"));
+	                    subject.setName(rs.getString("NAME"));
+	                    // Schoolオブジェクトは引数で渡されたものをそのままセットできる
+	                    subject.setSchool(school);
+	                    list.add(subject);
+	                }
+	            }
+	        }
+	        return list;
+	    }
 
 	   /**
 	    *
