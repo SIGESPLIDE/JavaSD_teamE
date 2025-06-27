@@ -98,7 +98,7 @@ public class ExamRegistController extends CommonServlet {
         Teacher teacher = (Teacher) session.getAttribute("session_user");
 
         if (teacher == null) {
-            resp.sendRedirect(req.getContextPath() + "/main/login");
+            resp.sendRedirect(req.getContextPath() + "/main/LOGI001.jsp");
             return;
         }
 
