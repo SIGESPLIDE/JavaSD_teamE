@@ -185,8 +185,8 @@ public class StudentDao extends dao {
 			       student.setNo(rs.getString("NO"));
 			       student.setName(rs.getString("NAME"));
 			       student.setEntYear(rs.getInt("ENT_YEAR"));
-                student.setClassNum(rs.getString("CLASS_NUM"));
-                student.setAttend(rs.getBoolean("IS_ATTEND"));
+             student.setClassNum(rs.getString("CLASS_NUM"));
+             student.setAttend(rs.getBoolean("IS_ATTEND"));
 
 			       // School を生成してセット
 			       School school = new School();
