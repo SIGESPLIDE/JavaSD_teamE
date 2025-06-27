@@ -23,18 +23,20 @@ import tool.CommonServlet;
 @WebServlet(urlPatterns={"/main/ExamList"})
 public class ExamListController extends CommonServlet {
 
-	@Override
+    @Override
     protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         // テスト用コード（本番ではセッションから取得）
         TeacherDao teacherDao = new TeacherDao();
         Teacher teacher = teacherDao.get("admin");
-        School school = teacher.getSchool();
 
-<<<<<<< HEAD
         // teacherがnullの場合はログイン画面にリダイレクト
         if (teacher == null) {
             resp.sendRedirect(req.getContextPath() + "/main/LOGI001.jsp");
-=======
+            return; // ★★★ 処理をここで中断させる return を追加 ★★★
+        } // ★★★ if文を閉じる } を追加 ★★★
+
+        School school = teacher.getSchool();
+
         // マスタ取得
         StudentDao studentDao = new StudentDao();
         List<Student> allStudents = studentDao.filterBasic(school, true);
@@ -67,7 +69,6 @@ public class ExamListController extends CommonServlet {
             req.setAttribute("entYearList", allStudents.stream()
                 .map(Student::getEntYear).distinct().sorted().collect(Collectors.toList()));
             req.getRequestDispatcher("GRMR001.jsp").forward(req, resp);
->>>>>>> branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
             return;
         }
 
@@ -93,6 +94,8 @@ public class ExamListController extends CommonServlet {
             ExamListStudent ex = new ExamListStudent();
             ex.setSubjectCd(subjectCd);
             ex.setSubjectName(subjectName);
+            // ★★★ s.getNo()はStringなので、Integer.parseIntで変換する ★★★
+            // ただし、ExamListStudentのnumフィールドがString型なら変換不要
             ex.setNum(Integer.parseInt(s.getNo())); // 学生番号
             ex.setPoint(0); // 仮の点数（後でExamDao等で取得）
             scoreList.add(ex);
@@ -102,19 +105,15 @@ public class ExamListController extends CommonServlet {
         req.setAttribute("scoreList", scoreList);
         req.setAttribute("subjectName", subjectName);
 
-<<<<<<< HEAD
         // 成績参照画面にjump！！！
         req.getRequestDispatcher("/main/GRMR001.jsp").forward(req, resp);
-=======
-        req.getRequestDispatcher("GRMR002.jsp").forward(req, resp);
->>>>>>> branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
     }
 
 
 
     @Override
     protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-//    ここには何も書かない。
+        // ここには何も書かない。
     }
 
     /**
@@ -122,7 +121,7 @@ public class ExamListController extends CommonServlet {
      * mode=subject → 科目別、 mode=student → 学生別、それ以外 → フィルタなし全件表示
      */
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-//    ここには何も書かない。
+        // ここには何も書かない。
     }
 
 }
