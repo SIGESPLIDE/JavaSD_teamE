@@ -39,7 +39,7 @@
 
             <button type="submit">絞り込み</button>
         </form>
-        <a href="StudentRegisterServlet">新規登録</a>
+        <a href="StudentCreate">新規登録</a>
     </div>
 
     <div class="result-area">

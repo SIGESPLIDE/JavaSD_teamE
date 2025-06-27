@@ -43,8 +43,7 @@
 				<div
 					class="card text-black bg-subject position-relative menu-box equal-height-box">
 					<div class="card-body">
-						<h3 class="card-title h5 mb-0">科目管理</h3>
-						<a href="#"></a>
+						<a href="${pageContext.request.contextPath}/main/subject">科目管理</a>
 					</div>
 				</div>
 			</div>
