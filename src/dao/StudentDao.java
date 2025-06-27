@@ -172,7 +172,6 @@ public class StudentDao extends dao {
         }
         return list;
     }
-
     public Student findByNo(String no) throws Exception {
 		   Student student = null;
 	       String sql = "SELECT * FROM STUDENT WHERE NO = ?";
@@ -199,4 +198,4 @@ public class StudentDao extends dao {
 	       }
 	       return student;
 }
-}
+
