@@ -25,19 +25,18 @@ public class StudentListController extends CommonServlet {
 
         HttpSession session = req.getSession();
         Teacher userSchool2 = (Teacher) session.getAttribute("user");
-        School test =  userSchool2.getSchool();
-        System.out.println(test);
 
-        if (userSchool2 == null || userSchool2.getClass() == null) {
-            errorMessage = "学校情報が取得できませんでした。再度ログインしてください。";
-            req.setAttribute("errorMessage", errorMessage);
-            RequestDispatcher rd = req.getRequestDispatcher("/main/ERRO001.jsp");
-            rd.forward(req, resp);
+        if (userSchool2 == null) {
+            resp.sendRedirect(req.getContextPath() + "/login.action");
             return;
-        } 
+        }
+
+        School school =  userSchool2.getSchool();
+//        System.out.println(test);
+
 
         String entYearStr = req.getParameter("entYear");
-        String classNum = req.getParameter("classId"); 
+        String classNum = req.getParameter("classId");
         String isAttendStr = req.getParameter("isEnrolled");
 
         Integer entYear = null;
@@ -58,10 +57,9 @@ public class StudentListController extends CommonServlet {
         StudentDao studentDao = new StudentDao();
         List<Student> studentList = null;
 
-        School userSchool = (School) session.getAttribute("user");
+//        School userSchool = (School) session.getAttribute("user");
         try {
-
-            studentList = studentDao.filterAllCond(userSchool, entYear, classNum, isAttend);
+            studentList = studentDao.filterAllCond(school, entYear, classNum, isAttend);
         } catch (Exception e) {
             errorMessage = "学生情報の取得中にエラーが発生しました: " + e.getMessage();
             e.printStackTrace();
@@ -70,19 +68,21 @@ public class StudentListController extends CommonServlet {
         // ここから修正・変更する部分
         // ClassNumDaoを使ってクラスリストをDBから取得
         ClassNumDao classNumDao = new ClassNumDao(); // ClassNumDaoのインスタンスを作成
-        List<String> classList = classNumDao.filter(userSchool); // filterメソッドを呼び出してクラスリストを取得
+        List<String> classList = classNumDao.filter(school); // filterメソッドを呼び出してクラスリストを取得
         // ここまで修正・変更する部分
+
 
         req.setAttribute("students", studentList);
         req.setAttribute("errorMessage", errorMessage);
-        
+
         // 検索条件をJSPのフォームに再表示するためにセット
         req.setAttribute("entYear", entYearStr);
         req.setAttribute("classId", classNum);
         req.setAttribute("isEnrolled", isAttendStr);
 
         // クラスリストをリクエストスコープにセット
-        req.setAttribute("classList", classList); 
+        req.setAttribute("classList", classList);
+
 
         RequestDispatcher rd = req.getRequestDispatcher("STDM001.jsp");
         rd.forward(req, resp);
