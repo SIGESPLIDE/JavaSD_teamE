@@ -93,21 +93,21 @@ import bean.Subject;
         */
 
 	   public List<Subject> filter() throws Exception {
-	        List<Subject> list = new ArrayList<>();
-	        String sql = "SELECT * FROM SUBJECT";
+		   List<Subject> list = new ArrayList<>();
+		   String sql = "SELECT * FROM SUBJECT";
 
-	        try (Connection con = getConnection();
-	             PreparedStatement st = con.prepareStatement(sql);
-	             ResultSet rs = st.executeQuery()) {
+		   try (Connection con = getConnection();
+				   PreparedStatement st = con.prepareStatement(sql);
+				   ResultSet rs = st.executeQuery()) {
 
-	            while (rs.next()) {
-	                Subject subject = new Subject();
-	                subject.setCd(rs.getString("CD"));
-	                subject.setName(rs.getString("NAME"));
-	                School school = new School();
-	                school.setCd(rs.getString("SCHOOL_CD"));
-	                subject.setSchool(school);
-	                list.add(subject);
+			   while (rs.next()) {
+				   Subject subject = new Subject();
+				   subject.setCd(rs.getString("CD"));
+				   subject.setName(rs.getString("NAME"));
+				   School school = new School();
+                   school.setCd(rs.getString("SCHOOL_CD")); // ← 修正済み
+                   subject.setSchool(school);
+                   list.add(subject);
 	            }
 	        }
 	        return list;
@@ -141,10 +141,12 @@ import bean.Subject;
 	                    subject.setSchool(school);
 	                    list.add(subject);
 	                }
-	            }
-	        }
-	        return list;
-	    }
+			   }
+
+		   }
+		   return list;
+
+	   }
 
 	   /**
 	    *
