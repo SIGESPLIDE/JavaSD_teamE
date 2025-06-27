@@ -22,7 +22,7 @@ import dao.StudentDao;
 *
 */
 
-@WebServlet(urlPatterns = {"/main/StudentCreateController"})
+@WebServlet(urlPatterns = {"/main/StudentCreate"})
 public class StudentCreateController extends HttpServlet {
 
     @Override
@@ -36,7 +36,7 @@ public class StudentCreateController extends HttpServlet {
         if (teacher == null || teacher.getSchool() == null) {
             // エラーメッセージをリクエストスコープにセットしてエラーページにフォワードする、などが望ましい
             req.setAttribute("error", "ログイン情報が無効です。再度ログインしてください。");
-            req.getRequestDispatcher("/main/error.jsp").forward(req, res); // 例: エラー表示用JSP
+            req.getRequestDispatcher("/main/ERRO001.jsp").forward(req, res); // 例: エラー表示用JSP
             return;
         }
 

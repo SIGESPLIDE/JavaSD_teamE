@@ -38,7 +38,7 @@ public class SubjectCreateController extends CommonServlet {
         }
 
         // 登録画面へフォワード
-        req.getRequestDispatcher("/main/SubjectCreate").forward(req, resp);
+        req.getRequestDispatcher("/main/SBJM002.jsp").forward(req, resp);
     }
 
     /**
