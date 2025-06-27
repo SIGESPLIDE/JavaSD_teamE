@@ -70,7 +70,7 @@
                       <c:otherwise></c:otherwise>
                     </c:choose>
                   </td>
-                  <td><a href="StudentEditServlet?studentNo=${stu.no}">変更</a></td>
+                  <td><a href="studentUpdate?studentNo=${stu.no}">変更</a></td>
                 </tr>
               </c:forEach>
             </tbody>
