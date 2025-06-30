@@ -58,6 +58,8 @@
 				</div>
 				<br>
 
+				 <!-- hiddenでschoolCdも送る（必要な場合） -->
+				<input type="hidden" name="school_cd" value="${student.school.cd}">
 				<!-- ボタン -->
 				<div class="button-group">
 					<button type="submit">変更</button>

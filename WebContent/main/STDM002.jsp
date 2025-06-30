@@ -52,12 +52,22 @@
                  <div class="input-group">
                       <label for="class_num">クラス<br></label>
                       <select name="class_num" id="class_num" required>
-                            <c:forEach var="classVal" items="${class_num_list}">
-                                  <option value="${classVal}" <c:if test="${classVal eq class_num}">selected</c:if>>
-                                        <c:out value="${classVal}" />
-                                  </option>
-                            </c:forEach>
-                     </select>
+                           <c:choose>
+                                <%-- class_num_list が空でない場合 --%>
+                                <c:when test="${not empty class_num_list}">
+                                      <option value="">クラスを選択してください</option>
+                                      <c:forEach var="classVal" items="${class_num_list}">
+                                            <option value="${classVal}" <c:if test="${classVal eq class_num}">selected</c:if>>
+                                                   <c:out value="${classVal}" />
+                                            </option>
+                                      </c:forEach>
+                                </c:when>
+                                <%-- class_num_list が空の場合 --%>
+                                <c:otherwise>
+                                      <option value="">登録可能なクラスがありません</option>
+                                </c:otherwise>
+                           </c:choose>
+                      </select>
                  </div>
 
                  <%-- ボタンに login-button クラスを適用 --%>

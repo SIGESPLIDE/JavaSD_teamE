@@ -1,5 +1,7 @@
 package StudentMain;
 
+import java.util.List;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -7,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import bean.School;
 import bean.Student;
+import dao.ClassNumDao;
 import dao.StudentDao;
 import tool.CommonServlet;
 
@@ -30,7 +33,7 @@ public class StudentUpdateExcuteController extends CommonServlet {
 			String schoolCd = req.getParameter("school_cd");
 
 			// 文字列 → 整数、ブール変換
-			int entYear = Integer.parseInt(entYearStr); // hidden項目としてJSPから送られている前提
+			int entYear = Integer.parseInt(entYearStr);
 			boolean isAttend = "true".equalsIgnoreCase(isAttendStr) || "1".equals(isAttendStr);
 
 			// ▼ バリデーション（名前またはクラスが未入力）
@@ -50,6 +53,12 @@ public class StudentUpdateExcuteController extends CommonServlet {
 				student.setSchool(school);
 
 				req.setAttribute("student", student);
+
+				// クラスリスト取得（エラー時にも必要）
+				ClassNumDao classNumDao = new ClassNumDao();
+				List<String> classList = classNumDao.filter(school);
+				req.setAttribute("classList", classList);
+
 				RequestDispatcher rd = req.getRequestDispatcher("STDM004.jsp");
 				rd.forward(req, resp);
 				return;
@@ -75,7 +84,43 @@ public class StudentUpdateExcuteController extends CommonServlet {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+
+			// エラー時にも必要なデータを渡して戻す
 			req.setAttribute("errorMessage", "更新処理でエラーが発生しました");
+
+			// 失敗しても最低限studentとclassListを渡すように
+			String no = req.getParameter("no");
+			String entYearStr = req.getParameter("ent_year");
+			String name = req.getParameter("name");
+			String classNum = req.getParameter("class_num");
+			String isAttendStr = req.getParameter("is_attend");
+			String schoolCd = req.getParameter("school_cd");
+
+			int entYear = 0;
+			try {
+				entYear = Integer.parseInt(entYearStr);
+			} catch (NumberFormatException ignored) {}
+
+			boolean isAttend = "true".equalsIgnoreCase(isAttendStr) || "1".equals(isAttendStr);
+
+			Student student = new Student();
+			student.setNo(no);
+			student.setName(name);
+			student.setEntYear(entYear);
+			student.setClassNum(classNum);
+			student.setAttend(isAttend);
+
+			School school = new School();
+			school.setCd(schoolCd);
+			student.setSchool(school);
+
+			req.setAttribute("student", student);
+
+			// クラスリスト再取得
+			ClassNumDao classNumDao = new ClassNumDao();
+			List<String> classList = classNumDao.filter(school);
+			req.setAttribute("classList", classList);
+
 			RequestDispatcher rd = req.getRequestDispatcher("STDM004.jsp");
 			rd.forward(req, resp);
 		}

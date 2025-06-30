@@ -160,7 +160,7 @@ public class StudentDao extends dao {
      * @author a_suzuki
      */
     public List<String> filterClassNum(School school) throws Exception {
-        String sql = "SELECT DISTINCT CLASS_NUM FROM STUDENT WHERE SCHOOL_CD = ? ORDER BY CLASS_NUM";
+    	String sql = "SELECT CLASS_NUM FROM CLASS_NUM WHERE SCHOOL_CD = ? ORDER BY CLASS_NUM";
         List<String> list = new ArrayList<>();
         try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql)) {
             st.setString(1, school.getCd());
