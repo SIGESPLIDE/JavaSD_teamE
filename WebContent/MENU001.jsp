@@ -4,10 +4,6 @@
 <c:choose>
     <%-- ログインしている場合（セッションにユーザー情報がある） --%>
     <c:when test="${not empty user}">
-        <span>${user.name}様</span>
-        <a href="${pageContext.request.contextPath}/accounts/logout">ログアウト</a>
-    </c:when>
-	<c:otherwise>
 		<nav class="sidebar">
 		    <ul>
 		        <li><a href="#" class="active">メニュー</a></li>
@@ -18,6 +14,7 @@
 				<li><a href="${pageContext.request.contextPath}/main/subject" >科目管理</a></li>
 				    </ul>
 		</nav>
-	</c:otherwise>
+    </c:when>
+
 </c:choose>
 <hr class="line_aligner">
