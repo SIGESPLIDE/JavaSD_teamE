@@ -4,69 +4,72 @@
 <c:import url="/BASE001.jsp">
 	<c:param name="head">
 		<title>学生情報変更</title>
+
+
 	</c:param>
 	<c:param name="body">
 		<h2>学生情報変更</h2>
 
 		<!-- エラーメッセージ表示 -->
 		<c:if test="${not empty errorMessage}">
-			<p style="color: red;">${errorMessage}</p>
+			<p class="error">${errorMessage}</p>
 		</c:if>
 
 		<form method="post" action="studentUpdateExecute">
 
-			<!-- 入学年度（表示のみ） -->
+			<!-- 受け取った情報を表示 -->
+			<div class="info-box">
+				<p><label>入学年度</label><br>
+				 ${student.entYear}</p>
 
-			<div class="form-group">
-				<label>入学年度</label><br> <input type="text"
-					value="${student.entYear}" readonly> <input type="hidden"
-					name="ent_year" value="${student.entYear}">
+				<p><label>学生番号</label><br>
+				 ${student.no}</p>
+
+
+
+
 			</div>
-			<br>
 
+			<!-- 入学年度（送信専用） -->
+			<input type="hidden" name="ent_year" value="${student.entYear}">
 
-			<!-- 学生番号（表示と送信用） -->
-			<div class="form-group">
-				<label>学生番号</label><br> <input type="text"
-					value="${student.no}" readonly> <input type="hidden"
-					name="no" value="${student.no}">
-			</div>
-			<br>
+			<!-- 学生番号（送信専用） -->
+			<input type="hidden" name="no" value="${student.no}">
 
 			<!-- 氏名 -->
 			<div class="form-group">
-				<label>氏名</label><br> <input type="text" name="name"
-					value="${student.name}" maxlength="30">
+				<label>氏名</label><br>
+				<input type="text" name="name" value="${student.name}" maxlength="30">
 			</div>
-			<br>
 
 			<!-- クラス選択 -->
 			<div class="form-group">
-				<label>クラス</label> <select name="class_num">
-					<%-- input type="text" から select に変更 --%>
+				<label>クラス</label><br>
+				<select name="class_num">
 					<option value="">--</option>
 					<c:forEach var="cls" items="${classList}">
-						<%-- Servletから渡されたclassListを使用 --%>
-						<option value="${cls}" ${param.class_num== cls ? 'selected' : ''}>${cls}</option>
+						<option value="${cls}" ${param.class_num== cls ? 'selected' : (student.classNum == cls ? 'selected' : '')}>${cls}</option>
 					</c:forEach>
 				</select>
+			</div>
 
-				<!-- 在学中チェック -->
-				<div class="form-group">
-					<label>在学中</label><br> <input type="checkbox" name="is_attend"
-						value="true" <c:if test="${student.attend}">checked</c:if>>
-				</div>
-				<br>
+			<!-- 在学中チェック -->
+			<div class="checkbox-group">
+				<label> 在学中
+					<input type="checkbox" name="is_attend" value="true"
+						<c:if test="${student.attend}">checked</c:if>>
+				</label>
+			</div>
 
-				 <!-- hiddenでschoolCdも送る（必要な場合） -->
-				<input type="hidden" name="school_cd" value="${student.school.cd}">
-				<!-- ボタン -->
-				<div class="button-group">
-					<button type="submit">変更</button>
-					<a href="studentList">戻る</a>
-				</div>
+			<!-- school_cd（送信用） -->
+			<input type="hidden" name="school_cd" value="${student.school.cd}">
 
+			<!-- ボタン -->
+			<div class="button-group">
+				<button type="submit">変更</button><br>
+				<a href="studentList">戻る</a>
 			</div>
 		</form>
 	</c:param>
 </c:import>
+
