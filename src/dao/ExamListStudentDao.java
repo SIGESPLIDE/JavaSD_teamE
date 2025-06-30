@@ -16,9 +16,7 @@ import bean.Student; // Studentクラスが存在すると仮定
 public class ExamListStudentDao extends dao {
 
 	// ベースとなるSQLクエリ
-	private String baseSql = "select s.name as subject_name, t.subject_cd, t.no, t.point " +
-                         "from test as t " +
-                         "left join subject as s on t.subject_cd = s.cd and t.school_cd = s.school_cd"; // ビューまたはテーブル名を指定
+	private String baseSql = "SELECT * FROM EXAM_LIST_STUDENT"; // ビューまたはテーブル名を指定
 
 	/**
 	 * ResultSetからExamListStudentのリストを生成します。
@@ -29,7 +27,7 @@ public class ExamListStudentDao extends dao {
 	 * @throws SQLException
 	 *             データベースアクセスエラー
 	 */
-	private List<ExamListStudent> postFilter(ResultSet rSet) throws SQLException {
+	public List<ExamListStudent> postFilter(ResultSet rSet) throws SQLException {
 		List<ExamListStudent> list = new ArrayList<>();
 		try {
 			// ResultSetをループしてデータを取得
@@ -39,7 +37,7 @@ public class ExamListStudentDao extends dao {
 				// ※カラム名は実際のテーブル/ビュー定義に合わせて修正してください
 				els.setSubjectName(rSet.getString("subject_name"));
 				els.setSubjectCd(rSet.getString("subject_cd"));
-				els.setNum(rSet.getInt("no"));
+				els.setNum(rSet.getInt("num"));
 				els.setPoint(rSet.getInt("point"));
 
 				list.add(els);
