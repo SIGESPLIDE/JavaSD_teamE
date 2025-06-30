@@ -30,7 +30,7 @@ public class LoginExcuteController extends CommonServlet {
      */
     @Override
     public void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.sendRedirect("/MMNU.jsp");
+        resp.sendRedirect("/JavaSD/main/MMNU001");
     }
 
     /**
