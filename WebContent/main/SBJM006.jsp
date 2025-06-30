@@ -1,25 +1,23 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ include file="/BASE001.jsp" %>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</head>
-<body>
-<!-- 作成者　潟辺　陸 -->
-<!-- 選択した科目を表示するコードがまだ完成していません -->
-<h2>科目情報削除</h2>
+<%@page contentType="text/html; charset=UTF-8" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-   <form action="SubjectDao.jsp" method="post">
-        <label for="id">を削除してもよろしいですか:</label>
-        <input type="text" id="id" name="id">
+<!-- 作成者　潟辺　陸 -->
+<c:import url="/BASE001.jsp">
+
+<c:param name="head">
+<h2>科目情報削除</h2>
+</c:param>
+
+<c:param name="body">
+
+<p></p>
 
 <button type="submit">削除</button>
 
+<div>
 <a href="SBJM001.jsp">戻る</a>
+</div>
 
-</form>
+</c:param>
 
-</body>
-</html>
+</c:import>
