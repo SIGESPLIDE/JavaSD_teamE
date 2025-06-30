@@ -12,7 +12,7 @@ public class MenuController extends CommonServlet {
 	@Override
 	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		// TODO 自動生成されたメソッド・スタブ
-        resp.sendRedirect("/JavaSD/main/MMNU001.jsp");
+        resp.sendRedirect("/main/MMNU001");
 
 	}
 
