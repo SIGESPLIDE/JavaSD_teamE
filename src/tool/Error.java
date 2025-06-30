@@ -16,7 +16,7 @@ public class Error extends CommonServlet {
 	@Override
 	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		// error.jsp にフォワードしてエラー画面を表示
-		req.getRequestDispatcher("/main/ERRO001").forward(req, resp);
+		req.getRequestDispatcher("error.jsp").forward(req, resp);
 	}
 
 	/**

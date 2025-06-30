@@ -125,23 +125,22 @@ import bean.Subject;
         */
 
 	   public int update(Subject subject) throws Exception {
-		   int rows = 0;
-           String sql = "UPDATE SUBJECT SET NAME = ? WHERE SCHOOL_CD = ?"; // ← 修正済み
+		    int rows = 0;
+		    String sql = "UPDATE SUBJECT SET NAME = ? WHERE SCHOOL_CD = ? AND CD = ?";
 
-           try (Connection con = getConnection();
-        		   PreparedStatement st = con.prepareStatement(sql)) {
-        	   st.setString(1, subject.getName());
-        	   st.setString(2, subject.getSchool().getCd()); // ← 修正済み（toString → getCd）
-        	   rows = st.executeUpdate();
-
-           }
-           return rows;
-
-
-
+		    try (Connection con = getConnection();
+		         PreparedStatement st = con.prepareStatement(sql)) {
+		        st.setString(1, subject.getName());
+		        st.setString(2, subject.getSchool().getCd());
+		        st.setString(3, subject.getCd());
+		        rows = st.executeUpdate();
+		    }
+		    return rows;
+		}
 
 
-	   }
+
+
        /**
         * 全科目を取得する
         * @return 科目リスト

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import bean.School;
 import bean.Student;
+import bean.Teacher;
 import dao.ClassNumDao; // ClassNumDaoをインポート
 import dao.StudentDao;
 import tool.CommonServlet;
@@ -23,15 +24,16 @@ public class StudentListController extends CommonServlet {
         String errorMessage = null;
 
         HttpSession session = req.getSession();
-        School userSchool = (School) session.getAttribute("userSchool");
+        Teacher userSchool2 = (Teacher) session.getAttribute("user");
 
-        if (userSchool == null || userSchool.getCd() == null || userSchool.getCd().isEmpty()) {
-            errorMessage = "学校情報が取得できませんでした。再度ログインしてください。";
-            req.setAttribute("errorMessage", errorMessage);
-            RequestDispatcher rd = req.getRequestDispatcher("/error.jsp");
-            rd.forward(req, resp);
+        if (userSchool2 == null) {
+            resp.sendRedirect(req.getContextPath() + "/login.action");
             return;
         }
+
+        School school =  userSchool2.getSchool();
+//        System.out.println(test);
+
 
         String entYearStr = req.getParameter("entYear");
         String classNum = req.getParameter("classId");
@@ -55,17 +57,18 @@ public class StudentListController extends CommonServlet {
         StudentDao studentDao = new StudentDao();
         List<Student> studentList = null;
 
+//        School userSchool = (School) session.getAttribute("user");
         try {
-            studentList = studentDao.filterAllCond(userSchool, entYear, classNum, isAttend);
+            studentList = studentDao.filterAllCond(school, entYear, classNum, isAttend);
         } catch (Exception e) {
-            errorMessage = "学生情報の取得中にエラーが発生しました: " + e.getMessage();
-            e.printStackTrace();
+          //  errorMessage = "学生情報の取得中にエラーが発生しました: " + e.getMessage();
+         //   e.printStackTrace();
         }
 
         // ここから修正・変更する部分
         // ClassNumDaoを使ってクラスリストをDBから取得
         ClassNumDao classNumDao = new ClassNumDao(); // ClassNumDaoのインスタンスを作成
-        List<String> classList = classNumDao.filter(userSchool); // filterメソッドを呼び出してクラスリストを取得
+        List<String> classList = classNumDao.filter(school); // filterメソッドを呼び出してクラスリストを取得
         // ここまで修正・変更する部分
 
 

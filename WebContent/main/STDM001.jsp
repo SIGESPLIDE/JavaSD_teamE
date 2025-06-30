@@ -37,7 +37,7 @@
               <input type="checkbox" name="isEnrolled" value="1" ${param.isEnrolled == '1' ? 'checked' : ''}/>在学中
             </label>
 
-            <button type="submit">絞り込み</button>
+            <button type="submit">検索</button>
         </form>
         <a href="StudentCreate">新規登録</a>
     </div>
