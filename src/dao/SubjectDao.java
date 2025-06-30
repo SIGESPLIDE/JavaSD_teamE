@@ -3,6 +3,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,61 @@ import bean.Subject;
     */
 
    public class SubjectDao extends dao {
+
+	// idで指定した科目を科目インスタンスにして一件返す
+	    // 存在しなかったらnullが入る
+	    public Subject get(String cd, School school) throws Exception {
+	        Subject subject = new Subject();
+	        // DBに接続
+	        Connection connection = getConnection();
+	        // SQLの準備をする変数
+	        PreparedStatement statement = null;
+
+	        try {
+	            // SQL文をセット
+	            statement = connection.prepareStatement("select * from subject where cd=? and school_cd=?");
+	            // SQL文に科目番号を入れる
+	            statement.setString(1, cd);
+	            statement.setString(2, school.getCd());
+	            // SQL文を実行
+	            ResultSet rSet = statement.executeQuery();
+	            // 学校Daoを初期化 科目インスタンスに学校コードをセットするため
+	            SchoolDao schoolDao = new SchoolDao();
+
+	            if (rSet.next()) {
+	                // 検索に引っかかった科目がある場合
+	                // 科目インスタンスにその検索結果をセット
+	                subject.setCd(rSet.getString("cd"));
+	                subject.setName(rSet.getString("name"));
+	                // 検索で引っかかった科目テーブルから学校番号を持ってきて、セット
+	                subject.setSchool(schoolDao.get(rSet.getString("school_cd")));
+	            } else {
+	                // 検索に一件も引っかからなかった場合
+	                // 科目インスタンスにnullをセット
+	                subject = null;
+	            }
+	        } catch (Exception e) {
+	            throw e;
+	        } finally {
+	            // SQL文を終了
+	            if (statement != null) {
+	                try{
+	                    statement.close();
+	                } catch (SQLException sqle) {
+	                    throw sqle;
+	                }
+	            }
+	            // DBを切断
+	            if (connection != null) {
+	                try{
+	                    connection.close();
+	                } catch (SQLException sqle) {
+	                    throw sqle;
+	                }
+	            }
+	        }
+	        return subject;
+	    }
 
 	   /**
        *

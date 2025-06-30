@@ -16,18 +16,20 @@ import bean.Student; // Studentクラスが存在すると仮定
 public class ExamListStudentDao extends dao {
 
 	// ベースとなるSQLクエリ
-	private String baseSql = "SELECT * FROM EXAM_LIST_STUDENT"; // ビューまたはテーブル名を指定
+	private String baseSql = "select s.name as subject_name, t.subject_cd, t.no, t.point " +
+                         "from test as t " +
+                         "left join subject as s on t.subject_cd = s.cd and t.school_cd = s.school_cd"; // ビューまたはテーブル名を指定
 
 	/**
 	 * ResultSetからExamListStudentのリストを生成します。
-	 * 
+	 *
 	 * @param rSet
 	 *            データベースからのResultSet
 	 * @return ExamListStudentのリスト
 	 * @throws SQLException
 	 *             データベースアクセスエラー
 	 */
-	public List<ExamListStudent> postFilter(ResultSet rSet) throws SQLException {
+	private List<ExamListStudent> postFilter(ResultSet rSet) throws SQLException {
 		List<ExamListStudent> list = new ArrayList<>();
 		try {
 			// ResultSetをループしてデータを取得
@@ -37,7 +39,7 @@ public class ExamListStudentDao extends dao {
 				// ※カラム名は実際のテーブル/ビュー定義に合わせて修正してください
 				els.setSubjectName(rSet.getString("subject_name"));
 				els.setSubjectCd(rSet.getString("subject_cd"));
-				els.setNum(rSet.getInt("num"));
+				els.setNum(rSet.getInt("no"));
 				els.setPoint(rSet.getInt("point"));
 
 				list.add(els);
@@ -52,7 +54,7 @@ public class ExamListStudentDao extends dao {
 
 	/**
 	 * 指定された学生番号に基づいて成績一覧をフィルタリングします。
-	 * 
+	 *
 	 * @param studentNo
 	 *            フィルタリングの基準となる学生番号
 	 * @return フィルタリングされたExamListStudentのリスト
@@ -112,7 +114,7 @@ public class ExamListStudentDao extends dao {
 
 	/**
 	 * 指定されたStudentオブジェクトに基づいて成績一覧をフィルタリングします。 (オーバーロードされたメソッド)
-	 * 
+	 *
 	 * @param student
 	 *            フィルタリングの基準となる学生オブジェクト
 	 * @return フィルタリングされたExamListStudentのリスト
