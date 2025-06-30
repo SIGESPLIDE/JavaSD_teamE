@@ -99,5 +99,6 @@
                     <!-- 補足メッセージ ⑭ -->
                     <div class="mt-3 text-muted">毎項目を選択または学生情報を入力して検索ボタンをクリックしてください</div>
                     </c:if>
+
     </c:param>
 </c:import>

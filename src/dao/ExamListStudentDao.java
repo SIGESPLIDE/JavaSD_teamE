@@ -121,6 +121,7 @@ public class ExamListStudentDao extends dao {
 	 * @throws Exception
 	 *             データベースアクセスエラーなど
 	 */
+
 	public List<ExamListStudent> filter(Student student) throws Exception {
 		// Studentオブジェクトから学生番号を取得し、filter(String studentNo)を呼び出す
 		return filter(student.getNo());

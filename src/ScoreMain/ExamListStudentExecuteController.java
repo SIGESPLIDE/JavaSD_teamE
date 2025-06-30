@@ -82,6 +82,7 @@ public class ExamListStudentExecuteController extends CommonServlet {
 			     SubjectDao subjectDao = new SubjectDao();
 
 			     // ドロップダウン用のリストを取得
+
 			     List<Student> studentListForDropdown = studentDao.filterBasic(school, true);
 			     // 学生リストから入学年度を重複なく抽出し、ソートする
 			  	List<Integer> entYearList = studentListForDropdown.stream().map(Student::getEntYear)

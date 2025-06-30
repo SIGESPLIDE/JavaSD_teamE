@@ -113,6 +113,7 @@ public class ExamListSubjectExecuteController extends CommonServlet {
 
 	}
 
+
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws Exception{
 //    	 //現在のセッションを取得（存在しない場合は新規作成）
@@ -128,4 +129,5 @@ public class ExamListSubjectExecuteController extends CommonServlet {
 //      }
 //      school = teacher.getSchool();
 	}
+
 }

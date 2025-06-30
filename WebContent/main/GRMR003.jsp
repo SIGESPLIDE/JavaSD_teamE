@@ -34,6 +34,7 @@
 							<td class="text-center py-2">${tLS.point}</td>
 						</tr>
 					</c:forEach>
+
 				</tbody>
 			</table>
 		</c:when>
