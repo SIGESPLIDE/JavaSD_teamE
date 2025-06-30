@@ -57,13 +57,13 @@ public class StudentListController extends CommonServlet {
         StudentDao studentDao = new StudentDao();
         List<Student> studentList = null;
 
-//        School userSchool = (School) session.getAttribute("user");
-        try {
-            studentList = studentDao.filterAllCond(school, entYear, classNum, isAttend);
-        } catch (Exception e) {
-            errorMessage = "学生情報の取得中にエラーが発生しました: " + e.getMessage();
-            e.printStackTrace();
-        }
+      //  School userSchool = (School) session.getAttribute("user");
+      // try {
+         //   studentList = studentDao.filterAllCond(school, entYear, classNum, isAttend);
+     //   } catch (Exception e) {
+         //   errorMessage = "学生情報の取得中にエラーが発生しました: " + e.getMessage();
+        //    e.printStackTrace();
+      //  }
 
         // ここから修正・変更する部分
         // ClassNumDaoを使ってクラスリストをDBから取得
