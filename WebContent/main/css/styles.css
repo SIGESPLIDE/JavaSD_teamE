@@ -1,40 +1,117 @@
 body {
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	margin: 0;
-	background-color: #f0f2f5;
 	display: flex;
-	flex-direction: column; /* 全体を縦方向に配置 */
+	flex-direction: column;
 	min-height: 100vh;
+	background-color: #f5f5f5;
 }
 
+/* フォーム全体のスタイル（学生情報変更） */
+form {
+	background-color: #ffffff;
+	padding: 30px;
+	margin: 30px auto;
+	width: 500px;
+	border-radius: 10px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 入力項目グループ */
+.form-group {
+	margin-bottom: 15px;
+}
+
+/* ラベル共通 */
+label {
+	display: block;
+	margin-bottom: 5px;
+	font-weight: bold;
+}
+
+/* テキスト入力・セレクトボックス共通 */
+input[type="text"],
+select {
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+/* チェックボックス */
+input[type="checkbox"] {
+	accent-color: #007bff;
+	transform: scale(1.2);
+	margin-right: 8px;
+}
+
+/* チェックボックスグループ */
+.checkbox-group {
+	margin-top: 10px;
+}
+
+/* ボタン */
+button {
+	background-color: #007bff;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 5px;
+	cursor: pointer;
+	font-weight: bold;
+}
+button:hover {
+	background-color: #0056b3;
+}
+
+/* リンク */
+a {
+	margin-left: 20px;
+	text-decoration: none;
+	color: #007bff;
+}
+
+/* エラー表示 */
+.error {
+	color: red;
+	margin-bottom: 10px;
+}
+
+/* 情報表示エリア（受け取ったデータ） */
+.info-box {
+	background-color: #e9ecef;
+	padding: 15px;
+	margin-bottom: 20px;
+	border-radius: 5px;
+}
+.info-box p {
+	margin: 4px 0;
+}
+
+/* メニューや共通部品関連 */
 .menu-box {
-	padding: 0; /* 枠内の余白 */
-	border-radius: .25rem; /* 角を少し丸く */
-	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* 軽い影 */
+	padding: 0;
+	border-radius: .25rem;
+	box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 
 .equal-height-box {
-	/* .card にこれを適用: .col-* の高さいっぱいに伸びる */
 	display: flex;
-	flex-direction: column; /* 内部要素を垂直に並べる */
-	height: 100%; /* 親の.colが伸ばしてくれた高さいっぱいを使う */
-	min-height: 10vh; /* 例えば、最低限の高さ（テキスト1行でも崩れない程度） */
+	flex-direction: column;
+	height: 100%;
+	min-height: 10vh;
 }
 
 .equal-height-box .card-body {
-	/* .card-body が .card 内の残りのスペースを埋める */
 	flex-grow: 1;
-	/* card-body内のコンテンツを垂直中央に配置 */
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	align-items: center; /* 水平方向も中央寄せにしたい場合 */
-	text-align: center; /* テキストの行揃え */
+	align-items: center;
+	text-align: center;
 }
 
-
-
-/* ヘッダーのスタイル */
+/* ヘッダー */
 .header {
 	background-color: #e0f0ff;
 	color: #333;
@@ -42,68 +119,61 @@ body {
 	width: 100%;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	border-bottom: 1px solid #cceeff;
-	flex-shrink: 0; /* ヘッダーは縮まない */
+	flex-shrink: 0;
 }
-
 .header-content {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	max-width: 1200px; /* 必要に応じて調整 */
+	max-width: 1200px;
 	margin: 0 auto;
 }
-
 .header h1 {
 	margin: 0;
 	font-size: 28px;
 	color: #444;
 }
-
 .user-info {
 	font-size: 16px;
 	color: #555;
 }
-
 .logout-link {
 	margin-left: 15px;
 	color: #007bff;
 	text-decoration: none;
 	font-weight: bold;
 }
-
 .logout-link:hover {
 	text-decoration: underline;
 }
 
-/* メインコンテナのスタイル (サイドバーとコンテンツエリアを保持) */
+/* レイアウト全体 */
 .main-container {
-	display: flex; /* Flexboxでサイドバーとコンテンツを横並びにする */
-	flex-grow: 1; /* フッターを除いた残りのスペースを全て使う */
+	display: flex;
+	flex-grow: 1;
 	width: 100%;
-	max-width: 1200px; /* ヘッダーの最大幅に合わせるか、調整 */
-	margin: 20px auto; /* ヘッダーの下、フッターの上に余白 */
-	padding: 0 20px; /* 左右の余白 */
-	box-sizing: border-box; /* paddingを幅に含める */
+	max-width: 1200px;
+	margin: 20px auto;
+	padding: 0 20px;
+	box-sizing: border-box;
 }
 
-/* サイドバーのスタイル */
+/* サイドバー */
 .sidebar {
-	width: 200px; /* サイドバーの固定幅 */
-	background-color: #ffffff;
+	width: 200px;
+	background-color: #f8f9fa;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-	padding: 20px 0;
+	padding: 1rem;
 	border-radius: 5px;
-	flex-shrink: 0; /* サイドバーは縮まない */
-	height: fit-content; /* コンテンツの高さに合わせて、不必要な空白をなくす */
-	margin-right: 20px; /* コンテンツエリアとの間隔 */
+	flex-shrink: 0;
+	height: fit-content;
+	margin-right: 20px;
 }
-
 .sidebar ul {
 	list-style: none;
 	padding: 0;
 	margin: 0;
 }
-
 .sidebar li a {
 	display: block;
 	padding: 12px 20px;
@@ -112,64 +182,52 @@ body {
 	font-size: 16px;
 	transition: background-color 0.2s ease;
 }
-
 .sidebar li a:hover {
 	background-color: #f0f0f0;
 }
-
 .sidebar li a.active {
 	background-color: #e0f0ff;
 	color: #007bff;
 	font-weight: bold;
 	border-left: 4px solid #007bff;
-	padding-left: 16px; /* border-left分ずらす */
+	padding-left: 16px;
 }
 
-/* コンテンツエリアのスタイル */
+/* コンテンツ領域 */
 .content-area {
-	flex-grow: 1; /* 残りのスペースを全て使う */
+	flex-grow: 1;
 	background-color: #ffffff;
-	padding: 30px; /* 空の状態でも内側の余白を確保 */
+	padding: 30px;
 	border-radius: 5px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-	min-height: 200px; /* コンテンツが空でも最低限の高さを保持（必要であれば） */
+	min-height: 200px;
 }
-
-.sidebar {
-	background-color: #f8f9fa; /* 非常に明るいグレー */
-	padding: 1rem;
-	min-height: calc(100vh - 2rem - 2rem); /* ヘッダーとフッターの高さを引く */
-}
-
 .main-content {
-	background-color: #ffffff; /* 白 */
+	background-color: #ffffff;
 	padding: 1rem;
-	flex-grow: 1; /* メインコンテンツが利用可能なスペースを埋める */
+	flex-grow: 1;
 }
 
+/* カード背景色（学生・成績・科目） */
 .card.text-black.bg-student {
 	background-color: #ecbcbf;
 }
-
 .card.text-black.bg-score {
 	background-color: #cee9cd;
 }
-
 .card.text-black.bg-subject {
 	background-color: #cfcfe7;
 }
 
-/* 必要に応じてフッターを下に固定するためのスタイル */
+/* フッター */
 .container-fluid {
 	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
 }
-
 .row.flex-grow-1 {
 	flex-grow: 1;
 }
-/* フッターのスタイル */
 .footer {
 	width: 100%;
 	text-align: center;
@@ -178,10 +236,9 @@ body {
 	color: #777;
 	font-size: 14px;
 	border-top: 1px solid #eee;
-	margin-top: auto; /* main-containerが埋まらない場合にフッターを一番下に固定 */
-	flex-shrink: 0; /* フッターは縮まない */
+	margin-top: auto;
+	flex-shrink: 0;
 }
-
 .footer p {
 	margin: 5px 0;
 }
