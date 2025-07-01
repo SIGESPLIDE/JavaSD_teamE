@@ -1,7 +1,5 @@
 <%@page contentType="text/html; charset=UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<c:import url="/BASE001.jsp">
-
 	<div class="search-results">
 		<%-- 学生名と学生番号の表示 --%>
 		<div class="mb-3">
@@ -44,4 +42,3 @@
 			</c:otherwise>
 		</c:choose>
 	</div>
-</c:import>
