@@ -5,7 +5,6 @@
 <%-- BASE001.jspをテンプレートとして使用 --%>
 <c:import url="/BASE001.jsp">
     <%-- ページのタイトルを設定 --%>
-    <c:param name="title">成績管理</c:param>
 
     <%-- ページの本文部分を設定 --%>
     <c:param name="body">

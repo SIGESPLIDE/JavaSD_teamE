@@ -24,7 +24,7 @@ public class ExamDao extends dao {
 	 * Examテーブルからデータを取得するためのベースとなるSQLクエリ。
 	 * STUDENTテーブルとSUBJECTテーブルをJOINして、学生名や科目名も取得する。
 	 */
-	private String baseSql = "SELECT t.student_no, s.name AS student_name, t.subject_cd, sub.name AS subject_name, t.school_cd, t.no, t.point, t.class_num FROM test t "
+	private String baseSql = "SELECT s.ent_year, t.student_no, s.name AS student_name, t.subject_cd, sub.name AS subject_name, t.school_cd, t.no, t.point, t.class_num FROM test t "
 			+ "JOIN student s ON t.student_no = s.no AND t.school_cd = s.school_cd "
 			+ "JOIN subject sub ON t.subject_cd = sub.cd AND t.school_cd = sub.school_cd ";
 
@@ -121,6 +121,7 @@ public class ExamDao extends dao {
 				Student student = new Student();
 				student.setNo(rs.getString("student_no"));
 				student.setName(rs.getString("student_name"));
+				student.setEntYear(rs.getInt("ent_year"));
 
 				// Subjectオブジェクトの生成と設定
 				Subject subject = new Subject();
