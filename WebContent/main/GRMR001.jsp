@@ -8,7 +8,6 @@
 	crossorigin="anonymous">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/main/css/styles.css">
-<div class="title">成績管理</div>
 <div class="container mt-4">
 	<h3 class="mb-4">成績参照</h3>
 	<!-- ① -->
