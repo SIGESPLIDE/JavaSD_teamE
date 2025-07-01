@@ -18,7 +18,7 @@ import dao.StudentDao;
 import dao.SubjectDao;
 import tool.CommonServlet;
 
-@WebServlet(urlPatterns = { "/main/" })
+@WebServlet(urlPatterns = { "/main/ExamList" })
 public class ExamListController extends CommonServlet {
 
 	@Override
