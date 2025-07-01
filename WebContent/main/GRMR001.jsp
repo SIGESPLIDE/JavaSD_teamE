@@ -1,9 +1,7 @@
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<c:import url="/BASE001.jsp">
-    <c:param name="title">成績管理</c:param>
-    <c:param name="body">
+    <div class="title">成績管理</div>
         <div class="container mt-4">
             <h3 class="mb-4">成績参照</h3> <!-- ① -->
 
@@ -101,5 +99,3 @@
                     <!-- 補足メッセージ ⑭ -->
                     <div class="mt-3 text-muted">毎項目を選択または学生情報を入力して検索ボタンをクリックしてください</div>
                     </c:if>
-    </c:param>
-</c:import>
