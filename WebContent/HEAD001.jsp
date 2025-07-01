@@ -9,8 +9,10 @@
 				<%-- セッション内のユーザーオブジェクト（例：User型）から username を表示 --%>
 
 				<div class="user-info">
-					<span>${user.name}様</span> <a
-						href="${pageContext.request.contextPath}/main/LOGO001">ログアウト</a>
+					<span>${user.name}様</span> <a>
+				href="${pageContext.request.contextPath}/main/LOGO001">ログアウト</a>
+
+						href="${pageContext.request.contextPath}/main/logout.action">ログアウト</a>
 				</div>
 			</div>
 		</header>
