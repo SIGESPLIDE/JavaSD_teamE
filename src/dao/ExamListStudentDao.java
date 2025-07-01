@@ -20,7 +20,7 @@ public class ExamListStudentDao extends dao {
 
 	/**
 	 * ResultSetからExamListStudentのリストを生成します。
-	 * 
+	 *
 	 * @param rSet
 	 *            データベースからのResultSet
 	 * @return ExamListStudentのリスト
@@ -52,7 +52,7 @@ public class ExamListStudentDao extends dao {
 
 	/**
 	 * 指定された学生番号に基づいて成績一覧をフィルタリングします。
-	 * 
+	 *
 	 * @param studentNo
 	 *            フィルタリングの基準となる学生番号
 	 * @return フィルタリングされたExamListStudentのリスト
@@ -112,13 +112,14 @@ public class ExamListStudentDao extends dao {
 
 	/**
 	 * 指定されたStudentオブジェクトに基づいて成績一覧をフィルタリングします。 (オーバーロードされたメソッド)
-	 * 
+	 *
 	 * @param student
 	 *            フィルタリングの基準となる学生オブジェクト
 	 * @return フィルタリングされたExamListStudentのリスト
 	 * @throws Exception
 	 *             データベースアクセスエラーなど
 	 */
+
 	public List<ExamListStudent> filter(Student student) throws Exception {
 		// Studentオブジェクトから学生番号を取得し、filter(String studentNo)を呼び出す
 		return filter(student.getNo());

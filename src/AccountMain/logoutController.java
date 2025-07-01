@@ -14,7 +14,7 @@ import tool.CommonServlet;
  * ログアウト処理を行うコントローラー
  *@author k_takahashihor
  */
-@WebServlet("/main/logout")
+@WebServlet("/logout.action")
 public class logoutController extends CommonServlet {
 
     /**
