@@ -26,7 +26,7 @@
 							成績管理
 						</p>
 						<p class="card-title h5 mb-0">
-							<a href="${pageContext.request.contextPath}/main/GRMU001">
+							<a href="${pageContext.request.contextPath}/main/STDM001">
 								成績登録
 							</a>
 						</p>
