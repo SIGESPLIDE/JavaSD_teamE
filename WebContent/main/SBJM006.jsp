@@ -10,7 +10,7 @@
 
 <c:param name="body">
 
-<p><%= %>></p>
+
 
 <button type="submit">削除</button>
 
