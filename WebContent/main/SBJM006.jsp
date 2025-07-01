@@ -10,13 +10,15 @@
 
 <c:param name="body">
 
-
-
-<button type="submit">削除</button>
+<form action="DeleteServlet" method="post">
+  <input type="hidden" name="id" value="${param.id}" />
+  <button type="submit">削除</button>
+</form>
 
 <div>
-<a href="SBJM001.jsp">戻る</a>
+  <a href="SBJM001.jsp">戻る</a>
 </div>
+
 
 </c:param>
 
