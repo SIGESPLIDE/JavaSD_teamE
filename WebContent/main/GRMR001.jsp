@@ -1,99 +1,120 @@
-
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-    <div class="title">成績管理</div>
-        <div class="container mt-4">
-            <h3 class="mb-4">成績参照</h3> <!-- ① -->
+<c:import url="/HEAD001.jsp" />
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/main/css/styles.css">
+<div class="container mt-4">
+	<h3 class="mb-4">成績参照</h3>
+	<!-- ① -->
 
-            <div class="card">
-                <div class="card-body">
-                    <!-- 科目情報 ② -->
-                    <h5 class="card-title mb-3">科目情報</h5>
-                    <form action="${pageContext.request.contextPath}/main/ExamList" method="post">
-                        <div class="row g-3 align-items-end">
-                            <!-- 入学年度 ③ -->
-                            <div class="col-md-3">
-                                <label for="enrollmentYear" class="form-label">入学年度</label> <!-- ③ -->
-                                <select class="form-select" id="enrollmentYear" name="f1"> <!-- ⑥ -->
-                                    <option value="">--------</option>
+	<div class="card">
+		<div class="card-body">
+			<!-- 科目情報 ② -->
+			<h5 class="card-title mb-3">科目情報</h5>
+			<form action="${pageContext.request.contextPath}/main/ExamList"
+				method="post">
+				<div class="row g-3 align-items-end">
+					<!-- 入学年度 ③ -->
+					<div class="col-md-3">
+						<label for="enrollmentYear" class="form-label">入学年度</label>
+						<!-- ③ -->
+						<select class="form-select" id="enrollmentYear" name="f1">
+							<!-- ⑥ -->
+							<option value="">--------</option>
 
-                                    <%-- データベースから情報を持ってきている --%>
-                                    <c:forEach var="selectEntYear" items="${entYearList}">
-                                        <option value="${selectEntYear}"<c:if test="${selectEntYear == entYear}">selected</c:if>>${selectEntYear}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
+							<%-- データベースから情報を持ってきている --%>
+							<c:forEach var="selectEntYear" items="${entYearList}">
+								<option value="${selectEntYear}"
+									<c:if test="${selectEntYear == entYear}">selected</c:if>>${selectEntYear}</option>
+							</c:forEach>
+						</select>
+					</div>
 
-                            <!-- クラス ④ -->
-                            <div class="col-md-3">
-                                <label for="class" class="form-label">クラス</label>
-                                <select class="form-select" id="class" name="f2"> <!-- ⑦ -->
-                                    <option value="">--------</option>
-                                    <c:forEach var="course" items="${classNumList}">
-                                        <option value="${course.class_num}"<c:if test="${course.class_num == classNum}">selected</c:if>>${course.class_num}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
+					<!-- クラス ④ -->
+					<div class="col-md-3">
+						<label for="class" class="form-label">クラス</label> <select
+							class="form-select" id="class" name="f2">
+							<!-- ⑦ -->
+							<option value="">--------</option>
+							<c:forEach var="course" items="${classNumList}">
+								<option value="${course.class_num}"
+									<c:if test="${course.class_num == classNum}">selected</c:if>>${course.class_num}</option>
+							</c:forEach>
+						</select>
+					</div>
 
-                            <!-- 科目 ⑤ -->
-                            <div class="col-md-3">
-                                <label for="subject" class="form-label">科目</label> <!-- ⑤ -->
-                                <select class="form-select" id="subject" name="f3"> <!-- ⑧ -->
-                                    <option value="">--------</option>
-                                    <c:forEach var="subject" items="${subjectList}">
-                                        <option value="${subject.cd}"<c:if test="${subject.cd == subjectCd}">selected</c:if>>${subject.cd}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
+					<!-- 科目 ⑤ -->
+					<div class="col-md-3">
+						<label for="subject" class="form-label">科目</label>
+						<!-- ⑤ -->
+						<select class="form-select" id="subject" name="f3">
+							<!-- ⑧ -->
+							<option value="">--------</option>
+							<c:forEach var="subject" items="${subjectList}">
+								<option value="${subject.cd}"
+									<c:if test="${subject.cd == subjectCd}">selected</c:if>>${subject.cd}</option>
+							</c:forEach>
+						</select>
+					</div>
 
-                            <!-- 検索ボタン ⑨ -->
-                            <div class="col-md-auto">
-                                <button type="submit" class="btn btn-primary">検索</button>
-                            </div>
-                            <input type="hidden" name="f" value="sj">
-                        </div>
-                        <c:if test="${not empty sjError}">
-                        <p class="text-warning ms-4 mb-0">${sjError}</p>
-                        </c:if>
-                    </form>
-                    <!-- 学生情報 ⑩ -->
-                    <hr class="my-4">
-                    <h5 class="card-title">学生情報</h5>
+					<!-- 検索ボタン ⑨ -->
+					<div class="col-md-auto">
+						<button type="submit" class="btn btn-primary">検索</button>
+					</div>
+					<input type="hidden" name="f" value="sj">
+				</div>
+				<c:if test="${not empty sjError}">
+					<p class="text-warning ms-4 mb-0">${sjError}</p>
+				</c:if>
+			</form>
+			<!-- 学生情報 ⑩ -->
+			<hr class="my-4">
+			<h5 class="card-title">学生情報</h5>
 
-                    <form action="${pageContext.request.contextPath}/main/ExamListStudent" method="post">
-                        <div class="row g-3 align-items-end">
-                            <div class="col-md-4">
-                                <label for="studentId" class="form-label">学生番号</label> <!-- ⑪ -->
-                                <input type="text" class="form-control" id="studentId" name="f4"
-                                       placeholder="学生番号を入力してください"> <!-- ⑫ -->
-                            </div>
-                            <div class="col-md-auto">
-                                <button type="submit" class="btn btn-secondary">検索</button> <!-- ⑬ -->
-                            </div>
-                            <input type="hidden" name="f" value="st">
-                        </div>
-                    </form>
+			<form
+				action="${pageContext.request.contextPath}/main/ExamListStudent"
+				method="post">
+				<div class="row g-3 align-items-end">
+					<div class="col-md-4">
+						<label for="studentId" class="form-label">学生番号</label>
+						<!-- ⑪ -->
+						<input type="text" class="form-control" id="studentId" name="f4"
+							placeholder="学生番号を入力してください">
+						<!-- ⑫ -->
+					</div>
+					<div class="col-md-auto">
+						<button type="submit" class="btn btn-secondary">検索</button>
+						<!-- ⑬ -->
+					</div>
+					<input type="hidden" name="f" value="st">
+				</div>
+			</form>
 
 
-                </div>
+		</div>
 
-            </div>
-        </div>
-        <c:if test = "${not empty error_student}">
-        	<div class ="p-3">
-        	<p class="alert alert-danger">${error_student}</p>
-        	</div>
-        </c:if>
+	</div>
+</div>
+<c:if test="${not empty error_student}">
+	<div class="p-3">
+		<p class="alert alert-danger">${error_student}</p>
+	</div>
+</c:if>
 
-        <c:if test="${not empty subject}">
-        	<c:import url="/main/GRMR002.jsp"/>
-        </c:if>
+<c:if test="${not empty subject}">
+	<c:import url="/main/GRMR002.jsp" />
+</c:if>
 
-        <c:if test="${not empty student}">
-        	<c:import url="/main/GRMR003.jsp"/>
-        </c:if>
+<c:if test="${not empty student}">
+	<c:import url="/main/GRMR003.jsp" />
+</c:if>
 
-        <c:if test="${empty subject && empty student && empty error_student}">
-                    <!-- 補足メッセージ ⑭ -->
-                    <div class="mt-3 text-muted">毎項目を選択または学生情報を入力して検索ボタンをクリックしてください</div>
-                    </c:if>
+<c:if test="${empty subject && empty student && empty error_student}">
+	<!-- 補足メッセージ ⑭ -->
+	<div class="mt-3 text-muted">毎項目を選択または学生情報を入力して検索ボタンをクリックしてください</div>
+</c:if>
