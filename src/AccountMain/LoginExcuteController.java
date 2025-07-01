@@ -30,7 +30,7 @@ public class LoginExcuteController extends CommonServlet {
      */
     @Override
     public void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.sendRedirect("/JavaSD/main/MMNU001");
+        resp.sendRedirect("login.action");
     }
 
     /**
@@ -50,7 +50,7 @@ public class LoginExcuteController extends CommonServlet {
 
         try {
             // DAOのloginメソッドを呼び出し、認証を行う
-            teacher = (Teacher) dao.login(id, password);
+            teacher = dao.login(id, password);
         } catch (Exception e) {
             // データベース接続などでエラーが発生した場合
             e.printStackTrace();

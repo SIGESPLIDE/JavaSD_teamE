@@ -15,6 +15,7 @@ import tool.CommonServlet;
  *@author k_takahashihor
  */
 @WebServlet("/main/logout.action")
+
 public class logoutController extends CommonServlet {
 
     /**
@@ -32,7 +33,7 @@ public class logoutController extends CommonServlet {
             // セッションを無効化します。これがログアウト処理の本体です。
             session.invalidate();
         }
-        
+
 
         // ログアウト完了画面（LOGOUT.jsp）にフォワード（画面遷移）します。
         req.getRequestDispatcher("/main/LOGO001.jsp").forward(req, resp);

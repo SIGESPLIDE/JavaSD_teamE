@@ -8,7 +8,7 @@ import bean.School;
 import bean.Subject;
 
 /**
- * 
+ *
  * @author s_saito, k_nohara
  *
  */
@@ -22,9 +22,10 @@ public class ExamListSubjectDao extends dao {
 
 	public List<ExamListSubject> postFilter(ResultSet rSet) {
 		return null;
-	}
+		}
 
 	public List<ExamListSubject> filter(int entYear, String classNum, Subject subject, School school) {
 		return null;
 	}
+
 }
