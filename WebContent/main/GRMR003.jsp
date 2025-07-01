@@ -1,4 +1,4 @@
-<%@page contentType="text/html; charset=UTF-8"%>
+<%@page contentType="text/html; charset=UTF-8"%>Add commentMore actions
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div class="search-results">
@@ -34,7 +34,6 @@
 							<td class="text-center py-2">${tLS.point}</td>
 						</tr>
 					</c:forEach>
-
 				</tbody>
 			</table>
 		</c:when>
@@ -43,4 +42,5 @@
 			<p>成績情報が存在しませんでした</p>
 		</c:otherwise>
 	</c:choose>
+	Add commentMore actions
 </div>

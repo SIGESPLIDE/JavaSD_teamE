@@ -130,92 +130,106 @@ body {
 	text-align: center;
 }
 
-/* その他の調整 */
-h2 {
-	margin-top: 0;
-	margin-bottom: 20px;
-	color: #333;
-	padding-bottom: 10px;
-	border-bottom: 2px solid #eee;
-	background-color: #f5f5f5;
-}
 
-h2 {
-	margin-bottom: 20px;
-	color: #343a40; /* 濃いめのグレー */
-	font-weight: 400; /* デフォルトより少し細く */
-}
-
+/* .container クラスの調整 (外枠や影をなくす) */
 .container {
-	background-color: #fff;
-	padding: 30px;
-	border-radius: 8px;
-	box-shadow: 0 2px 10px rgba(0, 0, 0, .08); /* 軽い影 */
+	background-color: transparent; /* 背景を透明に */
+	padding: 0; /* パディングを削除 (画像ではコンテンツが左端から始まっているため) */
+	border-radius: 0; /* 角の丸みをなくす */
+	box-shadow: none; /* 影をなくす */
 }
 
 /* 新規登録リンクのコンテナ */
 .add-new-link-container {
 	display: flex;
-	justify-content: flex-end; /* 右寄せ */
-	margin-bottom: 15px; /* テーブルとの間に余白 */
+	justify-content: flex-end;
+	margin-bottom: 15px;
 }
 
 .add-new-link-container a {
-	color: #007bff; /* Bootstrap primary blue */
-	text-decoration: none;
+	color: #007bff;
+	text-decoration: none; /* デフォルトのアンダーラインをなくす */
 	font-weight: 500;
 }
 
 .add-new-link-container a:hover {
-	text-decoration: underline;
+	text-decoration: underline; /* ホバー時のみアンダーライン */
 }
 
 /* テーブルのスタイル */
-.table-bordered th, .table-bordered td {
-	border: 1px solid #dee2e6; /* 細いボーダー */
+/* .table-bordered を削除し、行間の線のみを残す */
+.table {
+	border-collapse: collapse; /* セルのボーダーが重ならないように */
+	width: 100%;
+	margin-bottom: 1rem;
+	background-color: #fff; /* テーブル自体の背景は白 */
 }
 
 .table thead th {
-	background-color: #e9ecef; /* ヘッダーの背景色をライトグレーに */
-	color: #495057; /* ヘッダーの文字色 */
-	border-bottom: 2px solid #dee2e6;
-	padding: 12px 8px; /* パディング */
-	font-weight: 500; /* 少し太字 */
-	vertical-align: middle; /* 垂直方向の中央揃え */
+	background-color: #fff; /* ヘッダーの背景色を白に */
+	color: #495057;
+	border-top: none; /* 上部のボーダーをなくす */
+	border-left: none; /* 左のボーダーをなくす */
+	border-right: none; /* 右のボーダーをなくす */
+	border-bottom: 1px solid #dee2e6; /* 下部の細いボーダーのみ残す */
+	padding: 12px 8px;
+	font-weight: 500;
+	vertical-align: middle;
+}
+
+.table tbody tr {
+	border-bottom: 1px solid #dee2e6; /* 行間の細いボーダー */
+}
+/* 最終行のボーダーは不要であれば消す */
+.table tbody tr:last-child {
+	border-bottom: none;
 }
 
 .table tbody td {
-	padding: 12px 8px; /* パディング */
-	vertical-align: middle; /* 垂直方向の中央揃え */
-	color: #212529; /* 文字色 */
+	padding: 12px 8px;
+	vertical-align: middle;
+	color: #212529;
+	border-top: none; /* 上部のボーダーをなくす */
+	border-left: none; /* 左のボーダーをなくす */
+	border-right: none; /* 右のボーダーをなくす */
+	border-bottom: none; /* 行間のボーダーは tr に任せる */
 }
 
-/* 各列の幅調整 (画像からの推測) */
+/* table-hover のスタイルは Bootstrap が提供しているので、基本的にはOK */
+.table-hover tbody tr:hover {
+	background-color: rgba(0, 0, 0, 0.03); /* ホバー時の背景色を少し薄く */
+}
+
+/* 各列の幅調整 (画像からの推測は維持) */
 .table thead th:nth-child(1), /* 科目コード */ .table tbody td:nth-child(1) {
-	width: 15%; /* 幅を狭く */
-	text-align: center; /* 中央寄せ */
+	width: 15%;
+	text-align: left; /* 画像では科目コードも左寄せに見える */
 }
 
 .table thead th:nth-child(2), /* 科目名 */ .table tbody td:nth-child(2) {
-	width: 55%; /* 幅を広く */
-	text-align: left; /* 左寄せ */
+	width: 55%;
+	text-align: left;
 }
 
-.table thead th:nth-child(3), /* 変更 */ .table tbody td:nth-child(3),
-	.table thead th:nth-child(4), /* 削除 */ .table tbody td:nth-child(4) {
-	width: 15%; /* 変更・削除の幅 */
-	text-align: center; /* 中央寄せ */
+.table thead th:nth-child(3), /* 変更 */ .table tbody td:nth-child(3) {
+	width: 15%;
+	text-align: center;
 }
 
-/* 変更/削除リンクのスタイル */
+.table thead th:nth-child(4), /* 削除 */ .table tbody td:nth-child(4) {
+	width: 15%;
+	text-align: center;
+}
+
+/* 変更/削除リンクのスタイル (画像に合わせてアンダーラインをなくす) */
 .table tbody td a {
-	color: #007bff; /* Bootstrap primary blue */
-	text-decoration: none;
+	color: #007bff;
+	text-decoration: none; /* アンダーラインをなくす */
 	font-weight: normal;
 }
 
 .table tbody td a:hover {
-	text-decoration: underline;
+	text-decoration: underline; /* ホバー時のみアンダーライン */
 }
 
 .content-area {
@@ -259,9 +273,10 @@ button:hover {
 	background-color: #0056b3;
 }
 
-/
 h2 {
-	background-color: #f5f5f5;
+	padding: 5px 10px 5px 15px;
+	background: #e7e7e7; /* 薄めのグレー */
+	font-weight: 400; /* デフォルトより少し細く */
 }
 /* エラー表示 */
 .error {
