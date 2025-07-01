@@ -1,133 +1,127 @@
-package ScoreMain;
+package dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import bean.ExamListStudent; // ExamListStudentクラスが存在すると仮定
+import bean.Student; // Studentクラスが存在すると仮定
+import dao.dao;
 
-import bean.ClassNum;
-import bean.ExamListStudent;
-import bean.School;
-import bean.Student;
-import bean.Subject;
-import bean.Teacher;
-import dao.ClassNumDao;
-import dao.ExamListStudentDao;
-import dao.StudentDao;
-import dao.SubjectDao;
-import dao.TeacherDao;
-import tool.CommonServlet;
+/**
+ * 学生ごとの成績一覧を扱うためのDAOクラス。 DAOクラスを継承しています。
+ */
+public class ExamListStudentDao extends dao {
 
-@WebServlet(urlPatterns={"/main/ExamListStudent"})
-public class ExamListStudentExecuteController extends CommonServlet {
+	// ベースとなるSQLクエリ
+	private String baseSql = "SELECT * FROM EXAM_LIST_STUDENT"; // ビューまたはテーブル名を指定
 
-//	private Teacher teacher;
-//	private School school;
+	/**
+	 * ResultSetからExamListStudentのリストを生成します。
+	 *
+	 * @param rSet
+	 *            データベースからのResultSet
+	 * @return ExamListStudentのリスト
+	 * @throws SQLException
+	 *             データベースアクセスエラー
+	 */
+	public List<ExamListStudent> postFilter(ResultSet rSet) throws SQLException {
+		List<ExamListStudent> list = new ArrayList<>();
+		try {
+			// ResultSetをループしてデータを取得
+			while (rSet.next()) {
+				ExamListStudent els = new ExamListStudent();
+				// ResultSetから各列の値を取得し、ExamListStudentオブジェクトにセット
+				// ※カラム名は実際のテーブル/ビュー定義に合わせて修正してください
+				els.setSubjectName(rSet.getString("subject_name"));
+				els.setSubjectCd(rSet.getString("subject_cd"));
+				els.setNum(rSet.getInt("num"));
+				els.setPoint(rSet.getInt("point"));
 
-	@Override
-	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		// 現在のセッションを取得（存在しない場合は新規作成）
-				HttpSession session = req.getSession();
-				// Teacherオブジェクトを取得
-//				teacher = (Teacher) session.getAttribute("session_user");
+				list.add(els);
+			}
+		} catch (SQLException e) {
+			// エラーをログに出力するなど、適切なエラーハンドリングを行う
+			e.printStackTrace();
+			throw e; // 例外を呼び出し元にスロー
+		}
+		return list;
+	}
 
-				 // テスト用コード（本番ではセッションから取得）
-		        TeacherDao teacherDao = new TeacherDao();
-		        Teacher teacher = teacherDao.get("admin");
-		        School school = teacher.getSchool();
+	/**
+	 * 指定された学生番号に基づいて成績一覧をフィルタリングします。
+	 *
+	 * @param studentNo
+	 *            フィルタリングの基準となる学生番号
+	 * @return フィルタリングされたExamListStudentのリスト
+	 * @throws Exception
+	 *             データベースアクセスエラーなど
+	 */
+	public List<ExamListStudent> filter(String studentNo) throws Exception {
+		List<ExamListStudent> list = new ArrayList<>();
+		Connection con = null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
 
-				// DAOの準備
-				StudentDao studentDao = new StudentDao();
-				ExamListStudentDao ExamListStudentDao = new ExamListStudentDao();
+		try {
+			// スーパークラスDAOからデータベース接続を取得
+			con = getConnection();
 
-				// 値を取得
-				String studentNo = req.getParameter("f4");
+			// SQLクエリを準備 (学生番号で絞り込み)
+			String sql = baseSql + " WHERE student_no = ?";
+			st = con.prepareStatement(sql);
+			st.setString(1, studentNo);
 
-				//入力値の検証
-				if (studentNo == null || studentNo.isEmpty()) {
-					req.setAttribute("error_student", "学生番号を入力してください。");
-					// エラーがあっても検索画面は表示し続けるため、GRMR001.jspにフォワード
-					req.getRequestDispatcher("/main/GRMR001.jsp").forward(req, resp);
-					return;
+			// クエリを実行
+			rs = st.executeQuery();
+
+			// ResultSetからリストを生成
+			list = postFilter(rs);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			// リソースをクローズ
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException sqle) {
+					sqle.printStackTrace();
 				}
-
-				//学校コードの取得
-//		        School school = teacher.getSchool();
-
-				// 学生情報を取得
-				Student student = studentDao.get(studentNo);
-
-				//学生情報がない場合はエラーメッセージを表示
-				if (student == null) {
-		            // 学生が見つからなかった場合の処理
-		            req.setAttribute("error_student", "指定された学生番号の学生は存在しません。");
-		            // JSP側で ${testListStudent} がエラーにならないよう、空のリストをセットしておく
-		            req.setAttribute("testListStudent", new ArrayList<ExamListStudent>());
-
-		        } else {
-		            // 学生が見つかった場合の処理 (従来の処理)
-		            List<ExamListStudent> ExamListStudent = ExamListStudentDao.filter(student);
-		            req.setAttribute("ExamListStudent", ExamListStudent);
-		        }
-
-				// 検索結果をリクエスト属性にセット
-				req.setAttribute("student", student);
-				req.setAttribute("f4", studentNo);
-
-			     ClassNumDao classNumDao = new ClassNumDao();
-			     SubjectDao subjectDao = new SubjectDao();
-
-			     // ドロップダウン用のリストを取得
-
-			     List<Student> studentListForDropdown = studentDao.filterBasic(school, true);
-			     // 学生リストから入学年度を重複なく抽出し、ソートする
-			  	List<Integer> entYearList = studentListForDropdown.stream().map(Student::getEntYear)
-			  					.distinct()                    // 重複を除去する
-			  				    .sorted()                      // 昇順にソートする
-			  				    .collect(Collectors.toList()); // 結果をListに変換する
-			     List<String> classListStr = classNumDao.filter(school);
-			     List<Subject> subjectList = subjectDao.filter(school);
-
-			     // ClassNumリストに変換
-			     List<ClassNum> classNumList = new ArrayList<>();
-			     for (String classNumStrs : classListStr) {
-			            ClassNum classNum = new ClassNum();
-			            classNum.setClass_num(classNumStrs);
-			            classNumList.add(classNum);
-			     }
-
-			     // ドロップダウン用リストをリクエストスコープにセット
-			     req.setAttribute("entYearList", entYearList);
-			     req.setAttribute("classNumList", classNumList);
-			     req.setAttribute("subjectList", subjectList);
-
-				// フォワード
-				req.getRequestDispatcher("GRMR001.jsp").forward(req, resp);
+			}
+			if (st != null) {
+				try {
+					st.close();
+				} catch (SQLException sqle) {
+					sqle.printStackTrace();
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (SQLException sqle) {
+					sqle.printStackTrace();
+				}
+			}
+		}
+		return list;
 	}
 
-	@Override
-	protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		get(req, resp);
-
-	}
-
-	@Override
-	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws Exception{
-//    	 //現在のセッションを取得（存在しない場合は新規作成）
-//      HttpSession session = req.getSession();
-//      // Teacherオブジェクトを取得
-//      Teacher teacher = (Teacher) session.getAttribute("session_user");
-//
-//      // teacherがnullの場合はログイン画面にリダイレクト
-//      if (teacher == null) {
-//          resp.sendRedirect(req.getContextPath() + "/login.action");
-//
-//          return;
-//      }
-//      school = teacher.getSchool();
+	/**
+	 * 指定されたStudentオブジェクトに基づいて成績一覧をフィルタリングします。 (オーバーロードされたメソッド)
+	 *
+	 * @param student
+	 *            フィルタリングの基準となる学生オブジェクト
+	 * @return フィルタリングされたExamListStudentのリスト
+	 * @throws Exception
+	 *             データベースアクセスエラーなど
+	 */
+	public List<ExamListStudent> filter(Student student) throws Exception {
+		// Studentオブジェクトから学生番号を取得し、filter(String studentNo)を呼び出す
+		return filter(student.getNo());
 	}
 }
