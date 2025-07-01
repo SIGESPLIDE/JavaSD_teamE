@@ -1,6 +1,5 @@
 package ScoreMain;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,159 +9,125 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-// ★ beanパッケージのクラスをインポート
-import bean.Exam; // TestからExamに変更
+import bean.ClassNum;
+import bean.ExamListStudent;
 import bean.School;
 import bean.Student;
 import bean.Subject;
 import bean.Teacher;
-// ★ daoパッケージのクラスをインポート
 import dao.ClassNumDao;
-import dao.ExamDao; // TestDaoからExamDaoに変更
+import dao.ExamListStudentDao;
 import dao.StudentDao;
 import dao.SubjectDao;
+import dao.TeacherDao;
 import tool.CommonServlet;
 
-@WebServlet(urlPatterns={"/main/ExamRegist"})
-public class ExamRegistController extends CommonServlet {
+@WebServlet(urlPatterns={"/main/ExamListStudent"})
+public class ExamListStudentExecuteController extends CommonServlet {
 
-    @Override
-    protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        HttpSession session = req.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("session_user");
+//	private Teacher teacher;
+//	private School school;
 
-        if (teacher == null) {
-            resp.sendRedirect(req.getContextPath() + "/main/LOGI001.jsp");
-            return;
-        }
+	@Override
+	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		// 現在のセッションを取得（存在しない場合は新規作成）
+				HttpSession session = req.getSession();
+				// Teacherオブジェクトを取得
+//				teacher = (Teacher) session.getAttribute("session_user");
 
-        School school = teacher.getSchool();
+				 // テスト用コード（本番ではセッションから取得）
+		        TeacherDao teacherDao = new TeacherDao();
+		        Teacher teacher = teacherDao.get("admin");
+		        School school = teacher.getSchool();
 
-        // DAOのインスタンス化
-        ClassNumDao classNumDao = new ClassNumDao();
-        SubjectDao subjectDao = new SubjectDao();
-        ExamDao examDao = new ExamDao();
-        StudentDao studentDao = new StudentDao();
+				// DAOの準備
+				StudentDao studentDao = new StudentDao();
+				ExamListStudentDao ExamListStudentDao = new ExamListStudentDao();
 
-        // ドロップダウン用のリストを準備
-        List<Student> studentList = studentDao.filterBasic(school, true);
-        List<Integer> entYearList = studentList.stream().map(Student::getEntYear)
-                .distinct().sorted().collect(Collectors.toList());
-        List<String> classList = classNumDao.filter(school);
-        List<Subject> subjectList = subjectDao.filter(school); // 学校で絞り込むメソッドを推奨
+				// 値を取得
+				String studentNo = req.getParameter("f4");
 
-        req.setAttribute("entYearList", entYearList);
-        req.setAttribute("classList", classList);
-        req.setAttribute("subjectList", subjectList);
+				//入力値の検証
+				if (studentNo == null || studentNo.isEmpty()) {
+					req.setAttribute("error_student", "学生番号を入力してください。");
+					// エラーがあっても検索画面は表示し続けるため、GRMR001.jspにフォワード
+					req.getRequestDispatcher("/main/GRMR001.jsp").forward(req, resp);
+					return;
+				}
 
-        // --- 検索処理 ---
-        String entYearStr = req.getParameter("f1");
-        if (entYearStr != null && !entYearStr.isEmpty()) {
-            String classNum = req.getParameter("f2");
-            String subjectCd = req.getParameter("f3");
-            String testNoStr = req.getParameter("f4");
+				//学校コードの取得
+//		        School school = teacher.getSchool();
 
-            try {
-                int entYear = Integer.parseInt(entYearStr);
-                int testNo = (testNoStr != null && !testNoStr.isEmpty()) ? Integer.parseInt(testNoStr) : 0;
+				// 学生情報を取得
+				Student student = studentDao.get(studentNo);
 
-                // ★★★ ExamDao.filter の引数に合わせてオブジェクトを準備 ★★★
-                Subject subject = new Subject();
-                subject.setCd(subjectCd);
+				//学生情報がない場合はエラーメッセージを表示
+				if (student == null) {
+		            // 学生が見つからなかった場合の処理
+		            req.setAttribute("error_student", "指定された学生番号の学生は存在しません。");
+		            // JSP側で ${testListStudent} がエラーにならないよう、空のリストをセットしておく
+		            req.setAttribute("testListStudent", new ArrayList<ExamListStudent>());
 
-                // ★★★ ExamDao.filter を呼び出す ★★★
-                List<Exam> examResults = examDao.filter(entYear, classNum, subject, testNo, school);
-                req.setAttribute("examResults", examResults); // 変数名を変更
+		        } else {
+		            // 学生が見つかった場合の処理 (従来の処理)
+		            List<ExamListStudent> ExamListStudent = ExamListStudentDao.filter(student);
+		            req.setAttribute("ExamListStudent", ExamListStudent);
+		        }
 
-                // 検索条件をリクエストに保持
-                req.setAttribute("selectedEntYear", entYear);
-                req.setAttribute("selectedClassNum", classNum);
-                req.setAttribute("selectedSubjectCd", subjectCd);
-                req.setAttribute("selectedTestNo", testNo);
+				// 検索結果をリクエスト属性にセット
+				req.setAttribute("student", student);
+				req.setAttribute("f4", studentNo);
 
-            } catch (NumberFormatException e) {
-                req.setAttribute("errorMessage", "入学年度または回数に無効な値が入力されました。");
-            } catch (Exception e) {
-                e.printStackTrace();
-                req.setAttribute("errorMessage", "検索中にエラーが発生しました。");
-            }
-        }
+			     ClassNumDao classNumDao = new ClassNumDao();
+			     SubjectDao subjectDao = new SubjectDao();
 
-        req.getRequestDispatcher("/main/GRMU001.jsp").forward(req, resp);
-    }
+			     // ドロップダウン用のリストを取得
 
+			     List<Student> studentListForDropdown = studentDao.filterBasic(school, true);
+			     // 学生リストから入学年度を重複なく抽出し、ソートする
+			  	List<Integer> entYearList = studentListForDropdown.stream().map(Student::getEntYear)
+			  					.distinct()                    // 重複を除去する
+			  				    .sorted()                      // 昇順にソートする
+			  				    .collect(Collectors.toList()); // 結果をListに変換する
+			     List<String> classListStr = classNumDao.filter(school);
+			     List<Subject> subjectList = subjectDao.filter(school);
 
-    @Override
-    protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        HttpSession session = req.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("session_user");
+			     // ClassNumリストに変換
+			     List<ClassNum> classNumList = new ArrayList<>();
+			     for (String classNumStrs : classListStr) {
+			            ClassNum classNum = new ClassNum();
+			            classNum.setClass_num(classNumStrs);
+			            classNumList.add(classNum);
+			     }
 
-        if (teacher == null) {
-            resp.sendRedirect(req.getContextPath() + "/main/LOGI001.jsp");
-            return;
-        }
+			     // ドロップダウン用リストをリクエストスコープにセット
+			     req.setAttribute("entYearList", entYearList);
+			     req.setAttribute("classNumList", classNumList);
+			     req.setAttribute("subjectList", subjectList);
 
-        School school = teacher.getSchool();
-        ExamDao examDao = new ExamDao(); // TestDaoからExamDaoに変更
+				// フォワード
+				req.getRequestDispatcher("GRMR001.jsp").forward(req, resp);
+	}
 
-        String subjectCd = req.getParameter("f3");
-        String testNoStr = req.getParameter("f4");
-        String[] studentNos = req.getParameterValues("student_no");
+	@Override
+	protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		get(req, resp);
 
-        // ★★★ 保存用のList<Exam>を作成 ★★★
-        List<Exam> examsToSave = new ArrayList<>();
-        boolean isSuccess = false;
+	}
 
-        try {
-            int testNo = (testNoStr != null && !testNoStr.isEmpty()) ? Integer.parseInt(testNoStr) : 0;
-
-            for (String studentNo : studentNos) {
-                String pointStr = req.getParameter("point_" + studentNo);
-                int point = (pointStr != null && !pointStr.isEmpty()) ? Integer.parseInt(pointStr) : 0;
-
-                // ★★★ Examオブジェクトを作成する ★★★
-                Exam exam = new Exam();
-
-                Student student = new Student();
-                student.setNo(studentNo);
-                exam.setStudent(student);
-
-                Subject subject = new Subject();
-                subject.setCd(subjectCd);
-                exam.setSubject(subject);
-
-                exam.setSchool(school);
-                exam.setNo(testNo);
-                exam.setPoint(point);
-                exam.setClassNum(req.getParameter("class_num_" + studentNo));
-
-                examsToSave.add(exam);
-            }
-
-            // ★★★ ExamDao.save を呼び出すだけ！ トランザクション管理はDAO任せ ★★★
-            isSuccess = examDao.save(examsToSave);
-
-        } catch (NumberFormatException e) {
-            req.setAttribute("errorMessage", "点数に数字以外の文字が入力されています。確認してください。");
-            // エラー時はフォワードで画面を再表示
-            doGet(req, resp);
-            return;
-        } catch (Exception e) {
-            e.printStackTrace();
-            // isSuccessはデフォルトでfalseなので、ここでは何もしなくても良い
-        }
-
-        if (isSuccess) {
-            resp.sendRedirect(req.getContextPath() + "/main/GRMU002.jsp");
-        } else {
-            // 登録失敗時のリダイレクト（DBエラーなど）
-            String f1 = req.getParameter("f1");
-            String f2 = req.getParameter("f2");
-            String f3 = req.getParameter("f3");
-            String f4 = req.getParameter("f4");
-            String redirectUrl = "ExamRegist?f1=" + f1 + "&f2=" + f2 + "&f3=" + f3 + "&f4=" + f4
-                               + "&errorMessage=" + URLEncoder.encode("登録処理中にデータベースエラーが発生しました。", "UTF-8");
-            resp.sendRedirect(redirectUrl);
-        }
-    }
+	@Override
+	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws Exception{
+//    	 //現在のセッションを取得（存在しない場合は新規作成）
+//      HttpSession session = req.getSession();
+//      // Teacherオブジェクトを取得
+//      Teacher teacher = (Teacher) session.getAttribute("session_user");
+//
+//      // teacherがnullの場合はログイン画面にリダイレクト
+//      if (teacher == null) {
+//          resp.sendRedirect(req.getContextPath() + "/login.action");
+//
+//          return;
+//      }
+//      school = teacher.getSchool();
+	}
 }
