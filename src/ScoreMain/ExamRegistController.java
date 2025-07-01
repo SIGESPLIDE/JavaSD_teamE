@@ -29,7 +29,7 @@ public class ExamRegistController extends CommonServlet {
     @Override
     protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         HttpSession session = req.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("session_user");
+        Teacher teacher = (Teacher) session.getAttribute("user");
 
         if (teacher == null) {
             resp.sendRedirect(req.getContextPath() + "/main/LOGI001.jsp");
@@ -95,7 +95,7 @@ public class ExamRegistController extends CommonServlet {
     @Override
     protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         HttpSession session = req.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("session_user");
+        Teacher teacher = (Teacher) session.getAttribute("user");
 
         if (teacher == null) {
             resp.sendRedirect(req.getContextPath() + "/main/LOGI001.jsp");

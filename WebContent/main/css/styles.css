@@ -38,7 +38,9 @@ body {
 	appearance: none; /* デフォルトの矢印を非表示にする */
 	-webkit-appearance: none;
 	-moz-appearance: none;
-	background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%20viewBox%3D%220%200%20292.4%20292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%20197.3L159.5%2069.8c-4.1-4.1-10.7-4.1-14.8%200L5.4%20197.3c-4.1%204.1-4.1%2010.7%200%2014.8l14.8%2014.8c4.1%204.1%2010.7%204.1%2014.8%200l104.4-104.4c4.1-4.1%2010.7-4.1%2014.8%200l104.4%20104.4c4.1%204.1%2010.7%204.1%2014.8%200l14.8-14.8c4.2-4.1%204.2-10.7%200-14.8z%22%2F%3E%3C%2Fsvg%3E'); /* カスタム矢印 */
+	background-image:
+		url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%20viewBox%3D%220%200%20292.4%20292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%20197.3L159.5%2069.8c-4.1-4.1-10.7-4.1-14.8%200L5.4%20197.3c-4.1%204.1-4.1%2010.7%200%2014.8l14.8%2014.8c4.1%204.1%2010.7%204.1%2014.8%200l104.4-104.4c4.1-4.1%2010.7-4.1%2014.8%200l104.4%20104.4c4.1%204.1%2010.7%204.1%2014.8%200l14.8-14.8c4.2-4.1%204.2-10.7%200-14.8z%22%2F%3E%3C%2Fsvg%3E');
+	/* カスタム矢印 */
 	background-repeat: no-repeat;
 	background-position: right 8px center;
 	background-size: 12px;
@@ -61,7 +63,6 @@ body {
 
 .search-area button:hover {
 	background-color: #0056b3;
-
 }
 
 .search-area a:hover {
@@ -88,8 +89,7 @@ body {
 	margin-top: 10px;
 }
 
-.result-area th,
-.result-area td {
+.result-area th, .result-area td {
 	border: 1px solid #ddd; /* 薄いグレーの枠線 */
 	padding: 12px 15px; /* パディングを増やす */
 	text-align: left; /* 左寄せ */
@@ -140,13 +140,89 @@ h2 {
 	background-color: #f5f5f5;
 }
 
-
-.content-area {
-    padding: 30px; /* コンテンツエリアのパディング */
+h2 {
+	margin-bottom: 20px;
+	color: #343a40; /* 濃いめのグレー */
+	font-weight: 400; /* デフォルトより少し細く */
 }
 
-input[type="text"],
-select {
+.container {
+	background-color: #fff;
+	padding: 30px;
+	border-radius: 8px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, .08); /* 軽い影 */
+}
+
+/* 新規登録リンクのコンテナ */
+.add-new-link-container {
+	display: flex;
+	justify-content: flex-end; /* 右寄せ */
+	margin-bottom: 15px; /* テーブルとの間に余白 */
+}
+
+.add-new-link-container a {
+	color: #007bff; /* Bootstrap primary blue */
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.add-new-link-container a:hover {
+	text-decoration: underline;
+}
+
+/* テーブルのスタイル */
+.table-bordered th, .table-bordered td {
+	border: 1px solid #dee2e6; /* 細いボーダー */
+}
+
+.table thead th {
+	background-color: #e9ecef; /* ヘッダーの背景色をライトグレーに */
+	color: #495057; /* ヘッダーの文字色 */
+	border-bottom: 2px solid #dee2e6;
+	padding: 12px 8px; /* パディング */
+	font-weight: 500; /* 少し太字 */
+	vertical-align: middle; /* 垂直方向の中央揃え */
+}
+
+.table tbody td {
+	padding: 12px 8px; /* パディング */
+	vertical-align: middle; /* 垂直方向の中央揃え */
+	color: #212529; /* 文字色 */
+}
+
+/* 各列の幅調整 (画像からの推測) */
+.table thead th:nth-child(1), /* 科目コード */ .table tbody td:nth-child(1) {
+	width: 15%; /* 幅を狭く */
+	text-align: center; /* 中央寄せ */
+}
+
+.table thead th:nth-child(2), /* 科目名 */ .table tbody td:nth-child(2) {
+	width: 55%; /* 幅を広く */
+	text-align: left; /* 左寄せ */
+}
+
+.table thead th:nth-child(3), /* 変更 */ .table tbody td:nth-child(3),
+	.table thead th:nth-child(4), /* 削除 */ .table tbody td:nth-child(4) {
+	width: 15%; /* 変更・削除の幅 */
+	text-align: center; /* 中央寄せ */
+}
+
+/* 変更/削除リンクのスタイル */
+.table tbody td a {
+	color: #007bff; /* Bootstrap primary blue */
+	text-decoration: none;
+	font-weight: normal;
+}
+
+.table tbody td a:hover {
+	text-decoration: underline;
+}
+
+.content-area {
+	padding: 30px; /* コンテンツエリアのパディング */
+}
+
+input[type="text"], select {
 	width: 100%;
 	padding: 8px;
 	border: 1px solid #ccc;
@@ -174,9 +250,9 @@ button {
 	border-radius: 25px; /* 常に丸く */
 	cursor: pointer;
 	font-weight: bold;
-	appearance: none;        /* ← ブラウザのデフォルト無効化 */
-	-webkit-appearance: none;/* ← Safari対応 */
-	-moz-appearance: none;   /* ← Firefox対応 */
+	appearance: none; /* ← ブラウザのデフォルト無効化 */
+	-webkit-appearance: none; /* ← Safari対応 */
+	-moz-appearance: none; /* ← Firefox対応 */
 }
 
 button:hover {
@@ -184,7 +260,6 @@ button:hover {
 }
 
 /
-
 h2 {
 	background-color: #f5f5f5;
 }
@@ -193,8 +268,6 @@ h2 {
 	color: red;
 	margin-bottom: 10px;
 }
-
-
 
 .menu-box {
 	padding: 0; /* 枠内の余白 */
@@ -220,7 +293,6 @@ h2 {
 	align-items: center; /* 水平方向も中央寄せにしたい場合 */
 	text-align: center; /* テキストの行揃え */
 }
-
 
 /* ヘッダーのスタイル */
 .header {
