@@ -7,7 +7,6 @@ import java.sql.SQLException;
 
 import bean.School;
 
-
 public class SchoolDao extends dao {
 	// idで指定された学校インスタンスを返す
     // 存在しなかったらnullが返る

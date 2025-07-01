@@ -1,37 +1,30 @@
 package dao;
- 
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
- 
+
 import bean.ExamListStudent; // ExamListStudentクラスが存在すると仮定
 import bean.Student; // Studentクラスが存在すると仮定
- 
+
 /**
-* 学生ごとの成績一覧を扱うためのDAOクラス。 DAOクラスを継承しています。
-*/
+ * 学生ごとの成績一覧を扱うためのDAOクラス。 DAOクラスを継承しています。
+ */
 public class ExamListStudentDao extends dao {
- 
+
 	// ベースとなるSQLクエリ
 	 // ビューまたはテーブル名を指定
 	private String baseSql = "select s.name as subject_name, t.subject_cd, t.no, t.point " +
                          "from test as t " +
                          "left join subject as s on t.subject_cd = s.cd and t.school_cd = s.school_cd"; // ビューまたはテーブル名を指定
-<<<<<<< Upstream, based on branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
- 
-=======
 
->>>>>>> 027cae1 restore ExamList 
 	/**
 	 * ResultSetからExamListStudentのリストを生成します。
-<<<<<<< Upstream, based on branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
-=======
 	 *
 	 *
->>>>>>> 027cae1 restore ExamList 
 	 * @param rSet
 	 *            データベースからのResultSet
 	 * @return ExamListStudentのリスト
@@ -39,11 +32,7 @@ public class ExamListStudentDao extends dao {
 	 *             データベースアクセスエラー
 	 */
 	public List<ExamListStudent> postFilter(ResultSet rSet) throws SQLException {
-<<<<<<< Upstream, based on branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
- 
-=======
 
->>>>>>> 027cae1 restore ExamList 
 		List<ExamListStudent> list = new ArrayList<>();
 		try {
 			// ResultSetをループしてデータを取得
@@ -56,7 +45,7 @@ public class ExamListStudentDao extends dao {
 				els.setNum(rSet.getInt("num"));
 				els.setNum(rSet.getInt("no"));
 				els.setPoint(rSet.getInt("point"));
- 
+
 				list.add(els);
 			}
 		} catch (SQLException e) {
@@ -66,14 +55,11 @@ public class ExamListStudentDao extends dao {
 		}
 		return list;
 	}
- 
+
 	/**
 	 * 指定された学生番号に基づいて成績一覧をフィルタリングします。
-<<<<<<< Upstream, based on branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
-=======
 	 *
 	 *
->>>>>>> 027cae1 restore ExamList 
 	 * @param studentNo
 	 *            フィルタリングの基準となる学生番号
 	 * @return フィルタリングされたExamListStudentのリスト
@@ -85,22 +71,22 @@ public class ExamListStudentDao extends dao {
 		Connection con = null;
 		PreparedStatement st = null;
 		ResultSet rs = null;
- 
+
 		try {
 			// スーパークラスDAOからデータベース接続を取得
 			con = getConnection();
- 
+
 			// SQLクエリを準備 (学生番号で絞り込み)
 			String sql = baseSql + " WHERE student_no = ?";
 			st = con.prepareStatement(sql);
 			st.setString(1, studentNo);
- 
+
 			// クエリを実行
 			rs = st.executeQuery();
- 
+
 			// ResultSetからリストを生成
 			list = postFilter(rs);
- 
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -130,22 +116,17 @@ public class ExamListStudentDao extends dao {
 		}
 		return list;
 	}
- 
+
 	/**
 	 * 指定されたStudentオブジェクトに基づいて成績一覧をフィルタリングします。 (オーバーロードされたメソッド)
 	 *
-<<<<<<< Upstream, based on branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
-
-=======
 	 *
->>>>>>> 027cae1 restore ExamList 
 	 * @param student
 	 *            フィルタリングの基準となる学生オブジェクト
 	 * @return フィルタリングされたExamListStudentのリスト
 	 * @throws Exception
 	 *             データベースアクセスエラーなど
 	 */
- 
 	public List<ExamListStudent> filter(Student student) throws Exception {
 		// Studentオブジェクトから学生番号を取得し、filter(String studentNo)を呼び出す
 		return filter(student.getNo());

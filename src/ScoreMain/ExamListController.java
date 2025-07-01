@@ -1,78 +1,40 @@
 package ScoreMain;
-<<<<<<< Upstream, based on branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
- 
-=======
 
 import java.util.List;
 import java.util.stream.Collectors;
 
->>>>>>> 027cae1 restore ExamList 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-<<<<<<< Upstream, based on branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
- 
-=======
 
 import bean.ClassNum;
->>>>>>> 027cae1 restore ExamList 
 import bean.School;
+import bean.Student;
+import bean.Subject;
 import bean.Teacher;
+import dao.ClassNumDao;
+import dao.StudentDao;
+import dao.SubjectDao;
 import dao.TeacherDao;
 import tool.CommonServlet;
-<<<<<<< Upstream, based on branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
- 
-/**
-*
-* @author y_yasui
-*
-*/
-=======
 
 /**
  *
  * @author y_yasui
  *
  */
->>>>>>> 027cae1 restore ExamList 
 @WebServlet(urlPatterns={"/main/ExamList"})
 public class ExamListController extends CommonServlet {
-<<<<<<< Upstream, based on branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
- 
-//	private Teacher teacher;
-//	private School school;
- 
-=======
 
 //	private Teacher teacher;
 //	private School school;
 
->>>>>>> 027cae1 restore ExamList 
 	@Override
     protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         // テスト用コード（本番ではセッションから取得）
         TeacherDao teacherDao = new TeacherDao();
         Teacher teacher = teacherDao.get("admin");
-<<<<<<< Upstream, based on branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
- 
-        // teacherがnullの場合はログイン画面にリダイレクト
- 
-=======
->>>>>>> 027cae1 restore ExamList 
         School school = teacher.getSchool();
-<<<<<<< Upstream, based on branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
- 
-//        List<ExamListStudent> scoreList = new ArrayList<>();
-//        for (Student s : filtered) {
-//            ExamListStudent ex = new ExamListStudent();
-//            ex.setSubjectCd(subjectCd);
-//            ex.setSubjectName(subjectName);
-//            ex.setNum(Integer.parseInt(s.getNo())); // 学生番号
-//            ex.setPoint(0); // 仮の点数（後でExamDao等で取得）
-//            scoreList.add(ex);
-//        }
- 
-=======
 
         // マスタ取得
         StudentDao studentDao = new StudentDao();
@@ -136,61 +98,21 @@ public class ExamListController extends CommonServlet {
 //            scoreList.add(ex);
 //        }
 
->>>>>>> 027cae1 restore ExamList 
         // JSPに渡す
 //        req.setAttribute("scoreList", scoreList);
         req.setAttribute("subjectName", subjectName);
- 
+
         // 成績参照画面にjump！！！
-<<<<<<< Upstream, based on branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
-        req.getRequestDispatcher("GRMR002.jsp").forward(req, resp);
- 
-=======
 
         req.getRequestDispatcher("GRMR002.jsp").forward(req, resp);
 
->>>>>>> 027cae1 restore ExamList 
     }
- 
- 
+
+
+
     @Override
     protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         // ここには何も書かない。
-<<<<<<< Upstream, based on branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
- 
-        TeacherDao teacherDao = new TeacherDao();
-        Teacher teacher = teacherDao.get("admin");
- 
-    	String check=req.getParameter("f");
- 
-    	if("sj".equals(check)){
-    		String entYear = req.getParameter("f1");
-    		String classNum = req.getParameter("f2");
-    		String subjectCd = req.getParameter("f3");
- 
- 
-    		System.out.println(entYear);
-    		System.out.println(classNum);
-    		System.out.println(subjectCd);
- 
-    		if(entYear.isEmpty()|| classNum.isEmpty() || subjectCd.isEmpty()){
-    			req.setAttribute("sjError", "入学年度とクラスと科目を選択してください");
- 
-    			req.setAttribute("entYear", entYear);
-    			req.setAttribute("classNum", classNum);
-    			req.setAttribute("subjectCd", subjectCd);
- 
-    			this.get(req, resp);
- 
-    			return;
-    		}
- 
- 
-    		req.setAttribute("entYear",entYear);
-    		req.setAttribute("classNum", classNum);
-    		req.setAttribute("subjectCd", subjectCd);
- 
-=======
 
         TeacherDao teacherDao = new TeacherDao();
         Teacher teacher = teacherDao.get("admin");
@@ -224,22 +146,18 @@ public class ExamListController extends CommonServlet {
     		req.setAttribute("classNum", classNum);
     		req.setAttribute("subjectCd", subjectCd);
 
->>>>>>> 027cae1 restore ExamList 
     		req.getRequestDispatcher("/main/ExamListSubject").forward(req, resp);
     	}else{
     		req.getRequestDispatcher("/main/examliststudent").forward(req, resp);
     	}
     }
- 
+
     /**
      * modeパラメータで表示モードを切り替え
      * mode=subject → 科目別、 mode=student → 学生別、それ以外 → フィルタなし全件表示
      */
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-<<<<<<< Upstream, based on branch 'master' of https://github.com/SIGESPLIDE/JavaSD_teamE.git
-=======
 
->>>>>>> 027cae1 restore ExamList 
 //        HttpSession session = req.getSession();
 //        // Teacherオブジェクトを取得
 //        Teacher teacher = (Teacher) session.getAttribute("session_user");
@@ -252,4 +170,5 @@ public class ExamListController extends CommonServlet {
 //        }
 //        school = teacher.getSchool();
     }
-    }
+
+}
