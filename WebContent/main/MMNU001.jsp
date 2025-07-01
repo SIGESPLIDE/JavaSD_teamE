@@ -31,7 +31,7 @@
 							</a>
 						</p>
 						<p class="card-title h5 mb-0">
-							<a href="${pageContext.request.contextPath}/main/STDM001">
+							<a href="${pageContext.request.contextPath}/main/ExamList">
 								成績参照
 							</a>
 						</p>
