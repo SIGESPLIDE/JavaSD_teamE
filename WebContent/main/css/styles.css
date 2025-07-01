@@ -207,7 +207,7 @@ body {
 }
 
 .table thead th:nth-child(2), /* 科目名 */ .table tbody td:nth-child(2) {
-	width: 55%;
+	width: 20%;
 	text-align: left;
 }
 
