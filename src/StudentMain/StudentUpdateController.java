@@ -1,51 +1,81 @@
 package StudentMain;
 
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import bean.School;
 import bean.Student;
+import bean.Teacher;
+import dao.ClassNumDao;
 import dao.StudentDao;
 import tool.CommonServlet;
 
+/**
+ *
+ * @author k_nohara
+ *
+ */
+@WebServlet(urlPatterns = { "/main/studentUpdate" })
 public class StudentUpdateController extends CommonServlet {
 
 	@Override
 	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		// GETは編集画面表示用などに使用する想定
+		try {
+			  HttpSession session = req.getSession();
+			 Teacher teacher = (Teacher) session.getAttribute("user");
+
+		        // 1. ログインチェック (必須)
+		        if (teacher == null || teacher.getSchool() == null) {
+		            // エラーメッセージをリクエストスコープにセットしてエラーページにフォワードする、などが望ましい
+		            req.setAttribute("error", "ログイン情報が無効です。再度ログインしてください。");
+		            req.getRequestDispatcher("/main/error.jsp").forward(req, resp); // 例: エラー表示用JSP
+		            return;
 		        }
 
-	@Override
-	protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		// フォームからのパラメータ取得
 		        String no = req.getParameter("no");
-		String name = req.getParameter("name");
-		String entYearStr = req.getParameter("ent_year");
-		String classNum = req.getParameter("class_num");
-		String isAttendStr = req.getParameter("is_attend");
-		String schoolCd = req.getParameter("school_cd");
+		        if (no == null || no.isEmpty()) {
+		            no = req.getParameter("studentNo");  // 念のため対応
+		        }
+		        if (no == null || no.isEmpty()) {
+		            throw new Exception("学生コードが指定されていません");
+		        }
 
-		// 入学年度と在学状態を変換
-		int entYear = Integer.parseInt(entYearStr);
-		boolean isAttend = "true".equals(isAttendStr) || "1".equals(isAttendStr);
 
-		// Student オブジェクトを作成
-		Student student = new Student();
-		student.setNo(no);
-		student.setName(name);
-		student.setEntYear(entYear);
-		student.setClassNum(classNum);
-		student.setAttend(isAttend);
+			StudentDao dao = new StudentDao();
+			Student student = dao.findByNo(no);
 
-		School school = new School();
-		school.setCd(schoolCd);
-		student.setSchool(school);
+			if (student == null) {
+				throw new Exception("指定された学生が見つかりません");
+			}
 
-		// DAOで更新
-		StudentDao dao = new StudentDao();
-		dao.update(student);  // ※ updateメソッドが StudentDao に実装されている前提
+			ClassNumDao classNumDao = new ClassNumDao();
+			School school = teacher.getSchool();
+			List<String> classList = classNumDao.filter(school);
 
-		// リダイレクトまたは結果画面へ
-		resp.sendRedirect("STDM001");  // 学生一覧に戻すなど
+			req.setAttribute("classList", classList);
+
+
+			req.setAttribute("student", student);
+
+			RequestDispatcher rd = req.getRequestDispatcher("STDM004.jsp");
+			rd.forward(req, resp);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			throw new ServletException(e);
+		}
+	}
+
+	@Override
+    protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        // 更新処理は別サーブレットで実装する想定
+        resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "POSTメソッドはサポートされていません");
     }
 }

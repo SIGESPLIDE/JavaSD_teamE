@@ -20,10 +20,9 @@
                 </c:if>
             </div>
 
-
             <%-- リンク先をサーブレットのURLに修正 --%>
             <a href="SubjectCreate">続けて科目を登録する</a>
-            <a href="subject" style="margin-left: 20px;">科目一覧へ</a> <%-- 仮の科目一覧画面URL --%>
+            <a href="SubjectListController" style="margin-left: 20px;">科目一覧へ</a> <%-- 仮の科目一覧画面URL --%>
         </div>
     </c:param>
 </c:import>

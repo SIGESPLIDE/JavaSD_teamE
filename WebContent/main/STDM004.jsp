@@ -67,7 +67,7 @@
 			<!-- ボタン -->
 			<div class="button-group">
 				<button type="submit">変更</button><br>
-				<a href="studentList">戻る</a>
+				<a href="${pageContext.request.contextPath}/main/STDM001">戻る</a>
 			</div>
 		</form>
 	</c:param>
