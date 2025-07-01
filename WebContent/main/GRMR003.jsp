@@ -1,5 +1,6 @@
 <%@page contentType="text/html; charset=UTF-8"%>Add commentMore actions
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:import url="/BASE001.jsp">
 
 <div class="search-results">
 	<%-- 学生名と学生番号の表示 --%>
@@ -42,5 +43,5 @@
 			<p>成績情報が存在しませんでした</p>
 		</c:otherwise>
 	</c:choose>
-	Add commentMore actions
 </div>
+</c:import>

@@ -1,5 +1,8 @@
-<%@page contentType="text/html; charset=UTF-8"%>Add commentMore actions
+<%@page contentType="text/html; charset=UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:import url="/BASE001.jsp">
+<c:param name="head"></c:param>
+<c:param name="body">
 <c:if test="${not empty testListSubject}">
 	<div class="search-results">
 		<div class="mb-3">
@@ -59,3 +62,5 @@
 <c:if test="${empty testListSubject}">
 	<p>学生情報が存在しませんでした</p>
 </c:if>
+</c:param>
+</c:import>
