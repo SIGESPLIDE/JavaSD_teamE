@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import bean.School;
 import bean.Student;
 import bean.Teacher;
-import dao.ClassNumDao; // ClassNumDaoをインポート
+import dao.ClassNumDao;
 import dao.StudentDao;
 import tool.CommonServlet;
 
@@ -20,20 +20,17 @@ public class StudentListController extends CommonServlet {
 
     @Override
     protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-
         String errorMessage = null;
 
         HttpSession session = req.getSession();
-        Teacher userSchool2 = (Teacher) session.getAttribute("user");
+        Teacher user = (Teacher) session.getAttribute("user");
 
-        if (userSchool2 == null) {
+        if (user == null) {
             resp.sendRedirect(req.getContextPath() + "/login.action");
             return;
         }
 
-        School school =  userSchool2.getSchool();
-//        System.out.println(test);
-
+        School school = user.getSchool();
 
         String entYearStr = req.getParameter("entYear");
         String classNum = req.getParameter("classId");
@@ -46,10 +43,17 @@ public class StudentListController extends CommonServlet {
             } catch (NumberFormatException e) {
                 errorMessage = "入学年度が不正な形式です。";
                 req.setAttribute("errorMessage", errorMessage);
-                RequestDispatcher rd = req.getRequestDispatcher("STDM001.jsp");
-                rd.forward(req, resp);
+                forwardToPage(req, resp, school, entYearStr, classNum, isAttendStr);
                 return;
             }
+        }
+
+        // クラスのみ指定された場合のエラーチェック
+        if ((entYear == null) && (classNum != null && !classNum.isEmpty())) {
+            errorMessage = "クラスを指定する場合は入学年度も指定してください。";
+            req.setAttribute("errorMessage", errorMessage);
+            forwardToPage(req, resp, school, entYearStr, classNum, isAttendStr);
+            return;
         }
 
         boolean isAttend = (isAttendStr != null && isAttendStr.equals("1"));
@@ -57,32 +61,24 @@ public class StudentListController extends CommonServlet {
         StudentDao studentDao = new StudentDao();
         List<Student> studentList = null;
 
-//        School userSchool = (School) session.getAttribute("user");
         try {
             studentList = studentDao.filterAllCond(school, entYear, classNum, isAttend);
         } catch (Exception e) {
-          //  errorMessage = "学生情報の取得中にエラーが発生しました: " + e.getMessage();
-         //   e.printStackTrace();
+            errorMessage = "学生情報の取得中にエラーが発生しました。";
         }
 
-        // ここから修正・変更する部分
-        // ClassNumDaoを使ってクラスリストをDBから取得
-        ClassNumDao classNumDao = new ClassNumDao(); // ClassNumDaoのインスタンスを作成
-        List<String> classList = classNumDao.filter(school); // filterメソッドを呼び出してクラスリストを取得
-        // ここまで修正・変更する部分
+        // クラスリスト取得
+        ClassNumDao classNumDao = new ClassNumDao();
+        List<String> classList = classNumDao.filter(school);
 
-
+        // 各値をリクエストスコープにセット
         req.setAttribute("students", studentList);
+        req.setAttribute("classList", classList);
         req.setAttribute("errorMessage", errorMessage);
 
-        // 検索条件をJSPのフォームに再表示するためにセット
         req.setAttribute("entYear", entYearStr);
         req.setAttribute("classId", classNum);
         req.setAttribute("isEnrolled", isAttendStr);
-
-        // クラスリストをリクエストスコープにセット
-        req.setAttribute("classList", classList);
-
 
         RequestDispatcher rd = req.getRequestDispatcher("STDM001.jsp");
         rd.forward(req, resp);
@@ -91,5 +87,20 @@ public class StudentListController extends CommonServlet {
     @Override
     protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         doGet(req, resp);
+    }
+
+    // 共通のJSP転送処理（エラー時用）
+    private void forwardToPage(HttpServletRequest req, HttpServletResponse resp, School school,
+                               String entYearStr, String classNum, String isAttendStr) throws Exception {
+        ClassNumDao classNumDao = new ClassNumDao();
+        List<String> classList = classNumDao.filter(school);
+
+        req.setAttribute("classList", classList);
+        req.setAttribute("entYear", entYearStr);
+        req.setAttribute("classId", classNum);
+        req.setAttribute("isEnrolled", isAttendStr);
+
+        RequestDispatcher rd = req.getRequestDispatcher("STDM001.jsp");
+        rd.forward(req, resp);
     }
 }
