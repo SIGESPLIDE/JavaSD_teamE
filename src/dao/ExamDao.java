@@ -342,6 +342,87 @@ public class ExamDao extends dao {
 		return count > 0;
 	}
 
+    /**
+     * 【新規追加】成績を「新規なら回数1、更新なら回数+1」で保存する専用メソッド。
+     * このメソッド内でトランザクション管理も行う。
+     * @param exams 保存または更新する試験データのリスト
+     * @return 処理が成功した場合はtrue
+     * @throws Exception
+     */
+    public boolean saveOrUpdateWithCountUp(List<Exam> exams) throws Exception {
+        if (exams == null || exams.isEmpty()) {
+            return true; // 処理対象がない場合は成功とする
+        }
+
+        Connection connection = getConnection();
+        // トランザクションを開始
+        connection.setAutoCommit(false);
+        boolean allSuccess = true;
+
+        try {
+            // リスト内の各成績データをループで処理
+            for (Exam exam : exams) {
+                // --- 1. データが既に存在するかチェック ---
+                //    (学生番号と科目コードで一意に特定)
+                String checkSql = "SELECT COUNT(*) FROM test WHERE student_no = ? AND subject_cd = ?";
+                int recordCount = 0;
+                try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
+                    checkStmt.setString(1, exam.getStudent().getNo());
+                    checkStmt.setString(2, exam.getSubject().getCd());
+                    try (ResultSet rs = checkStmt.executeQuery()) {
+                        if (rs.next()) {
+                            recordCount = rs.getInt(1);
+                        }
+                    }
+                }
+
+                // --- 2. 存在有無に応じてINSERTまたはUPDATEを実行 ---
+                if (recordCount == 0) {
+                    // ★★★ 新規登録 (INSERT) の場合 ★★★
+                    // 回数を「1」として新規登録する
+                    String insertSql = "INSERT INTO test (student_no, subject_cd, school_cd, no, point, class_num) VALUES (?, ?, ?, 1, ?, ?)";
+                    try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
+                        insertStmt.setString(1, exam.getStudent().getNo());
+                        insertStmt.setString(2, exam.getSubject().getCd());
+                        insertStmt.setString(3, exam.getSchool().getCd());
+                        insertStmt.setInt(4, exam.getPoint());
+                        insertStmt.setString(5, exam.getClassNum());
+                        insertStmt.executeUpdate();
+                    }
+                } else {
+                    // ★★★ 更新 (UPDATE) の場合 ★★★
+                    // 回数を「+1」し、点数を更新する
+                    String updateSql = "UPDATE test SET no = no + 1, point = ? WHERE student_no = ? AND subject_cd = ?";
+                    try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
+                        updateStmt.setInt(1, exam.getPoint());
+                        updateStmt.setString(2, exam.getStudent().getNo());
+                        updateStmt.setString(3, exam.getSubject().getCd());
+                        updateStmt.executeUpdate();
+                    }
+                }
+            }
+            // 全て成功したらコミット
+            connection.commit();
+
+        } catch (Exception e) {
+            allSuccess = false;
+            // エラーが発生したらロールバック
+            if (connection != null) {
+                connection.rollback();
+            }
+            e.printStackTrace();
+            throw e; // エラーをコントローラーに通知
+        } finally {
+            // 接続を閉じる
+            if (connection != null) {
+                connection.setAutoCommit(true);
+                connection.close();
+            }
+        }
+        return allSuccess;
+    }
+
+
 	/**
 	 * 成績情報を削除する（単一レコード） このメソッドは外部から渡されたConnectionを使用し、トランザクション管理は呼び出し元で行う
 	 *
