@@ -103,63 +103,76 @@ public class ExamRegistController extends CommonServlet {
         }
 
         School school = teacher.getSchool();
-        ExamDao examDao = new ExamDao(); // TestDaoからExamDaoに変更
+        ExamDao examDao = new ExamDao();
 
-        String subjectCd = req.getParameter("f3");
-        String testNoStr = req.getParameter("f4");
+        // フォームから必要なデータを取得
+        // ★ 登録対象の科目は、検索時のものを隠しフィールドから受け取る
+        String subjectCd = req.getParameter("f3_registered");
         String[] studentNos = req.getParameterValues("student_no");
 
-        // ★★★ 保存用のList<Exam>を作成 ★★★
-        List<Exam> examsToSave = new ArrayList<>();
+        List<Exam> examsToProcess = new ArrayList<>();
         boolean isSuccess = false;
 
         try {
-            int testNo = (testNoStr != null && !testNoStr.isEmpty()) ? Integer.parseInt(testNoStr) : 0;
+            // 学生番号リストがnullでないことを確認
+            if (studentNos != null) {
+                for (String studentNo : studentNos) {
+                    String pointStr = req.getParameter("point_" + studentNo);
 
-            for (String studentNo : studentNos) {
-                String pointStr = req.getParameter("point_" + studentNo);
-                int point = (pointStr != null && !pointStr.isEmpty()) ? Integer.parseInt(pointStr) : 0;
+                    // ★ 点数が入力されている学生のみを処理対象とする
+                    if (pointStr != null && !pointStr.isEmpty()) {
+                        int point = Integer.parseInt(pointStr);
 
-                // ★★★ Examオブジェクトを作成する ★★★
-                Exam exam = new Exam();
+                        // DAOに渡すためのExamオブジェクトを作成
+                        Exam exam = new Exam();
+                        Student student = new Student();
+                        student.setNo(studentNo);
+                        exam.setStudent(student);
 
-                Student student = new Student();
-                student.setNo(studentNo);
-                exam.setStudent(student);
+                        Subject subject = new Subject();
+                        subject.setCd(subjectCd);
+                        exam.setSubject(subject);
 
-                Subject subject = new Subject();
-                subject.setCd(subjectCd);
-                exam.setSubject(subject);
+                        exam.setSchool(school);
+                        exam.setPoint(point);
+                        exam.setClassNum(req.getParameter("class_num_" + studentNo));
 
-                exam.setSchool(school);
-                exam.setNo(testNo);
-                exam.setPoint(point);
-                exam.setClassNum(req.getParameter("class_num_" + studentNo));
+                        // ★コントローラーは回数を意識しない。DAOに任せる。
+                        // exam.setNo(testNo); ← この行は不要
 
-                examsToSave.add(exam);
+                        examsToProcess.add(exam);
+                    }
+                }
             }
 
-            // ★★★ ExamDao.save を呼び出すだけ！ トランザクション管理はDAO任せ ★★★
-            isSuccess = examDao.save(examsToSave);
+            // 処理対象のデータが1件以上ある場合のみDAOを呼び出す
+            if (!examsToProcess.isEmpty()) {
+                // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                // ★★★ 修正箇所: 新しく作成した専用メソッドを呼び出す ★★★
+                // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                isSuccess = examDao.saveOrUpdateWithCountUp(examsToProcess);
+            } else {
+                // 点数が一つも入力されなかった場合は、DB処理は行わず成功とする
+                isSuccess = true;
+            }
 
         } catch (NumberFormatException e) {
             req.setAttribute("errorMessage", "点数に数字以外の文字が入力されています。確認してください。");
-            // エラー時はフォワードで画面を再表示
-            doGet(req, resp);
+            doGet(req, resp); // doGetを再実行してエラー表示
             return;
         } catch (Exception e) {
             e.printStackTrace();
-            // isSuccessはデフォルトでfalseなので、ここでは何もしなくても良い
+            isSuccess = false; // DB関連などの予期せぬエラー
         }
 
         if (isSuccess) {
             resp.sendRedirect(req.getContextPath() + "/main/GRMU002.jsp");
         } else {
-            // 登録失敗時のリダイレクト（DBエラーなど）
-            String f1 = req.getParameter("f1");
-            String f2 = req.getParameter("f2");
-            String f3 = req.getParameter("f3");
-            String f4 = req.getParameter("f4");
+            // 失敗時のリダイレクト処理（元の検索条件をURLに付与して戻す）
+            String f1 = req.getParameter("f1_registered");
+            String f2 = req.getParameter("f2_registered");
+            String f3 = req.getParameter("f3_registered");
+            String f4 = req.getParameter("f4_registered");
             String redirectUrl = "ExamRegist?f1=" + f1 + "&f2=" + f2 + "&f3=" + f3 + "&f4=" + f4
                                + "&errorMessage=" + URLEncoder.encode("登録処理中にデータベースエラーが発生しました。", "UTF-8");
             resp.sendRedirect(redirectUrl);
