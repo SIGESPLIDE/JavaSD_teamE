@@ -212,6 +212,8 @@ public class ExamDao extends dao {
 	 * @return すべての保存処理が成功した場合にtrueを返す
 	 * @throws Exception
 	 */
+
+	/**
 	public boolean save(List<Exam> list) throws Exception {
 		Connection connection = null;
 		boolean allSuccess = true;
@@ -259,6 +261,7 @@ public class ExamDao extends dao {
 		}
 		return allSuccess;
 	}
+	*/
 
 	/**
 	 * Examオブジェクト1件を保存する内部メソッド (private)。 既存データがあればUPDATE、なければINSERTを行う。
@@ -271,6 +274,8 @@ public class ExamDao extends dao {
 	 * @return 処理が成功した場合にtrueを返す
 	 * @throws Exception
 	 */
+
+	/**
 	private boolean saveSingle(Exam exam, Connection connection) throws Exception {
 		PreparedStatement statement = null;
 		ResultSet rs = null;
@@ -331,6 +336,7 @@ public class ExamDao extends dao {
 		}
 		return count > 0;
 	}
+	*/
 
     /**
      * 【新規追加】成績を「新規なら回数1、更新なら回数+1」で保存する専用メソッド。
@@ -339,6 +345,8 @@ public class ExamDao extends dao {
      * @return 処理が成功した場合はtrue
      * @throws Exception
      */
+
+	/**
     public boolean saveOrUpdateWithCountUp(List<Exam> exams) throws Exception {
         if (exams == null || exams.isEmpty()) {
             return true; // 処理対象がない場合は成功とする
@@ -404,6 +412,84 @@ public class ExamDao extends dao {
             throw e; // エラーをコントローラーに通知
         } finally {
             // 接続を閉じる
+            if (connection != null) {
+                connection.setAutoCommit(true);
+                connection.close();
+            }
+        }
+        return allSuccess;
+    }
+    */
+
+	/**
+     * 成績データを保存または更新（UPSERT）する。
+     * - 指定された回数のデータが存在すればUPDATE、なければINSERTする。
+     * - このメソッド内でトランザクション管理を行う。
+     * @param exams 保存または更新する試験データのリスト
+     * @return 処理が成功した場合はtrue
+     * @throws Exception
+     */
+    public boolean upsert(List<Exam> exams) throws Exception {
+        if (exams == null || exams.isEmpty()) {
+            return true;
+        }
+
+        Connection connection = getConnection();
+        connection.setAutoCommit(false);
+        boolean allSuccess = true;
+
+        try {
+            for (Exam exam : exams) {
+                // 1. データが既に存在するかチェック (回数も条件に含める)
+                String checkSql = "SELECT COUNT(*) FROM test WHERE student_no = ? AND subject_cd = ? AND school_cd = ? AND no = ?";
+                int recordCount = 0;
+                try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
+                    checkStmt.setString(1, exam.getStudent().getNo());
+                    checkStmt.setString(2, exam.getSubject().getCd());
+                    checkStmt.setString(3, exam.getSchool().getCd());
+                    checkStmt.setInt(4, exam.getNo());
+                    try (ResultSet rs = checkStmt.executeQuery()) {
+                        if (rs.next()) {
+                            recordCount = rs.getInt(1);
+                        }
+                    }
+                }
+
+                // 2. 存在有無に応じてINSERTまたはUPDATE
+                if (recordCount == 0) {
+                    // 新規登録 (INSERT)
+                    String insertSql = "INSERT INTO test (student_no, subject_cd, school_cd, no, point, class_num) VALUES (?, ?, ?, ?, ?, ?)";
+                    try (PreparedStatement insertStmt = connection.prepareStatement(insertSql)) {
+                        insertStmt.setString(1, exam.getStudent().getNo());
+                        insertStmt.setString(2, exam.getSubject().getCd());
+                        insertStmt.setString(3, exam.getSchool().getCd());
+                        insertStmt.setInt(4, exam.getNo());
+                        insertStmt.setInt(5, exam.getPoint());
+                        insertStmt.setString(6, exam.getClassNum());
+                        insertStmt.executeUpdate();
+                    }
+                } else {
+                    // 更新 (UPDATE)
+                    String updateSql = "UPDATE test SET point = ? WHERE student_no = ? AND subject_cd = ? AND school_cd = ? AND no = ?";
+                    try (PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
+                        updateStmt.setInt(1, exam.getPoint());
+                        updateStmt.setString(2, exam.getStudent().getNo());
+                        updateStmt.setString(3, exam.getSubject().getCd());
+                        updateStmt.setString(4, exam.getSchool().getCd());
+                        updateStmt.setInt(5, exam.getNo());
+                        updateStmt.executeUpdate();
+                    }
+                }
+            }
+            connection.commit();
+        } catch (Exception e) {
+            allSuccess = false;
+            if (connection != null) {
+                connection.rollback();
+            }
+            e.printStackTrace();
+            throw e;
+        } finally {
             if (connection != null) {
                 connection.setAutoCommit(true);
                 connection.close();
