@@ -1,44 +1,21 @@
 /* サイドバーのスタイル */
 .sidebar {
-	width: 200px; /* サイドバーの固定幅 */
-	min-height: calc(100vh - 2rem - 2rem); /* ヘッダーとフッターの高さを引く */
+	width: 150px; /* サイドバーの固定幅 */
 	padding: 20px 0;
-	border-radius: 5px;
 	flex-shrink: 0; /* サイドバーは縮まない */
 	height: fit-content; /* コンテンツの高さに合わせて、不必要な空白をなくす */
-	margin-right: 20px; /* コンテンツエリアとの間隔 */
-	padding: 1rem;
+	margin-right: 2px; /* コンテンツエリアとの間隔 */
 }
  
 .sidebar ul {
 	list-style: none;
-	padding: 0;
-	margin: 0;
-}
- 
-.sidebar li a {
-	display: block;
-	padding: 12px 20px;
-	color: #333;
-	text-decoration: none;
-	font-size: 16px;
-	transition: background-color 0.2s ease;
-}
- 
-.sidebar li a:hover {
-	background-color: #f0f0f0;
-}
- 
-.sidebar li a.active {
-	background-color: #e0f0ff;
-	color: #007bff;
-	font-weight: bold;
-	border-left: 4px solid #007bff;
-	padding-left: 16px; /* border-left分ずらす */
-}
- 
- 
-.sidebar {
 
- 
+}
+
+.sidebar li {
+	margin-bottom: 5px;
+}
+
+.sidebar li a {
+	font-size: 16px;
 }
