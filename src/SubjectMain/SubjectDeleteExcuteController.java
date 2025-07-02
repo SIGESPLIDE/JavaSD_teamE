@@ -22,7 +22,7 @@ public class SubjectDeleteExcuteController extends CommonServlet {
     @Override
     protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         // 科目IDを取得して削除処理を実行
-        String subjectId = req.getParameter("id");
+        int subjectId = req.getParameter("id");
         SubjectDao dao = new SubjectDao();
         dao.delete(subjectId);
 
