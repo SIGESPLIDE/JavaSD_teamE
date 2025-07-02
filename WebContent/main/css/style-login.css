@@ -1,0 +1,159 @@
+/*
+ * style-login.css
+ * ログイン画面レイアウト用CSS (画像に基づいて作成)
+ *
+ * クラスと装飾の関連性:
+ * - .login-page-wrapper: ページ全体の中央寄せ（BASE001.jspのbodyに直接スタイルが適用できない場合のラッパー）。
+ * - .login-container: ログインフォーム全体を囲む白いカード状のコンテナ。
+ * - .login-header: ログインフォームのタイトル部分のコンテナ。
+ * - .login-title: ログインフォームのタイトル（h2タグ）。
+ * - .login-form-body: フォーム自体のパディングや配置。
+ * - .error-message: エラーメッセージの表示スタイル。
+ * - .form-group: 各入力フィールド、チェックボックス、ボタンのグループ。
+ * - label: 入力フィールドのラベル（アニメーションする）。
+ * - input[type="text"], input[type="password"]: テキスト/パスワード入力フィールド。
+ * - .checkbox-group: チェックボックスとラベルを囲むグループ。
+ * - input[type="checkbox"]: チェックボックス。
+ * - .login-button: ログイン送信ボタン。
+ */
+
+/* 1. ページ全体の背景と中央寄せ */
+/* login-page-wrapper に適用 (BASE001.jsp の body に直接スタイルが適用できない場合のラッパー) */
+.login-page-wrapper {
+    display: flex;
+    justify-content: center; /* 水平中央寄せ */
+    align-items: center;     /* 垂直中央寄せ */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* フォント調整 */
+    color: #343a40; /* 基本の文字色 */
+}
+
+
+/* 2. ログインフォームを囲むメインコンテナ */
+.login-container {
+    border-radius: 2px; /* 角の丸み (画像に合わせて小さく) */
+    border: solid 1px #e7e7e7; /* 細いボーダー */
+    width: 100%; /* 幅いっぱいに広がる */
+    max-width: 600px; /* 最大幅を設定 (画像に合わせて調整) */
+    overflow: hidden; /* 内容がはみ出さないように */
+    position: relative; /* 子要素のpositioningのために */
+}
+
+.login-title {
+	display: flex;
+	justify-content: center;
+}
+
+h2.login-title {
+	padding: 10px;
+}
+/* 4. フォーム本体のパディング */
+.login-container form { /* formタグに適用 */
+    padding: 30px; /* フォーム本体の内側余白 */
+}
+
+/* 5. エラーメッセージのスタイル */
+.error-message {
+    color: #dc3545; /* 赤色 */
+    background-color: #f8d7da; /* 薄い赤色の背景 */
+    border: 1px solid #f5c6cb; /* ボーダー */
+    border-radius: .25rem; /* 角丸 */
+    padding: .75rem 1.25rem; /* パディング */
+    margin-bottom: 20px; /* 下部マージン */
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+/* 6. 各フォームグループ (ID, パスワード, チェックボックス, ボタン) の共通スタイル */
+.form-group {
+    margin-bottom: 20px; /* 各要素間の余白 */
+    position: relative; /* ラベルの配置のために */
+}
+
+/* 7. ラベルのスタイル (画像のように入力フィールド内に表示されるスタイルを模倣) */
+.form-group label {
+    position: absolute; /* 親要素基準で配置 */
+    top: 6px; /* 入力フィールドのパディングに合わせて調整 */
+    left: 8px; /* 入力フィールドのパディングに合わせて調整 */
+    font-size: 0.9rem; /* ラベルの文字サイズ */
+    color: #6c757d; /* ラベルの色を少し薄く */
+    padding: 0 5px; /* ラベルの背景を見せるためのパディング */
+    pointer-events: none; /* ラベルをクリックしても入力フィールドにフォーカスが当たるように */
+    transition: all 0.2s ease-out; /* アニメーション */
+    transform: translateY(0); /* 基準位置 */
+    z-index: 1; /* ラベルが入力フィールドの上にくるように */
+}
+
+
+
+/* 8. 入力フィールド (text, password) のスタイル */
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: 100%; /* 幅いっぱい */
+    padding: 15px; /* パディングを多めにして、ラベルが上に移動するスペースを確保 */
+    font-size: 1rem; /* 文字サイズ */
+	padding-left: 30px;
+    box-sizing: border-box; /* パディングとボーダーを幅に含める */
+    outline: none; /* フォーカス時のデフォルトのアウトラインを消す */
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+    border-color: #80bdff; /* フォーカス時のボーダー色 */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* フォーカス時のシャドウ */
+}
+
+/* placeholderのスタイル (ラベルと競合しないように) */
+.form-group input::placeholder {
+    color: transparent; /* 通常時はplaceholderを透明にする */
+}
+
+/* 9. チェックボックスとラベルのグループ */
+/* .form-group と .checkbox-group の両方を持つ要素に適用 */
+.form-group.checkbox-group { 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-group.checkbox-group input[type="checkbox"] {
+    /* Bootstrapのカスタムチェックボックスが適用されるはず */
+    margin-right: 5px; /* チェックボックスとラベルの間の余白 */
+    flex-shrink: 0; /* チェックボックスが縮まないように */
+    /* Bootstrapのカスタムフォームチェックボックスを使用する場合、このスタイルはあまり効かないかもしれません */
+}
+
+.form-group.checkbox-group label { /* ★ここも修正しました */
+    /* チェックボックスのラベルは通常のラベルと動作が異なるため、個別設定 */
+    position: static; /* position: absolute をリセット */
+    transform: none; /* transform をリセット */
+    font-size: 0.9rem; /* ラベルの文字サイズ */
+    color: #495057; /* 文字色 */
+    cursor: pointer; /* カーソルをポインターに */
+    padding: 0; /* 背景透過 */
+    margin-bottom: 0; /* デフォルトマージンをリセット */
+}
+
+.form-group.submit-group {
+	display: flex;
+	justify-content: center;
+}
+
+/* 10. ログインボタンのスタイル */
+.login-button {
+	margin-left: 20px;
+	margin-right: 20px;
+	width: 25%;
+    padding: 12px 15px; /* ボタンのパディング */
+    font-size: 1.1rem; /* ボタンの文字サイズ */
+    font-weight: 500; /* ボタンの文字を太字に */
+    border-radius: 5px; /* 角丸 */
+    background-color: #007bff; /* 青色 */
+    color: #fff; /* 文字色を白に */
+    border: none; /* ボーダーなし */
+    cursor: pointer; /* カーソルをポインターに */
+    transition: background-color 0.2s ease; /* ホバー時のアニメーション */
+}
+
+.login-button:hover {
+    background-color: #0056b3; /* ホバー時の少し濃い青色 */
+}
