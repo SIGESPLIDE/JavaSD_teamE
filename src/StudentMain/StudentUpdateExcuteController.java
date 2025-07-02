@@ -36,11 +36,20 @@ public class StudentUpdateExcuteController extends CommonServlet {
 			int entYear = Integer.parseInt(entYearStr); // hidden項目としてJSPから送られている前提
 			boolean isAttend = "true".equalsIgnoreCase(isAttendStr) || "1".equals(isAttendStr);
 
-			// ▼ バリデーション（名前またはクラスが未入力）
-			if (name == null || name.trim().isEmpty() || classNum == null || classNum.trim().isEmpty()) {
-				req.setAttribute("errorMessage", "氏名とクラスの両方を入力してください。");
+			// バリデーション
+			boolean hasError = false;
 
-				// 入力された内容を保持して戻す
+			if (name == null || name.trim().isEmpty()) {
+				req.setAttribute("nameError", "このフィールドを入力してください。");
+				hasError = true;
+			}
+
+			if (classNum == null || classNum.trim().isEmpty()) {
+				req.setAttribute("classError", "このフィールドを入力してください。");
+				hasError = true;
+			}
+
+			if (hasError) {
 				Student student = new Student();
 				student.setNo(no);
 				student.setName(name);
@@ -54,7 +63,6 @@ public class StudentUpdateExcuteController extends CommonServlet {
 
 				req.setAttribute("student", student);
 
-				// クラスリスト取得（エラー時にも必要）
 				ClassNumDao classNumDao = new ClassNumDao();
 				List<String> classList = classNumDao.filter(school);
 				req.setAttribute("classList", classList);
@@ -64,7 +72,7 @@ public class StudentUpdateExcuteController extends CommonServlet {
 				return;
 			}
 
-			// ▼ 正常な場合は更新処理
+			// 更新処理
 			Student student = new Student();
 			student.setNo(no);
 			student.setName(name);
@@ -85,10 +93,8 @@ public class StudentUpdateExcuteController extends CommonServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 
-			// エラー時にも必要なデータを渡して戻す
 			req.setAttribute("errorMessage", "更新処理でエラーが発生しました");
 
-			// 失敗しても最低限studentとclassListを渡すように
 			String no = req.getParameter("no");
 			String entYearStr = req.getParameter("ent_year");
 			String name = req.getParameter("name");
@@ -116,7 +122,6 @@ public class StudentUpdateExcuteController extends CommonServlet {
 
 			req.setAttribute("student", student);
 
-			// クラスリスト再取得
 			ClassNumDao classNumDao = new ClassNumDao();
 			List<String> classList = classNumDao.filter(school);
 			req.setAttribute("classList", classList);
