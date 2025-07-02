@@ -7,7 +7,16 @@
 
 
 <div class="container mt-4">
-	<h2 class="mb-4">成績参照</h2>
+	<%-- ここを修正 --%>
+	<h2 class="mb-4">
+		成績参照
+		<c:if test="${not empty subject}">
+			（科目）
+		</c:if>
+		<c:if test="${not empty student}">
+			（学生）
+		</c:if>
+	</h2>
 
 	<div class="card custom-card">
 		<div class="card-body">
@@ -53,7 +62,7 @@
 					</div>
 
 					<div class="col-auto d-flex align-items-center">
-						<button type="submit" class="btn btn-gray">検索</button> <%-- ここをbtn-grayに変更 --%>
+						<button type="submit" class="btn btn-gray">検索</button>
 					</div>
 					<input type="hidden" name="f" value="sj">
 				</div>
@@ -71,7 +80,7 @@
 							placeholder="学生番号を入力してください">
 					</div>
 					<div class="col-auto d-flex align-items-center">
-						<button type="submit" class="btn btn-gray">検索</button> <%-- ここをbtn-grayに変更 --%>
+						<button type="submit" class="btn btn-gray">検索</button>
 					</div>
 					<input type="hidden" name="f" value="st">
 				</div>
