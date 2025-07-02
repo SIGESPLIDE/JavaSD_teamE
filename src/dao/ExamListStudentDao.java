@@ -42,7 +42,6 @@ public class ExamListStudentDao extends dao {
 				// ※カラム名は実際のテーブル/ビュー定義に合わせて修正してください
 				els.setSubjectName(rSet.getString("subject_name"));
 				els.setSubjectCd(rSet.getString("subject_cd"));
-				els.setNum(rSet.getInt("num"));
 				els.setNum(rSet.getInt("no"));
 				els.setPoint(rSet.getInt("point"));
 

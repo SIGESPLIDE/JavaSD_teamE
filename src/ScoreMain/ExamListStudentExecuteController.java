@@ -29,15 +29,8 @@ public class ExamListStudentExecuteController extends CommonServlet {
 
 	@Override
 	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		// 現在のセッションを取得（存在しない場合は新規作成）
-				HttpSession session = req.getSession();
-				// Teacherオブジェクトを取得
-				teacher = (Teacher) session.getAttribute("user");
 
-				 // テスト用コード（本番ではセッションから取得）
-		        //TeacherDao teacherDao = new TeacherDao();
-		        //Teacher teacher = teacherDao.get("admin");
-		        //School school = teacher.getSchool();
+		this.execute(req, resp);
 
 				// DAOの準備
 				StudentDao studentDao = new StudentDao();
@@ -53,9 +46,6 @@ public class ExamListStudentExecuteController extends CommonServlet {
 					req.getRequestDispatcher("/main/GRMR001.jsp").forward(req, resp);
 					return;
 				}
-
-				//学校コードの取得
-		        School school = teacher.getSchool();
 
 				// 学生情報を取得
 				Student student = studentDao.get(studentNo);
@@ -119,7 +109,7 @@ public class ExamListStudentExecuteController extends CommonServlet {
     	 //現在のセッションを取得（存在しない場合は新規作成）
       HttpSession session = req.getSession();
       // Teacherオブジェクトを取得
-      Teacher teacher = (Teacher) session.getAttribute("session_user");
+      Teacher teacher = (Teacher) session.getAttribute("user");
 
       // teacherがnullの場合はログイン画面にリダイレクト
       if (teacher == null) {
