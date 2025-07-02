@@ -44,62 +44,45 @@ public class ExamDao extends dao {
 	 *             データベースアクセス中にエラーが発生した場合
 	 */
 	public Exam get(Student student, Subject subject, School school, int no) throws Exception {
-		Exam exam = null;
-		Connection connection = getConnection();
-		PreparedStatement statement = null;
-		ResultSet rs = null;
+	    Exam exam = null;
+	    String sql = baseSql + "WHERE t.student_no = ? AND t.subject_cd = ? AND t.school_cd = ? AND t.no = ?";
 
-		try {
-			// SQLクエリの準備
-			String sql = baseSql + "WHERE t.student_no = ? AND t.subject_cd = ? AND t.school_cd = ? AND t.no = ?";
-			statement = connection.prepareStatement(sql);
+	    // ★★★ すべてのリソースを try() の中で定義 ★★★
+	    try (Connection connection = getConnection();
+	         PreparedStatement statement = connection.prepareStatement(sql)) {
 
-			// パラメータの設定
-			statement.setString(1, student.getNo());
-			statement.setString(2, subject.getCd());
-			statement.setString(3, school.getCd());
-			statement.setInt(4, no);
+	        // パラメータの設定
+	        statement.setString(1, student.getNo());
+	        statement.setString(2, subject.getCd());
+	        statement.setString(3, school.getCd());
+	        statement.setInt(4, no);
 
-			// クエリの実行
-			rs = statement.executeQuery();
+	        // ResultSetもこの中で定義
+	        try (ResultSet rs = statement.executeQuery()) {
+	            // 検索結果の処理
+	            if (rs.next()) {
+	                exam = new Exam();
+	                exam.setStudent(student);
+	                exam.setSubject(subject);
+	                exam.setSchool(school);
+	                exam.setNo(rs.getInt("no"));
 
-			// 検索結果の処理
-			if (rs.next()) {
-				exam = new Exam();
-				exam.setStudent(student);
-				exam.setSubject(subject);
-				exam.setSchool(school);
-				exam.setNo(rs.getInt("no"));
-				exam.setPoint(rs.getInt("point"));
-				exam.setClassNum(rs.getString("class_num"));
-			}
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			// リソースの解放
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException sqle) {
-					throw sqle;
-				}
-			}
-			if (statement != null) {
-				try {
-					statement.close();
-				} catch (SQLException sqle) {
-					throw sqle;
-				}
-			}
-			if (connection != null) {
-				try {
-					connection.close();
-				} catch (SQLException sqle) {
-					throw sqle;
-				}
-			}
-		}
-		return exam;
+	                int pointValue = rs.getInt("point");
+	                if (rs.wasNull()) {
+	                    exam.setPoint(-1); // または exam.setPoint(null) ※Integerの場合
+	                } else {
+	                    exam.setPoint(pointValue);
+	                }
+
+	                exam.setClassNum(rs.getString("class_num"));
+	            }
+	        }
+	    } catch (Exception e) {
+	        throw e; // エラーは上位にスロー
+	    }
+	    // ★★★ finallyブロックは完全に不要になる ★★★
+
+	    return exam;
 	}
 
 	/**
@@ -111,37 +94,44 @@ public class ExamDao extends dao {
 	 * @throws Exception
 	 *             処理中にエラーが発生した場合
 	 */
+
 	private List<Exam> postFilter(ResultSet rs, School school) throws Exception {
-		List<Exam> list = new ArrayList<>();
-		try {
-			while (rs.next()) {
-				Exam exam = new Exam();
+	    List<Exam> list = new ArrayList<>();
+	    try {
+	        while (rs.next()) {
+	            Exam exam = new Exam();
 
-				// Studentオブジェクトの生成と設定
-				Student student = new Student();
-				student.setNo(rs.getString("student_no"));
-				student.setName(rs.getString("student_name"));
-				student.setEntYear(rs.getInt("ent_year"));
+	            Student student = new Student();
+	            student.setNo(rs.getString("student_no"));
+	            student.setName(rs.getString("student_name"));
+	            student.setEntYear(rs.getInt("ent_year"));
 
-				// Subjectオブジェクトの生成と設定
-				Subject subject = new Subject();
-				subject.setCd(rs.getString("subject_cd"));
-				subject.setName(rs.getString("subject_name"));
+	            Subject subject = new Subject();
+	            subject.setCd(rs.getString("subject_cd"));
+	            subject.setName(rs.getString("subject_name"));
 
-				// Examオブジェクトのプロパティ設定
-				exam.setStudent(student);
-				exam.setSubject(subject);
-				exam.setSchool(school);
-				exam.setNo(rs.getInt("no"));
-				exam.setPoint(rs.getInt("point"));
-				exam.setClassNum(rs.getString("class_num"));
+	            exam.setStudent(student);
+	            exam.setSubject(subject);
+	            exam.setSchool(school);
+	            exam.setNo(rs.getInt("no"));
+	            exam.setClassNum(rs.getString("class_num"));
 
-				list.add(exam);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return list;
+	            // ★★★ 修正: 重複したsetPointを削除し、ロジックを一本化 ★★★
+	            int pointValue = rs.getInt("point");
+	            if (rs.wasNull()) {
+	                // DBの値がNULLなら、未入力を示す「-1」をセット
+	                exam.setPoint(-1);
+	            } else {
+	                // 値がある場合はそのままセット
+	                exam.setPoint(pointValue);
+	            }
+
+	            list.add(exam);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return list;
 	}
 
 	/**

@@ -3,6 +3,7 @@ package ScoreMain;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.annotation.WebServlet;
@@ -26,7 +27,7 @@ import tool.CommonServlet;
 @WebServlet(urlPatterns={"/main/ExamRegist"})
 public class ExamRegistController extends CommonServlet {
 
-    @Override
+	@Override
     protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         HttpSession session = req.getSession();
         Teacher teacher = (Teacher) session.getAttribute("user");
@@ -39,55 +40,82 @@ public class ExamRegistController extends CommonServlet {
         School school = teacher.getSchool();
 
         // DAOのインスタンス化
+        StudentDao studentDao = new StudentDao();
         ClassNumDao classNumDao = new ClassNumDao();
         SubjectDao subjectDao = new SubjectDao();
         ExamDao examDao = new ExamDao();
-        StudentDao studentDao = new StudentDao();
 
-        // ドロップダウン用のリストを準備
-        List<Student> studentList = studentDao.filterBasic(school, true);
-        List<Integer> entYearList = studentList.stream().map(Student::getEntYear)
-                .distinct().sorted().collect(Collectors.toList());
+        // --- 1. ドロップダウン用のマスタデータを準備 ---
+        List<Integer> entYearList = studentDao.filterBasic(school, true).stream()
+                .map(Student::getEntYear).distinct().sorted().collect(Collectors.toList());
         List<String> classList = classNumDao.filter(school);
-        List<Subject> subjectList = subjectDao.filter(school); // 学校で絞り込むメソッドを推奨
+        List<Subject> subjectList = subjectDao.filter(school);
 
         req.setAttribute("entYearList", entYearList);
         req.setAttribute("classList", classList);
         req.setAttribute("subjectList", subjectList);
 
-        // --- 検索処理 ---
+        // --- 2. 検索条件をすべて取得 ---
         String entYearStr = req.getParameter("f1");
-        if (entYearStr != null && !entYearStr.isEmpty()) {
-            String classNum = req.getParameter("f2");
-            String subjectCd = req.getParameter("f3");
-            String testNoStr = req.getParameter("f4");
+        String classNum = req.getParameter("f2");
+        String subjectCd = req.getParameter("f3");
+        String testNoStr = req.getParameter("f4");
 
+        // --- 3. 検索が実行された場合のみリストを作成 ---
+        if (entYearStr != null && !entYearStr.isEmpty()) {
             try {
                 int entYear = Integer.parseInt(entYearStr);
                 int testNo = (testNoStr != null && !testNoStr.isEmpty()) ? Integer.parseInt(testNoStr) : 0;
 
-                // ★★★ ExamDao.filter の引数に合わせてオブジェクトを準備 ★★★
+                // 3a. 【学生リストの取得】クラスに所属する在校生を全員取得 (これが表示の土台)
+                List<Student> studentsInClass = studentDao.filterAllCond(school, entYear, classNum, true);
+
+                // 3b. 【成績リストの取得】指定された科目・回数の成績を取得
                 Subject subject = new Subject();
                 subject.setCd(subjectCd);
+                List<Exam> scores = examDao.filter(entYear, classNum, subject, testNo, school);
 
-                // ★★★ ExamDao.filter を呼び出す ★★★
-                List<Exam> examResults = examDao.filter(entYear, classNum, subject, testNo, school);
-                req.setAttribute("examResults", examResults); // 変数名を変更
+                // 3c. 【成績データの高速検索用Map作成】
+                Map<String, Exam> scoreMap = scores.stream()
+                    .collect(Collectors.toMap(
+                        (Exam exam) -> exam.getStudent().getNo(),
+                        (Exam exam) -> exam
+                    ));
 
-                // 検索条件をリクエストに保持
+                // 3d. 【最終的な表示用リストの作成 (マージ処理)】
+                List<Exam> examResults = new ArrayList<>();
+                for (Student student : studentsInClass) {
+                    Exam rowData;
+                    if (scoreMap.containsKey(student.getNo())) {
+                        // 成績が存在する場合：DBから取得した成績データをそのまま使う
+                        rowData = scoreMap.get(student.getNo());
+                    } else {
+                        // 成績が存在しない場合：表示用に新規データを作成
+                        rowData = new Exam();
+                        rowData.setStudent(student); // 学生情報
+                        rowData.setSubject(subject); // 検索した科目
+                        rowData.setSchool(school);
+                        rowData.setClassNum(classNum);
+                        rowData.setNo(testNo);     // 検索した回数
+                        rowData.setPoint(-1);      // 未入力は「-1」として扱う
+                    }
+                    examResults.add(rowData);
+                }
+
+                // 3e. JSPにデータを渡す
+                req.setAttribute("examResults", examResults);
                 req.setAttribute("selectedEntYear", entYear);
                 req.setAttribute("selectedClassNum", classNum);
                 req.setAttribute("selectedSubjectCd", subjectCd);
                 req.setAttribute("selectedTestNo", testNo);
 
-            } catch (NumberFormatException e) {
-                req.setAttribute("errorMessage", "入学年度または回数に無効な値が入力されました。");
             } catch (Exception e) {
                 e.printStackTrace();
-                req.setAttribute("errorMessage", "検索中にエラーが発生しました。");
+                req.setAttribute("errorMessage", "データの取得中にエラーが発生しました。");
             }
         }
 
+        // --- 4. JSPへフォワード ---
         req.getRequestDispatcher("/main/GRMU001.jsp").forward(req, resp);
     }
 
