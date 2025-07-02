@@ -84,10 +84,10 @@
                         <%-- 登録フォーム: POSTメソッドでコントローラーに送信 --%>
                         <form action="ExamRegist" method="post">
                             <%-- 登録処理に必要な検索条件を隠しフィールドで渡す --%>
-                            <input type="hidden" name="f1" value="${selectedEntYear}">
-                            <input type="hidden" name="f2" value="${selectedClassNum}">
-                            <input type="hidden" name="f3" value="${selectedSubjectCd}">
-                            <input type="hidden" name="f4" value="${selectedTestNo}">
+                            <input type="hidden" name="f1_registered" value="${selectedEntYear}">
+                            <input type="hidden" name="f2_registered" value="${selectedClassNum}">
+                            <input type="hidden" name="f3_registered" value="${selectedSubjectCd}">
+                            <input type="hidden" name="f4_registered" value="${selectedTestNo}">
 
                             <table class="table table-hover mt-3">
                                 <thead>
