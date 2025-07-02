@@ -11,6 +11,7 @@
 <c:param name="body">
 
 <form action="DeleteServlet" method="post">
+<label for="id">削除するID:</label>
   <input type="hidden" name="id" value="${param.id}" />
   <button type="submit">削除</button>
 </form>
