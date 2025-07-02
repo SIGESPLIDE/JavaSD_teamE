@@ -13,7 +13,7 @@ public class SubjectDeleteExcuteController extends CommonServlet {
         // 削除対象の科目情報を取得して確認画面に表示
         String subjectId = req.getParameter("id");
         SubjectDao dao = new SubjectDao();
-        Subject subject = dao.findById(subjectId);
+        Subject subject = dao.findByCd(subjectId);
 
         req.setAttribute("subject", subject);
         req.getRequestDispatcher("/WEB-INF/view/subject_delete_confirm.jsp").forward(req, resp);

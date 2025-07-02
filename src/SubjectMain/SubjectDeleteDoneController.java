@@ -11,7 +11,7 @@ public class SubjectDeleteDoneController extends CommonServlet {
     @Override
     protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         // 削除完了画面を表示
-        req.getRequestDispatcher("/WEB-INF/view/subject_delete_done.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WebContent/main/SBJM007").forward(req, resp);
     }
 
     @Override
@@ -24,6 +24,6 @@ public class SubjectDeleteDoneController extends CommonServlet {
         dao.delete(subjectId);
 
         // 削除完了画面へリダイレクト
-        resp.sendRedirect("subject_delete_done");
+        resp.sendRedirect("SBJM007");
     }
 }
