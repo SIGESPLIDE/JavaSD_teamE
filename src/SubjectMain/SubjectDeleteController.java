@@ -13,10 +13,25 @@ public class SubjectDeleteController extends CommonServlet {
 
 	}
 
-	@Override
-	protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-		// TODO 自動生成されたメソッド・スタブ
+@Override
+protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    String subjectId = req.getParameter("id");
 
-	}
+    if (subjectId == null || subjectId.isEmpty()) {
+        resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Subject ID is required.");
+        return;
+    }
 
+    try {
+        // DAOを使って削除処理を行う（例: SubjectDAO.delete(subjectId);）
+        SubjectDAO dao = new SubjectDAO();
+        dao.delete(subjectId);
+
+        // 削除後、一覧ページなどにリダイレクト
+        resp.sendRedirect("subjectList");
+    } catch (Exception e) {
+        e.printStackTrace();
+        resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to delete subject.");
+    }
+}
 }
