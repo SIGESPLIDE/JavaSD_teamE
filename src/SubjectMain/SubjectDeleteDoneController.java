@@ -17,7 +17,7 @@ public class SubjectDeleteDoneController extends CommonServlet {
     @Override
     protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         // リクエストから科目IDを取得
-        int subjectId = req.getParameter("id");
+        int subjectId = Integer.parseInt(req.getParameter("id"));
 
         // DAOを使って削除処理を実行
         SubjectDao dao = new SubjectDao();

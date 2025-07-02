@@ -3,6 +3,7 @@ package SubjectMain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import bean.Subject;
 import dao.SubjectDao;
 import tool.CommonServlet;
 
@@ -22,7 +23,7 @@ public class SubjectDeleteExcuteController extends CommonServlet {
     @Override
     protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         // 科目IDを取得して削除処理を実行
-        int subjectId = req.getParameter("id");
+        int subjectId = Integer.parseInt(req.getParameter("id"));
         SubjectDao dao = new SubjectDao();
         dao.delete(subjectId);
 
