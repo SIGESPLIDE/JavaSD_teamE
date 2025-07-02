@@ -3,6 +3,7 @@ package SubjectMain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dao.SubjectDao;
 import tool.CommonServlet;
 
 public class SubjectDeleteController extends CommonServlet {
@@ -16,6 +17,8 @@ public class SubjectDeleteController extends CommonServlet {
 @Override
 protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
     String subjectId = req.getParameter("id");
+    int subjectId_num = Integer.parseInt(req.getParameter("id"));
+
 
     if (subjectId == null || subjectId.isEmpty()) {
         resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Subject ID is required.");
@@ -24,8 +27,8 @@ protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exc
 
     try {
         // DAOを使って削除処理を行う（例: SubjectDAO.delete(subjectId);）
-        SubjectDAO dao = new SubjectDAO();
-        dao.delete(subjectId);
+        SubjectDao dao = new SubjectDao();
+        dao.delete(subjectId_num);
 
         // 削除後、一覧ページなどにリダイレクト
         resp.sendRedirect("subjectList");
