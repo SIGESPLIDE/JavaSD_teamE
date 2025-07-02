@@ -39,30 +39,57 @@ public class StudentDao extends dao {
 		return null;
 	}
 
-	public List<Student> filterAllCond(School school, int entYear, String classNum, boolean isAttend) throws Exception {
-		String sql = baseSql + " WHERE SCHOOL_CD = ? AND ENT_YEAR = ? AND CLASS_NUM = ? AND IS_ATTEND = ?";
+	public List<Student> filterAllCond(School school, Integer entYear, String classNum, boolean isAttendChecked) throws Exception {
+	    List<Student> list = new ArrayList<>();
 
-		List<Student> list = new ArrayList<>();
-		try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql)) {
-			st.setString(1, school.getCd());
-			st.setInt(2, entYear);
-			st.setString(3, classNum);
-			st.setBoolean(4, isAttend);
-			try (ResultSet rs = st.executeQuery()) {
-				while (rs.next()) {
-					Student s = new Student();
-					s.setNo(rs.getString("NO"));
-					s.setName(rs.getString("NAME"));
-					s.setEntYear(rs.getInt("ENT_YEAR"));
-					s.setClassNum(rs.getString("CLASS_NUM"));
-					s.setAttend(rs.getBoolean("IS_ATTEND"));
-					s.setSchool(school);
-					list.add(s);
-				}
-			}
-		}
-		return list;
+	    // ベースSQL
+	    StringBuilder sql = new StringBuilder(baseSql + " WHERE SCHOOL_CD = ?");
+	    List<Object> params = new ArrayList<>();
+	    params.add(school.getCd());
+
+	    // 入学年度指定あり
+	    if (entYear != null) {
+	        sql.append(" AND ENT_YEAR = ?");
+	        params.add(entYear);
+	    }
+
+	    // クラス指定あり
+	    if (classNum != null && !classNum.isEmpty()) {
+	        sql.append(" AND CLASS_NUM = ?");
+	        params.add(classNum);
+	    }
+
+	    // 在学中チェックあり（チェックボックスON時のみ）
+	    if (isAttendChecked) {
+	        sql.append(" AND IS_ATTEND = TRUE");
+	    }
+
+	    try (Connection con = getConnection(); PreparedStatement st = con.prepareStatement(sql.toString())) {
+	        for (int i = 0; i < params.size(); i++) {
+	            st.setObject(i + 1, params.get(i));
+	        }
+
+	        try (ResultSet rs = st.executeQuery()) {
+	            while (rs.next()) {
+	                Student s = new Student();
+	                s.setNo(rs.getString("NO"));
+	                s.setName(rs.getString("NAME"));
+	                s.setEntYear(rs.getInt("ENT_YEAR"));
+	                s.setClassNum(rs.getString("CLASS_NUM"));
+	                s.setAttend(rs.getBoolean("IS_ATTEND"));
+
+	                School sch = new School();
+	                sch.setCd(rs.getString("SCHOOL_CD"));
+	                s.setSchool(sch);
+
+	                list.add(s);
+	            }
+	        }
+	    }
+	    return list;
 	}
+
+
 
 	public List<Student> filterYear(School school, int entYear, boolean isAttend) throws Exception {
 		String sql = baseSql + " WHERE SCHOOL_CD = ? AND ENT_YEAR = ? AND IS_ATTEND = ?";
@@ -126,7 +153,7 @@ public class StudentDao extends dao {
 
 	/**
 	 * 学生情報をデータベースに登録します。
-	 * 
+	 *
 	 * @param student
 	 *            登録する学生情報
 	 * @return 登録に成功した場合はtrue, 失敗した場合はfalse
@@ -153,7 +180,7 @@ public class StudentDao extends dao {
 
 	/**
 	 * 【追加】指定された学校に所属するクラス番号の一覧を重複なく取得します。 画面項目定義書の要件を満たすために追加しました。
-	 * 
+	 *
 	 * @param school
 	 *            学校情報
 	 * @return クラス番号のリスト
