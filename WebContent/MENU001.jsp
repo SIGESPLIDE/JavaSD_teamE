@@ -17,4 +17,3 @@
     </c:when>
 
 </c:choose>
-<hr class="line_aligner">

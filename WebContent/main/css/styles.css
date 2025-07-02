@@ -6,6 +6,12 @@ body {
 	min-height: 100vh;
 }
 
+.yohaku {
+	align-items: center;
+	margin-left:15%;
+	margin-right:15%;
+}
+
 .menu-group {
 	padding-bottom: 20px;
 }
@@ -249,10 +255,6 @@ body {
 	text-decoration: underline; /* ホバー時のみアンダーライン */
 }
 
-.content-area {
-	padding: 30px; /* コンテンツエリアのパディング */
-}
-
 input[type="text"], select {
 	width: 100%;
 	padding: 8px;
@@ -352,7 +354,6 @@ h2 {
 	color: #333;
 	padding: 15px 20px;
 	width: 100%;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	border-bottom: 1px solid #cceeff;
 	flex-shrink: 0; /* ヘッダーは縮まない */
 }
@@ -390,7 +391,6 @@ h2 {
 /* メインコンテナのスタイル (サイドバーとコンテンツエリアを保持) */
 .main-container {
 	display: flex; /* Flexboxでサイドバーとコンテンツを横並びにする */
-	flex-grow: 1; /* フッターを除いた残りのスペースを全て使う */
 	width: 100%;
 	max-width: 1200px; /* ヘッダーの最大幅に合わせるか、調整 */
 	margin: 20px auto; /* ヘッダーの下、フッターの上に余白 */
@@ -402,11 +402,7 @@ h2 {
 /* コンテンツエリアのスタイル */
 .content-area {
 	flex-grow: 1; /* 残りのスペースを全て使う */
-	background-color: #ffffff;
 	padding: 30px; /* 空の状態でも内側の余白を確保 */
-	border-radius: 5px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-	min-height: 200px; /* コンテンツが空でも最低限の高さを保持（必要であれば） */
 }
 
 .main-content {
