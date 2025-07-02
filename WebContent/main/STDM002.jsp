@@ -12,82 +12,78 @@
         <%-- <link rel="stylesheet" href="styles.css"> --%>
     </c:param>
     <c:param name="body">
-        <div class="login-container">
-            <h2>学生情報登録</h2>
+        <div class="container" style="max-width: 600px;">
+            <h2 class="my-4">学生情報登録</h2>
 
-            <%-- ★★★ 修正箇所①: エラーメッセージ表示エリア ★★★ --%>
-            <%-- コントローラーから渡されたerrorsマップにエラーが1件でもあれば表示 --%>
-            <c:if test="${not empty errors}">
-                 <div style="color: red; background-color: #ffebee; border: 1px solid #e57373; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-                    <strong>入力内容にエラーがあります:</strong>
-                    <ul>
-                        <%-- errorsマップの各エラーメッセージをリストで表示 --%>
-                        <c:forEach var="entry" items="${errors}">
-                            <li><c:out value="${entry.value}" /></li>
-                        </c:forEach>
-                    </ul>
-                 </div>
-            </c:if>
-            <%-- 汎用のerrorキーにも対応 --%>
-            <c:if test="${not empty error}">
-                 <div style="color: red; background-color: #ffebee; border: 1px solid #e57373; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-                      <c:out value="${error}" />
-                 </div>
+            <%-- システム全体のエラーがあれば表示 --%>
+            <c:if test="${not empty errors.system}">
+                <div class="alert alert-danger">${errors.system}</div>
             </c:if>
 
             <form action="StudentCreateExcute" method="post">
-                 <%-- 入学年度 --%>
-                 <div class="input-group">
-                      <label for="ent_year">入学年度<br></label>
-                      <select name="ent_year" id="ent_year" required>
-                            <option value="0">---------</option> <%-- valueを0に修正 --%>
-                            <c:forEach var="year" items="${ent_year_list}">
-                                   <%-- ★★★ 修正箇所②: 入力値保持のロジックを修正 ★★★ --%>
-                                   <option value="${year}" <c:if test="${year eq ent_year}">selected</c:if>>
-                                         <c:out value="${year}" />
-                                   </option>
+                <%-- ★★★ 入学年度 ★★★ --%>
+                <div class="mb-3">
+                    <label for="ent_year" class="form-label">入学年度</label>
+                    <%-- ★ 修正: is-invalidクラスを削除 --%>
+                    <select class="form-select" id="ent_year" name="ent_year" required>
+                        <option value="0">---------</option>
+                        <c:forEach var="year" items="${ent_year_list}">
+                            <option value="${year}" <c:if test="${year eq ent_year}">selected</c:if>>${year}</option>
+                        </c:forEach>
+                    </select>
+                    <%-- ★ 修正: エラーメッセージのスタイルを直接指定 --%>
+                    <c:if test="${not empty errors.ent_year}">
+                        <div style="color: #fd7e14; font-size: 0.875em;">${errors.ent_year}</div>
+                    </c:if>
+                </div>
+
+                <%-- ★★★ 学生番号 ★★★ --%>
+                <div class="mb-3">
+                    <label for="no" class="form-label">学生番号</label>
+                    <%-- ★ 修正: is-invalidクラスを削除 --%>
+                    <input type="text" class="form-control"
+                           id="no" name="no" value="${no}" required>
+                    <%-- ★ 修正: エラーメッセージのスタイルを直接指定 --%>
+                    <c:if test="${not empty errors.no_empty}">
+                        <div style="color: #fd7e14; font-size: 0.875em;">${errors.no_empty}</div>
+                    </c:if>
+                    <c:if test="${not empty errors.no_duplicate}">
+                        <div style="color: #fd7e14; font-size: 0.875em;">${errors.no_duplicate}</div>
+                    </c:if>
+                </div>
+
+                <%-- ★★★ 氏名 ★★★ --%>
+                <div class="mb-3">
+                    <label for="name" class="form-label">氏名</label>
+                    <%-- ★ 修正: is-invalidクラスを削除 --%>
+                    <input type="text" class="form-control"
+                           id="name" name="name" value="${name}" required>
+                    <%-- ★ 修正: エラーメッセージのスタイルを直接指定 --%>
+                    <c:if test="${not empty errors.name}">
+                        <div style="color: #fd7e14; font-size: 0.875em;">${errors.name}</div>
+                    </c:if>
+                </div>
+
+                <%-- ★★★ クラス ★★★ --%>
+                <div class="mb-3">
+                    <label for="class_num" class="form-label">クラス</label>
+                    <select class="form-select" id="class_num" name="class_num" required>
+                        <c:if test="${not empty class_num_list}">
+                            <option value="">---------</option>
+                            <c:forEach var="c" items="${class_num_list}">
+                                <option value="${c}" <c:if test="${c == class_num}">selected</c:if>>${c}</option>
                             </c:forEach>
-                      </select>
-                 </div>
+                        </c:if>
+                        <c:if test="${empty class_num_list}">
+                            <option value="">登録可能なクラスがありません</option>
+                        </c:if>
+                    </select>
+                </div>
 
-                 <%-- 学生番号 --%>
-                 <div class="input-group">
-                      <label for="no">学生番号<br></label>
-                      <%-- ★★★ 修正箇所③: value属性のクォートを修正 ★★★ --%>
-                      <input type="text" name="no" id="no" placeholder="学生番号を入力してください" value="<c:out value='${no}'/>" required maxlength="10">
-                 </div>
-
-                 <%-- 氏名 --%>
-                 <div class="input-group">
-                      <label for="name">氏名<br></label>
-                      <input type="text" name="name" id="name" placeholder="氏名を入力してください" value="<c:out value='${name}'/>" required maxlength="30">
-                 </div>
-
-                 <%-- クラス --%>
-                 <div class="input-group">
-                      <label for="class_num">クラス<br></label>
-                      <select name="class_num" id="class_num" required>
-                           <c:choose>
-                                <c:when test="${not empty class_num_list}">
-                                      <%-- ★★★ 修正箇所④: 最初の選択肢のvalueを空に ★★★ --%>
-                                      <option value="">クラスを選択してください</option>
-                                      <c:forEach var="classVal" items="${class_num_list}">
-                                            <option value="${classVal}" <c:if test="${classVal eq class_num}">selected</c:if>>
-                                                   <c:out value="${classVal}" />
-                                            </option>
-                                      </c:forEach>
-                                </c:when>
-                                <c:otherwise>
-                                      <option value="">登録可能なクラスがありません</option>
-                                </c:otherwise>
-                           </c:choose>
-                      </select>
-                 </div>
-
-                 <button type="submit" class="login-button">登録して終了</button>
-                 <div class="login-link">
-                     <a href="STDM001">戻る</a> <%-- 戻るリンク先を一覧画面に修正 --%>
-                 </div>
+                <div class="d-flex align-items-center">
+                    <button type="submit" class="btn btn-primary">登録して終了</button>
+                    <a href="StudentList.action" class="ms-3">戻る</a>
+                </div>
             </form>
         </div>
     </c:param>

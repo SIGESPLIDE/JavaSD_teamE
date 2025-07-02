@@ -59,9 +59,11 @@ public class StudentCreateExcuteController extends HttpServlet {
             }
 
             if (studentName == null || studentName.isEmpty()) {
-                errors.put("name", "このフィールドを入力してください。");
+                // JSP側でプレースホルダーを切り替えるためのエラーキー
+                errors.put("name_empty_placeholder", "氏名を入力してください");
+                // JSP側でツールチップを表示するためのエラーキー
+                errors.put("name_empty_tooltip", "このフィールドを入力してください。");
             }
-
             // エラーが1件でもあれば、登録画面に戻る
             if (!errors.isEmpty()) {
                 req.setAttribute("ent_year", entYearStr);
