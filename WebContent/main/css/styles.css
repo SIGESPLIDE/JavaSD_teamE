@@ -6,6 +6,9 @@ body {
 	flex-direction: column; /* 全体を縦方向に配置 */
 	min-height: 100vh;
 }
+.yohaku {
+	margin: 50px;
+}
 
 /* search-area のスタイル */
 .search-area {
