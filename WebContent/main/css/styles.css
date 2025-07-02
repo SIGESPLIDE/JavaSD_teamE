@@ -1,13 +1,18 @@
 body {
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	margin: 0;
-	background-color: #f0f2f5;
 	display: flex;
 	flex-direction: column; /* 全体を縦方向に配置 */
 	min-height: 100vh;
 }
-.yohaku {
-	margin: 50px;
+
+
+.custom-card {
+    background-color: #f0f0f0; /* グレー背景 */
+}
+ .form-label {
+    white-space: nowrap;
+    margin-right: 8px;
 }
 
 /* search-area のスタイル */
@@ -159,6 +164,8 @@ body {
 	text-decoration: underline; /* ホバー時のみアンダーライン */
 }
 
+
+
 /* テーブルのスタイル */
 /* .table-bordered を削除し、行間の線のみを残す */
 .table {
@@ -258,9 +265,8 @@ input[type="checkbox"] {
 	margin-top: 10px;
 }
 
-/* ボタン */
+/* ボタンの共通スタイル */
 button {
-	background-color: #007bff;
 	color: white;
 	border: none;
 	padding: 10px 20px;
@@ -272,9 +278,30 @@ button {
 	-moz-appearance: none; /* ← Firefox対応 */
 }
 
-button:hover {
-	background-color: #0056b3;
+/* 青いボタンのスタイル（もしあれば） */
+.btn-primary {
+    background-color: #007bff;
 }
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* 灰色のボタンのスタイルを新しく定義 */
+.btn-gray {
+    background-color: #6c757d; /* Bootstrapのsecondaryボタンに近い色 */
+    color: white;
+    font-weight: normal; /* 太字を解除 */
+}
+
+.btn-gray:hover {
+    background-color: #5a6268; /* ホバー時の色を少し濃く */
+}
+
+/* 科目情報・学生情報の見出しテキストのフォント太さ */
+.normal-font-weight {
+    font-weight: normal !important; /* !important で強制的に上書き */
+}
+
 
 h2 {
 	padding: 5px 10px 5px 15px;
@@ -364,44 +391,6 @@ h2 {
 	box-sizing: border-box; /* paddingを幅に含める */
 }
 
-/* サイドバーのスタイル */
-.sidebar {
-	width: 200px; /* サイドバーの固定幅 */
-	background-color: #ffffff;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-	padding: 20px 0;
-	border-radius: 5px;
-	flex-shrink: 0; /* サイドバーは縮まない */
-	height: fit-content; /* コンテンツの高さに合わせて、不必要な空白をなくす */
-	margin-right: 20px; /* コンテンツエリアとの間隔 */
-}
-
-.sidebar ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-}
-
-.sidebar li a {
-	display: block;
-	padding: 12px 20px;
-	color: #333;
-	text-decoration: none;
-	font-size: 16px;
-	transition: background-color 0.2s ease;
-}
-
-.sidebar li a:hover {
-	background-color: #f0f0f0;
-}
-
-.sidebar li a.active {
-	background-color: #e0f0ff;
-	color: #007bff;
-	font-weight: bold;
-	border-left: 4px solid #007bff;
-	padding-left: 16px; /* border-left分ずらす */
-}
 
 /* コンテンツエリアのスタイル */
 .content-area {
@@ -411,12 +400,6 @@ h2 {
 	border-radius: 5px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 	min-height: 200px; /* コンテンツが空でも最低限の高さを保持（必要であれば） */
-}
-
-.sidebar {
-	background-color: #f8f9fa; /* 非常に明るいグレー */
-	padding: 1rem;
-	min-height: calc(100vh - 2rem - 2rem); /* ヘッダーとフッターの高さを引く */
 }
 
 .main-content {
