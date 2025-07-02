@@ -7,6 +7,14 @@ body {
 	min-height: 100vh;
 }
 
+.custom-card {
+    background-color: #f0f0f0; /* グレー背景 */
+}
+ .form-label {
+    white-space: nowrap;
+    margin-right: 8px;
+}
+
 /* search-area のスタイル */
 .search-area {
 	padding: 20px;
@@ -156,6 +164,8 @@ body {
 	text-decoration: underline; /* ホバー時のみアンダーライン */
 }
 
+
+
 /* テーブルのスタイル */
 /* .table-bordered を削除し、行間の線のみを残す */
 .table {
@@ -255,9 +265,8 @@ input[type="checkbox"] {
 	margin-top: 10px;
 }
 
-/* ボタン */
+/* ボタンの共通スタイル */
 button {
-	background-color: #007bff;
 	color: white;
 	border: none;
 	padding: 10px 20px;
@@ -269,9 +278,30 @@ button {
 	-moz-appearance: none; /* ← Firefox対応 */
 }
 
-button:hover {
-	background-color: #0056b3;
+/* 青いボタンのスタイル（もしあれば） */
+.btn-primary {
+    background-color: #007bff;
 }
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* 灰色のボタンのスタイルを新しく定義 */
+.btn-gray {
+    background-color: #6c757d; /* Bootstrapのsecondaryボタンに近い色 */
+    color: white;
+    font-weight: normal; /* 太字を解除 */
+}
+
+.btn-gray:hover {
+    background-color: #5a6268; /* ホバー時の色を少し濃く */
+}
+
+/* 科目情報・学生情報の見出しテキストのフォント太さ */
+.normal-font-weight {
+    font-weight: normal !important; /* !important で強制的に上書き */
+}
+
 
 h2 {
 	padding: 5px 10px 5px 15px;
