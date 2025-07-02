@@ -10,6 +10,7 @@
 		<div class="menu-group">
 			<h2>メニュー</h2>
 		</div>
+		
 		<div class="row justify-content-center">
 			<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
 				<div
@@ -25,7 +26,7 @@
 				<div
 					class="card text-black bg-score position-relative menu-box equal-height-box">
 					<div class="card-body">
-						<p class="card-title h5 mb-0">成績管理</p>
+						<label class="card-title h5 mb-0">成績管理</label>
 						<p class="card-title h5 mb-0">
 							<a href="${pageContext.request.contextPath}/main/ExamRegist">
 								成績登録 </a>
