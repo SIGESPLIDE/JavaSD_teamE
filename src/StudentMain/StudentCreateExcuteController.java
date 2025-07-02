@@ -3,7 +3,6 @@ package StudentMain;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,14 +21,19 @@ import dao.StudentDao;
 @WebServlet(urlPatterns = {"/main/StudentCreateExcute"})
 public class StudentCreateExcuteController extends HttpServlet {
 
-@Override
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 
         HttpSession session = req.getSession();
         Teacher teacher = (Teacher) session.getAttribute("user");
 
-        // フォームデータの文字コードを設定
+        // ログインチェック
+        if (teacher == null) {
+            res.sendRedirect(req.getContextPath() + "/main/LOGI001.jsp");
+            return;
+        }
+
         req.setCharacterEncoding("UTF-8");
 
         String entYearStr = req.getParameter("ent_year");
@@ -41,21 +45,25 @@ public class StudentCreateExcuteController extends HttpServlet {
         Map<String, String> errors = new HashMap<>();
 
         try {
-            // バリデーション
+            // === バリデーション ===
             if (entYearStr == null || entYearStr.equals("0")) {
                 errors.put("ent_year", "入学年度を選択してください");
             }
+
             if (studentNo == null || studentNo.isEmpty()) {
                 errors.put("no_empty", "このフィールドを入力してください。");
-            } else if (studentDao.get(studentNo) != null) {
+            }
+
+            else if (studentDao.get(studentNo) != null) {
                 errors.put("no_duplicate", "学生番号が重複しています");
             }
+
             if (studentName == null || studentName.isEmpty()) {
                 errors.put("name", "このフィールドを入力してください。");
-}
+            }
 
+            // エラーが1件でもあれば、登録画面に戻る
             if (!errors.isEmpty()) {
-                // エラーがある場合、入力内容とエラーメッセージを保持して登録画面に戻る
                 req.setAttribute("ent_year", entYearStr);
                 req.setAttribute("no", studentNo);
                 req.setAttribute("name", studentName);
@@ -68,15 +76,15 @@ public class StudentCreateExcuteController extends HttpServlet {
                 List<Integer> entYearList = new ArrayList<>();
                 for (int i = 0; i < 11; i++) {
                     entYearList.add(currentYear - i);
-}
+                }
                 List<String> classNumSet = studentDao.filterClassNum(teacher.getSchool());
 
-                req.setAttribute("ent_year_set", entYearList);
+                req.setAttribute("ent_year_list", entYearList); // JSP側の名前に合わせる
                 req.setAttribute("class_num_list", classNumSet);
 
                 req.getRequestDispatcher("/main/STDM002.jsp").forward(req, res);
                 return;
-}
+            }
 
             // エラーがない場合、Studentインスタンスを生成してDBに保存
             Student student = new Student();
@@ -87,16 +95,15 @@ public class StudentCreateExcuteController extends HttpServlet {
             student.setAttend(true); // 在学中をデフォルト
             student.setSchool(teacher.getSchool());
 
-            studentDao.save(student); // 実装済みのsaveメソッドを呼び出す
+            studentDao.save(student);
 
             // 完了画面にフォワード
             req.getRequestDispatcher("/main/STDM003.jsp").forward(req, res);
 
         } catch (Exception e) {
             e.printStackTrace();
-            // システムエラーが発生した場合の処理
-            req.setAttribute("errors", Collections.singletonMap("system", "システムエラーが発生しました。詳細は管理者にお問い合わせください。"));
-            req.getRequestDispatcher("/main/STDM002.jsp").forward(req, res);
+            req.setAttribute("error", "システムエラーが発生しました。詳細は管理者にお問い合わせください。"); // エラーキーを統一
+            req.getRequestDispatcher("/main/ERRO001.jsp").forward(req, res); // 汎用エラーページに飛ばす方が良い場合も
         }
     }
 }
