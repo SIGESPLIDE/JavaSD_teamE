@@ -19,26 +19,25 @@ import dao.ClassNumDao;
 import dao.ExamListStudentDao;
 import dao.StudentDao;
 import dao.SubjectDao;
-import dao.TeacherDao;
 import tool.CommonServlet;
 
 @WebServlet(urlPatterns={"/main/ExamListStudent"})
 public class ExamListStudentExecuteController extends CommonServlet {
 
-//	private Teacher teacher;
-//	private School school;
+	private Teacher teacher;
+	private School school;
 
 	@Override
 	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		// 現在のセッションを取得（存在しない場合は新規作成）
 				HttpSession session = req.getSession();
 				// Teacherオブジェクトを取得
-//				teacher = (Teacher) session.getAttribute("session_user");
+				teacher = (Teacher) session.getAttribute("user");
 
 				 // テスト用コード（本番ではセッションから取得）
-		        TeacherDao teacherDao = new TeacherDao();
-		        Teacher teacher = teacherDao.get("admin");
-		        School school = teacher.getSchool();
+		        //TeacherDao teacherDao = new TeacherDao();
+		        //Teacher teacher = teacherDao.get("admin");
+		        //School school = teacher.getSchool();
 
 				// DAOの準備
 				StudentDao studentDao = new StudentDao();
@@ -56,7 +55,7 @@ public class ExamListStudentExecuteController extends CommonServlet {
 				}
 
 				//学校コードの取得
-//		        School school = teacher.getSchool();
+		        School school = teacher.getSchool();
 
 				// 学生情報を取得
 				Student student = studentDao.get(studentNo);
@@ -117,17 +116,17 @@ public class ExamListStudentExecuteController extends CommonServlet {
 
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws Exception{
-//    	 //現在のセッションを取得（存在しない場合は新規作成）
-//      HttpSession session = req.getSession();
-//      // Teacherオブジェクトを取得
-//      Teacher teacher = (Teacher) session.getAttribute("session_user");
-//
-//      // teacherがnullの場合はログイン画面にリダイレクト
-//      if (teacher == null) {
-//          resp.sendRedirect(req.getContextPath() + "/login.action");
-//
-//          return;
-//      }
-//      school = teacher.getSchool();
+    	 //現在のセッションを取得（存在しない場合は新規作成）
+      HttpSession session = req.getSession();
+      // Teacherオブジェクトを取得
+      Teacher teacher = (Teacher) session.getAttribute("session_user");
+
+      // teacherがnullの場合はログイン画面にリダイレクト
+      if (teacher == null) {
+          resp.sendRedirect(req.getContextPath() + "/login.action");
+
+          return;
+      }
+      school = teacher.getSchool();
 	}
 }
