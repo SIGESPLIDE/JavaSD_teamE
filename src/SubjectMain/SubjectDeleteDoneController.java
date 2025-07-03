@@ -7,14 +7,14 @@ import javax.servlet.http.HttpServletResponse;
 import dao.SubjectDao;
 import tool.CommonServlet;
 
-@WebServlet(urlPatterns = {"/main/SubjectDeleteDone"})
+@WebServlet(urlPatterns = {"/main/subjectDeleteDone"})
 
 public class SubjectDeleteDoneController extends CommonServlet {
 
     @Override
     protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         // 削除完了画面を表示
-        req.getRequestDispatcher("/WebContent/main/SBJM007").forward(req, resp);
+        req.getRequestDispatcher("/main/SBJM007.jsp").forward(req, resp);
     }
 
     @Override
@@ -27,6 +27,6 @@ public class SubjectDeleteDoneController extends CommonServlet {
         dao.delete(subjectId);
 
         // 削除完了画面へリダイレクト
-        resp.sendRedirect("SBJM007");
+        resp.sendRedirect("SBJM007.jsp");
     }
 }

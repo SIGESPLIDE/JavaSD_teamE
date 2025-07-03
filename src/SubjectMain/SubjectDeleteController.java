@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import dao.SubjectDao;
 import tool.CommonServlet;
 
-@WebServlet(urlPatterns = {"/main/SubjectDelete"})
+@WebServlet(urlPatterns = {"/main/subjectDelete"})
 
 public class SubjectDeleteController extends CommonServlet {
 

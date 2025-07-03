@@ -8,7 +8,7 @@ import bean.Subject;
 import dao.SubjectDao;
 import tool.CommonServlet;
 
-@WebServlet(urlPatterns = {"/main/SubjectDeleteExcute"})
+@WebServlet(urlPatterns = {"/main/subjectDeleteExcute"})
 
 public class SubjectDeleteExcuteController extends CommonServlet {
 
@@ -20,7 +20,7 @@ public class SubjectDeleteExcuteController extends CommonServlet {
         Subject subject = dao.findByCd(subjectId);
 
         req.setAttribute("subject", subject);
-        req.getRequestDispatcher("/WebContent/main/SBJM006").forward(req, resp);
+        req.getRequestDispatcher("/main/SBJM006.jsp").forward(req, resp);
     }
 
     @Override
