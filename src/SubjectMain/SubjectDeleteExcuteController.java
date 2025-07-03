@@ -9,6 +9,7 @@ import dao.SubjectDao;
 import tool.CommonServlet;
 
 @WebServlet(urlPatterns = {"/main/SubjectDeleteExcute"})
+
 public class SubjectDeleteExcuteController extends CommonServlet {
 
     @Override
