@@ -21,7 +21,7 @@
       <br>
       <div class="form-group">
         <label for="subjectName">科目名</label><br>
-        <input type="text" id="subjectName" name="subjectName" value="${subject.name}">
+        <input type="text" id="subjectName" name="subjectName" value="${subject.name}" required>
       </div>
       <br>
       <!-- hiddenでschoolCdも送る（必要な場合） -->
