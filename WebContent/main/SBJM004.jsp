@@ -28,7 +28,7 @@
       <input type="hidden" name="SCHOOL_CD" value="${subject.school.cd}">
       <div class="button-group">
         <button type="submit">変更</button>
-        <a href="subjectList">戻る</a>
+        <a href="/JavaSD/main/subject">戻る</a>
       </div>
     </form>
   </c:param>
