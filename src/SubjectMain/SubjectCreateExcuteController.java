@@ -19,69 +19,91 @@ import tool.CommonServlet;
  *
  */
 
-@WebServlet(urlPatterns={"/main/SubjectCreateExcute"})
+@WebServlet(urlPatterns = { "/main/SubjectCreateExcute" })
 public class SubjectCreateExcuteController extends CommonServlet {
 
-    /**
-     * POSTリクエストを処理し、科目情報をデータベースに登録する
-     */
+	/**
+	 * POSTリクエストを処理し、科目情報をデータベースに登録する
+	 */
+	@Override
+	protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		// ... (文字コード設定、セッションチェックはそのまま) ...
+		req.setCharacterEncoding("UTF-8");
+		HttpSession session = req.getSession();
+		Teacher teacher = (Teacher) session.getAttribute("user");
+		if (teacher == null) {
+			resp.sendRedirect(req.getContextPath() + "/main/Login.action");
+			return;
+		}
 
-    @Override
-    protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        // リクエストの文字コードを設定
-        req.setCharacterEncoding("UTF-8");
+		String cd = req.getParameter("cd");
+		String name = req.getParameter("name");
 
-        // セッションからログインユーザー情報を取得
-        HttpSession session = req.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("user");
+		// ★★★ 1. 文字数チェックを追加 ★★★
+		if (cd == null || cd.length() != 3) {
+			// エラーメッセージをリクエストスコープにセット
+			req.setAttribute("error", "科目コードは3文字で入力してください");
 
-        // ログインしていない場合は処理を中断し、ログインページにリダイレクト
-        if (teacher == null) {
-            resp.sendRedirect("/main/LOGI001.jsp"); // ログインページのURLを仮定
-            return;
-        }
-        System.out.println("DEBUG-001");
-        // リクエストパラメータの取得
-        String cd = req.getParameter("cd");
-        String name = req.getParameter("name");
+			// 入力値をフォームに戻すためにリクエストスコープにセット
+			req.setAttribute("cd", cd);
+			req.setAttribute("name", name);
 
-        // Subjectオブジェクトの生成
-        Subject subject = new Subject();
-        subject.setCd(cd);
-        subject.setName(name);
-        subject.setSchool(teacher.getSchool()); // ログインユーザーが所属する学校情報をセット
+			// 科目登録画面（入力画面）にフォワードで戻す
+			req.getRequestDispatcher("/main/SBJM002.jsp").forward(req, resp);
+			return; // 処理を終了
+		}
 
-        // DAOを使ってデータベースに保存
-        boolean result = false;
-        try {
-            SubjectDao subjectDao = new SubjectDao();
-            result = subjectDao.save(subject);
-        } catch (Exception e) {
-            // コンソールにエラーの詳細を出力（デバッグに必須）
-            e.printStackTrace();
+		// ★★★ 2. 重複チェック（既存のロジック） ★★★
+		SubjectDao subjectDao = new SubjectDao();
+		Subject existingSubject = subjectDao.get(cd, teacher.getSchool());
 
-            // エラーが発生したことをリクエストにセットして、ユーザーに知らせることもできる
-            req.setAttribute("error", "データベース登録中にエラーが発生しました。");
-        }
-        System.out.println("DEBUG-002");
-        // 結果に応じてリクエストスコープにデータをセット
-        req.setAttribute("result", result);
-        req.setAttribute("subject_name", name);
+		if (existingSubject != null) {
+			// エラーメッセージをリクエストスコープにセット（画像に合わせて修正）
+			req.setAttribute("error", "科目コードが重複しています");
 
-        // 登録完了画面にフォワード
-        req.getRequestDispatcher("/main/SBJM003.jsp").forward(req, resp);
-    }
+			// 入力値をフォームに戻すためにリクエストスコープにセット
+			req.setAttribute("cd", cd);
+			req.setAttribute("name", name);
 
-    /**
-     * GETリクエストで直接アクセスされた場合は、科目登録画面にリダイレクトする
-     */
+			// 科目登録画面（入力画面）にフォワードで戻す
+			req.getRequestDispatcher("/main/SBJM002.jsp").forward(req, resp);
+			return; // 処理を終了
+		}
 
-    @Override
-    protected void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // 科目登録画面のURLを仮定
-        // (SubjectCreateControllerのような画面表示用サーブレットが存在すると想定)
-        System.out.println("DEBUG-003");
+		// ----- 以下、すべてのチェックをパスした場合の処理（変更なし） -----
 
-        resp.sendRedirect(req.getContextPath() + "/JavaSD/main/SBJM002.jsp");
-    }
+		Subject subject = new Subject();
+		subject.setCd(cd);
+		subject.setName(name);
+		subject.setSchool(teacher.getSchool());
+
+		boolean result = false;
+		try {
+			result = subjectDao.save(subject);
+		} catch (Exception e) {
+			e.printStackTrace();
+			req.setAttribute("error", "データベース登録中にエラーが発生しました。");
+			req.setAttribute("cd", cd);
+			req.setAttribute("name", name);
+			req.getRequestDispatcher("/main/SBJM002.jsp").forward(req, resp);
+			return;
+		}
+
+		req.setAttribute("result", result);
+		req.setAttribute("subject_name", name);
+		req.getRequestDispatcher("/main/SBJM003.jsp").forward(req, resp);
+	}
+
+	/**
+	 * GETリクエストで直接アクセスされた場合は、科目登録画面にリダイレクトする
+	 */
+
+	@Override
+	protected void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 科目登録画面のURLを仮定
+		// (SubjectCreateControllerのような画面表示用サーブレットが存在すると想定)
+		System.out.println("DEBUG-003");
+
+		resp.sendRedirect(req.getContextPath() + "/JavaSD/main/SBJM002.jsp");
+	}
 }

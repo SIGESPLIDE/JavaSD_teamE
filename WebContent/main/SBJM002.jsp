@@ -11,19 +11,17 @@
         <section class="content-form">
             <h2>科目情報登録</h2>
 
-            <%-- エラーメッセージ表示エリア --%>
-            <c:if test="${not empty error}">
-                <div style="color: red; margin-bottom: 15px;">
-                    <p><c:out value="${error}"/></p>
-                </div>
-            </c:if>
-
             <%-- action属性をサーブレットのURLパターンに合わせる --%>
             <form action="${pageContext.request.contextPath}/main/SubjectCreateExcute" method="post">
                 <div class="input-group">
                     <label for="cd-input">科目コード</label>
                     <%-- 失敗時に値が戻るようにvalue属性を設定 --%>
                     <input type="text" id="cd-input" name="cd" value="<c:out value='${cd}'/>" maxlength="3" required placeholder="科目コードを入力してください">
+                    <c:if test="${not empty error}">
+                         <div style="color: #fd7e14; margin-bottom: 0.875em;">
+                    <p><c:out value="${error}"/></p>
+                </div>
+            </c:if>
                 </div>
 
                 <div class="input-group">
