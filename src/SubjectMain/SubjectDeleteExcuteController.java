@@ -1,5 +1,6 @@
 package SubjectMain;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -7,6 +8,7 @@ import bean.Subject;
 import dao.SubjectDao;
 import tool.CommonServlet;
 
+@WebServlet(urlPatterns = {"/main/SubjectDeleteExcute"})
 public class SubjectDeleteExcuteController extends CommonServlet {
 
     @Override
