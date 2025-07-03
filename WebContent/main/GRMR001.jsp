@@ -56,7 +56,7 @@
 							<option value="">--------</option>
 							<c:forEach var="subject" items="${subjectList}">
 								<option value="${subject.cd}" <c:if test="${subject.cd == subjectCd}">selected</c:if>>
-									${subject.cd}
+									${subject.name}
 								</c:forEach>
 						</select>
 					</div>
