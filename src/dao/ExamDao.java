@@ -499,102 +499,66 @@ public class ExamDao extends dao {
     }
 
 
-	/**
-	 * 成績情報を削除する（単一レコード） このメソッドは外部から渡されたConnectionを使用し、トランザクション管理は呼び出し元で行う
-	 *
-	 * @param Exam
-	 *            削除するExamオブジェクト
-	 * @param connection
-	 *            データベース接続
-	 * @return 削除に成功した場合はtrue, 失敗した場合はfalse
-	 * @throws Exception
-	 */
-	public boolean delete(Exam exam, Connection connection) throws Exception {
-		PreparedStatement statement = null;
-		int count = 0;
+    /**
+     * Examオブジェクトのリストを受け取り、対応する成績データを一括で削除します。
+     * 削除のキーは student_no, subject_cd, school_cd, no です。
+     * @param list 削除対象のキー情報を持つExamオブジェクトのリスト
+     * @return 処理が成功した場合はtrue、失敗した場合はfalse
+     * @throws Exception
+     */
+    public boolean delete(List<Exam> list) throws Exception {
+        // コネクションを確立
+        Connection connection = getConnection();
+        // プリペアードステートメント
+        PreparedStatement statement = null;
+        int count = 0; // 処理件数
 
-		try {
-			String sql = "DELETE FROM test WHERE student_no = ? AND subject_cd = ? AND school_cd = ? AND no = ?";
-			statement = connection.prepareStatement(sql);
-			statement.setString(1, exam.getStudent().getNo());
-			statement.setString(2, exam.getSubject().getCd());
-			statement.setString(3, exam.getSchool().getCd());
-			statement.setInt(4, exam.getNo());
+        try {
+            // SQL文を準備
+            // 主キー（student_no, subject_cd, school_cd, no）を条件に指定
+            String sql = "DELETE FROM test WHERE student_no = ? AND subject_cd = ? AND school_cd = ? AND no = ?";
+            statement = connection.prepareStatement(sql);
 
-			count = statement.executeUpdate();
+            // リストの全件をループ
+            for (Exam exam : list) {
+                // プレースホルダに値をセット
+                statement.setString(1, exam.getStudent().getNo());
+                statement.setString(2, exam.getSubject().getCd());
+                statement.setString(3, exam.getSchool().getCd());
+                statement.setInt(4, exam.getNo());
 
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			if (statement != null) {
-				try {
-					statement.close();
-				} catch (SQLException sqle) {
-					throw sqle;
-				}
-			}
-		}
+                // バッチ処理に追加
+                statement.addBatch();
+                count++;
+            }
 
-		return count > 0;
-	}
+            // バッチ処理を実行
+            statement.executeBatch();
 
-	/**
-	 * 複数の成績情報を一括で削除する このメソッド内でトランザクション管理を行う。
-	 *
-	 * @param list
-	 *            削除するExamオブジェクトのリスト
-	 * @return すべての削除が成功した場合はtrue, 失敗した場合はfalse
-	 * @throws Exception
-	 */
-	public boolean delete(List<Exam> list) throws Exception {
-		Connection connection = getConnection();
-		boolean result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 例外が発生した場合は失敗
+            return false;
+        } finally {
+            // クローズ処理
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
-		try {
-			// トランザクションを開始
-			connection.setAutoCommit(false);
-
-			for (Exam exam : list) {
-				if (!delete(exam, connection)) {
-					// 1件でも失敗したらループを抜ける
-					result = false;
-					break;
-				}
-			}
-
-			if (result) {
-				// すべて成功した場合のみコミット
-				connection.commit();
-			} else {
-				// 1件でも失敗した場合はロールバック
-				connection.rollback();
-			}
-
-		} catch (Exception e) {
-			// 例外発生時もロールバック
-			try {
-				connection.rollback();
-			} catch (SQLException sqle) {
-				throw sqle;
-			}
-			throw e;
-		} finally {
-			// オートコミットを元に戻し、コネクションをクローズ
-			try {
-				connection.setAutoCommit(true);
-			} catch (SQLException sqle) {
-				throw sqle;
-			}
-			if (connection != null) {
-				try {
-					connection.close();
-				} catch (SQLException sqle) {
-					throw sqle;
-				}
-			}
-		}
-
-		return result;
-	}
+        System.out.println("削除件数: " + count);
+        return true;
+    }
 
 }
