@@ -177,6 +177,7 @@ public class ExamRegistController extends CommonServlet {
                 }
             }
 
+
             if (!examsToProcess.isEmpty()) {
                 // ★★★★★★★ 修正箇所: DAOの新しいupsertメソッドを呼び出す ★★★★★★★
                 isSuccess = examDao.upsert(examsToProcess);
