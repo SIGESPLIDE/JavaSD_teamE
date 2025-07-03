@@ -72,7 +72,7 @@ public class LoginExcuteController extends CommonServlet {
         } else {
             // ログイン失敗の場合
             // エラーメッセージと入力されたIDをリクエストスコープに設定
-            req.setAttribute("errorMessage", "ログインに失敗しました。IDまたはパスワードが正しくありません。");
+            req.setAttribute("errorMessage", "IDまたはパスワードが確認できませんでした");
             req.setAttribute("id", id);
 
             // 再度ログイン画面（LOGI001.jsp）にフォワード
