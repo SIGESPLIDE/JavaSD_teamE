@@ -498,65 +498,28 @@ public class ExamDao extends dao {
         return allSuccess;
     }
 
-    /**
-     * Examオブジェクトのリストを受け取り、対応する成績データを一括で削除します。
-     * 削除のキーは student_no, subject_cd, school_cd, no です。
-     * @param list 削除対象のキー情報を持つExamオブジェクトのリスト
-     * @return 処理が成功した場合はtrue、失敗した場合はfalse
-     * @throws Exception
-     */
     public boolean delete(List<Exam> list) throws Exception {
-        // コネクションを確立
         Connection connection = getConnection();
-        // プリペアードステートメント
         PreparedStatement statement = null;
-        int count = 0; // 処理件数
-
         try {
-            // SQL文を準備
-            // 主キー（student_no, subject_cd, school_cd, no）を条件に指定
             String sql = "DELETE FROM test WHERE student_no = ? AND subject_cd = ? AND school_cd = ? AND no = ?";
             statement = connection.prepareStatement(sql);
 
-            // リストの全件をループ
             for (Exam exam : list) {
-                // プレースホルダに値をセット
                 statement.setString(1, exam.getStudent().getNo());
                 statement.setString(2, exam.getSubject().getCd());
                 statement.setString(3, exam.getSchool().getCd());
                 statement.setInt(4, exam.getNo());
-
-                // バッチ処理に追加
                 statement.addBatch();
-                count++;
             }
-
-            // バッチ処理を実行
             statement.executeBatch();
-
         } catch (Exception e) {
             e.printStackTrace();
-            // 例外が発生した場合は失敗
             return false;
         } finally {
-            // クローズ処理
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            if (statement != null) statement.close();
+            if (connection != null) connection.close();
         }
-
-        System.out.println("削除件数: " + count);
         return true;
     }
 

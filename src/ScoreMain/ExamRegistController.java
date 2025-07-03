@@ -141,60 +141,62 @@ public class ExamRegistController extends CommonServlet {
         String testNoStr = req.getParameter("f4_registered");
         String[] studentNos = req.getParameterValues("student_no");
 
-        // ★★★ 登録/更新用リストと、削除用リストを準備 ★★★
+        // 登録/更新用リストと、削除用リストを準備
         List<Exam> upsertList = new ArrayList<>();
         List<Exam> deleteList = new ArrayList<>();
 
-        boolean isSuccess = true; // 初期値をtrueに
+        boolean isSuccess = true;
 
         try {
             int testNo = (testNoStr != null && !testNoStr.isEmpty()) ? Integer.parseInt(testNoStr) : 0;
 
             if (studentNos != null) {
                 for (String studentNo : studentNos) {
-                    String pointStr = req.getParameter("point_" + studentNo);
-                    Exam exam = new Exam(); // 共通のExamオブジェクトを生成
 
-                    // --- 共通のキー情報をセット ---
+                    // ★★★ 1. 削除チェックボックスがチェックされているか確認 ★★★
+                    String deleteCheck = req.getParameter("delete_" + studentNo);
+
+                    // --- 共通のキー情報を先にセット ---
+                    Exam exam = new Exam();
                     Student student = new Student();
                     student.setNo(studentNo);
                     exam.setStudent(student);
-
                     Subject subject = new Subject();
                     subject.setCd(subjectCd);
                     exam.setSubject(subject);
-
                     exam.setSchool(school);
                     exam.setNo(testNo);
                     exam.setClassNum(req.getParameter("class_num_" + studentNo));
 
-                    // ★★★ 点数入力欄が空かどうかで処理を分岐 ★★★
-                    if (pointStr != null && !pointStr.isEmpty()) {
-                        // 【登録・更新処理】点数が入力されている場合
-                        int point = Integer.parseInt(pointStr);
-                        exam.setPoint(point);
-                        upsertList.add(exam); // 登録/更新リストに追加
+                    if (deleteCheck != null) {
+                        // 【削除処理】チェックボックスがONの場合
+                        deleteList.add(exam);
                     } else {
-                        // 【削除処理】点数が空の場合
-                        deleteList.add(exam); // 削除リストに追加
+                        // 【登録/更新処理】チェックボックスがOFFの場合
+                        String pointStr = req.getParameter("point_" + studentNo);
+
+                        // 点数が入力されている場合のみ処理
+                        if (pointStr != null && !pointStr.isEmpty()) {
+                            int point = Integer.parseInt(pointStr);
+                            exam.setPoint(point);
+                            upsertList.add(exam);
+                        }
                     }
                 }
             }
 
-            // ★★★ DAOのメソッドを呼び出す ★★★
-            // 登録/更新対象があれば実行
+            // DAOのメソッドを呼び出す
             if (!upsertList.isEmpty()) {
                 isSuccess = examDao.upsert(upsertList);
             }
-            // 削除対象があれば実行（isSuccessが既にfalseなら実行しない）
             if (isSuccess && !deleteList.isEmpty()) {
-                isSuccess = examDao.delete(deleteList); // ★新しいdeleteメソッドを呼び出す
+                isSuccess = examDao.delete(deleteList);
             }
 
         } catch (NumberFormatException e) {
             req.setAttribute("errorMessage", "点数に数字以外の文字が入力されています。確認してください。");
-            isSuccess = false; // エラーなので失敗
-            doGet(req, resp); // 検索画面に戻す
+            isSuccess = false;
+            doGet(req, resp);
             return;
         } catch (Exception e) {
             e.printStackTrace();
@@ -205,7 +207,7 @@ public class ExamRegistController extends CommonServlet {
             resp.sendRedirect(req.getContextPath() + "/main/GRMU002.jsp");
         } else {
             req.setAttribute("errorMessage", "データベース処理中にエラーが発生しました。");
-            doGet(req, resp); // 失敗時も検索画面に戻す
+            doGet(req, resp);
         }
     }
 }
