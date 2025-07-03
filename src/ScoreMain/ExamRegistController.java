@@ -27,96 +27,100 @@ import tool.CommonServlet;
 public class ExamRegistController extends CommonServlet {
 
 	@Override
-    protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        HttpSession session = req.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("user");
+	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	    HttpSession session = req.getSession();
+	    Teacher teacher = (Teacher) session.getAttribute("user");
 
-        if (teacher == null) {
-            resp.sendRedirect(req.getContextPath() + "/main/LOGI001.jsp");
-            return;
-        }
+	    if (teacher == null) {
+	        resp.sendRedirect(req.getContextPath() + "/main/LOGI001.jsp");
+	        return;
+	    }
 
-        School school = teacher.getSchool();
+	    School school = teacher.getSchool();
 
-        // DAOのインスタンス化
-        StudentDao studentDao = new StudentDao();
-        ClassNumDao classNumDao = new ClassNumDao();
-        SubjectDao subjectDao = new SubjectDao();
-        ExamDao examDao = new ExamDao();
+	    // DAOのインスタンス化
+	    StudentDao studentDao = new StudentDao();
+	    ClassNumDao classNumDao = new ClassNumDao();
+	    SubjectDao subjectDao = new SubjectDao();
+	    ExamDao examDao = new ExamDao();
 
-        // --- 1. ドロップダウン用のマスタデータを準備 ---
-        List<Integer> entYearList = studentDao.filterBasic(school, true).stream()
-                .map(Student::getEntYear).distinct().sorted().collect(Collectors.toList());
-        List<String> classList = classNumDao.filter(school);
-        List<Subject> subjectList = subjectDao.filter(school);
+	    // --- ドロップダウン用データ取得 ---
+	    List<Integer> entYearList = studentDao.filterBasic(school, true).stream()
+	        .map(Student::getEntYear).distinct().sorted().collect(Collectors.toList());
+	    List<String> classList = classNumDao.filter(school);
+	    List<Subject> subjectList = subjectDao.filter(school);
 
-        req.setAttribute("entYearList", entYearList);
-        req.setAttribute("classList", classList);
-        req.setAttribute("subjectList", subjectList);
+	    req.setAttribute("entYearList", entYearList);
+	    req.setAttribute("classList", classList);
+	    req.setAttribute("subjectList", subjectList);
 
-        // --- 2. 検索条件をすべて取得 ---
-        String entYearStr = req.getParameter("f1");
-        String classNum = req.getParameter("f2");
-        String subjectCd = req.getParameter("f3");
-        String testNoStr = req.getParameter("f4");
+	    // --- 検索条件の取得 ---
+	    String entYearStr = req.getParameter("f1");
+	    String classNum = req.getParameter("f2");
+	    String subjectCd = req.getParameter("f3");
+	    String testNoStr = req.getParameter("f4");
 
-        // --- 3. 検索が実行された場合のみリストを作成 ---
-        if (entYearStr != null && !entYearStr.isEmpty()) {
-            try {
-                int entYear = Integer.parseInt(entYearStr);
-                int testNo = (testNoStr != null && !testNoStr.isEmpty()) ? Integer.parseInt(testNoStr) : 0;
+	    // --- 検索ボタンが押されたかの判定（f1～f4のいずれかが送られていれば検索実行とみなす） ---
+	    boolean isSearchAttempted = entYearStr != null || classNum != null || subjectCd != null || testNoStr != null;
 
-                // 3a. 【学生リストの取得】クラスに所属する在校生を全員取得 (これが表示の土台)
-                List<Student> studentsInClass = studentDao.filterAllCond(school, entYear, classNum, true);
+	    if (isSearchAttempted) {
+	        // --- 入力がすべて揃っているかチェック ---
+	        if (entYearStr == null || entYearStr.isEmpty() ||
+	            classNum == null || classNum.isEmpty() ||
+	            subjectCd == null || subjectCd.isEmpty() ||
+	            testNoStr == null || testNoStr.isEmpty()) {
 
-                // 3b. 【成績リストの取得】指定された科目・回数の成績を取得
-                Subject subject = new Subject();
-                subject.setCd(subjectCd);
-                List<Exam> scores = examDao.filter(entYear, classNum, subject, testNo, school);
+	            req.setAttribute("errorMessage", "入学年度とクラスと科目と回数を選択してください。");
+	        } else {
+	            try {
+	                int entYear = Integer.parseInt(entYearStr);
+	                int testNo = Integer.parseInt(testNoStr);
 
-                // 3c. 【成績データの高速検索用Map作成】
-                Map<String, Exam> scoreMap = scores.stream()
-                    .collect(Collectors.toMap(
-                        (Exam exam) -> exam.getStudent().getNo(),
-                        (Exam exam) -> exam
-                    ));
+	                List<Student> studentsInClass = studentDao.filterAllCond(school, entYear, classNum, true);
 
-                // 3d. 【最終的な表示用リストの作成 (マージ処理)】
-                List<Exam> examResults = new ArrayList<>();
-                for (Student student : studentsInClass) {
-                    Exam rowData;
-                    if (scoreMap.containsKey(student.getNo())) {
-                        // 成績が存在する場合：DBから取得した成績データをそのまま使う
-                        rowData = scoreMap.get(student.getNo());
-                    } else {
-                        // 成績が存在しない場合：表示用に新規データを作成
-                        rowData = new Exam();
-                        rowData.setStudent(student); // 学生情報
-                        rowData.setSubject(subject); // 検索した科目
-                        rowData.setSchool(school);
-                        rowData.setClassNum(classNum);
-                        rowData.setNo(testNo);     // 検索した回数
-                        rowData.setPoint(-1);      // 未入力は「-1」として扱う
-                    }
-                    examResults.add(rowData);
-                }
+	                Subject subject = new Subject();
+	                subject.setCd(subjectCd);
+	                List<Exam> scores = examDao.filter(entYear, classNum, subject, testNo, school);
 
-                // 3e. JSPにデータを渡す
-                req.setAttribute("examResults", examResults);
-                req.setAttribute("selectedEntYear", entYear);
-                req.setAttribute("selectedClassNum", classNum);
-                req.setAttribute("selectedSubjectCd", subjectCd);
-                req.setAttribute("selectedTestNo", testNo);
+	                Map<String, Exam> scoreMap = scores.stream()
+	                        .collect(Collectors.toMap(
+	                                exam -> exam.getStudent().getNo(),
+	                                exam -> exam
+	                        ));
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                req.setAttribute("errorMessage", "データの取得中にエラーが発生しました。");
-            }
-        }
+	                List<Exam> examResults = new ArrayList<>();
+	                for (Student student : studentsInClass) {
+	                    Exam rowData;
+	                    if (scoreMap.containsKey(student.getNo())) {
+	                        rowData = scoreMap.get(student.getNo());
+	                    } else {
+	                        rowData = new Exam();
+	                        rowData.setStudent(student);
+	                        rowData.setSubject(subject);
+	                        rowData.setSchool(school);
+	                        rowData.setClassNum(classNum);
+	                        rowData.setNo(testNo);
+	                        rowData.setPoint(0);
 
-        // --- 4. JSPへフォワード ---
-        req.getRequestDispatcher("/main/GRMU001.jsp").forward(req, resp);
-    }
+	                    }
+	                    examResults.add(rowData);
+	                }
+
+	                req.setAttribute("examResults", examResults);
+	                req.setAttribute("selectedEntYear", entYear);
+	                req.setAttribute("selectedClassNum", classNum);
+	                req.setAttribute("selectedSubjectCd", subjectCd);
+	                req.setAttribute("selectedTestNo", testNo);
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	                req.setAttribute("errorMessage", "データの取得中にエラーが発生しました。");
+	            }
+	        }
+	    }
+
+	    req.getRequestDispatcher("/main/GRMU001.jsp").forward(req, resp);
+	}
+
 
 
 	@Override
