@@ -4,7 +4,9 @@
 	padding: 20px 0;
 	flex-shrink: 0; /* サイドバーは縮まない */
 	height: fit-content; /* コンテンツの高さに合わせて、不必要な空白をなくす */
+	min-height: 400px;
 	margin-right: 2px; /* コンテンツエリアとの間隔 */
+	border-right: 1px solid #e7e7e7;
 }
  
 .sidebar ul {
@@ -18,4 +20,8 @@
 
 .sidebar li a {
 	font-size: 16px;
+}
+
+nav a {
+	text-decoration: underline;
 }
