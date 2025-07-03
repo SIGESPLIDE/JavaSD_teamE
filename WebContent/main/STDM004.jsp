@@ -39,15 +39,15 @@
 				<c:if test="${not empty errors['name']}">
 					<p class="error" style="color:red; margin:0">${errors['name']}</p>
 				</c:if>
-				<input type="text" name="name" value="${student.name}" maxlength="30">
+				<input type="text" name="name" value="${student.name}" maxlength="30" required>
 			</div>
 
 			<div class="form-group">
 				<label>クラス</label><br>
 				<c:if test="${not empty errors['class_num']}">
-					<p class="error" style="color:red; margin:0">${errors['class_num']}</p>
+					<p class="error" style="color:red; margin:0" >${errors['class_num']}</p>
 				</c:if>
-				<select name="class_num">
+				<select name="class_num" required>
 					<option value="">--</option>
 					<c:forEach var="cls" items="${classList}">
 						<option value="${cls}" ${cls == student.classNum ? 'selected' : ''}>${cls}</option>
