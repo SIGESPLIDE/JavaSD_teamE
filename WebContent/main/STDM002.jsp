@@ -82,7 +82,7 @@
 
                 <div class="d-flex align-items-center">
                     <button type="submit" class="btn btn-primary">登録して終了</button>
-                    <a href="StudentList.action" class="ms-3">戻る</a>
+                    <a href="STDM"001 class="ms-3">戻る</a>
                 </div>
             </form>
         </div>
