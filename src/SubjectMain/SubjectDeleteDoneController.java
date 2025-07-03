@@ -14,7 +14,7 @@ public class SubjectDeleteDoneController extends CommonServlet {
     @Override
     protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         // 削除完了画面を表示
-        req.getRequestDispatcher("/WebContent/main/SBJM007").forward(req, resp);
+        req.getRequestDispatcher("/main/SBJM007").forward(req, resp);
     }
 
     @Override

@@ -20,7 +20,7 @@ public class SubjectDeleteExcuteController extends CommonServlet {
         Subject subject = dao.findByCd(subjectId);
 
         req.setAttribute("subject", subject);
-        req.getRequestDispatcher("/WebContent/main/SBJM006").forward(req, resp);
+        req.getRequestDispatcher("/main/SBJM006").forward(req, resp);
     }
 
     @Override
