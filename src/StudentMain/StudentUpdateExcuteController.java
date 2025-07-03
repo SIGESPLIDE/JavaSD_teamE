@@ -1,6 +1,8 @@
 package StudentMain;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.annotation.WebServlet;
@@ -23,105 +25,62 @@ public class StudentUpdateExcuteController extends CommonServlet {
 
 	@Override
 	protected void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		req.setCharacterEncoding("UTF-8");
+
+		String no = req.getParameter("no");
+		String name = req.getParameter("name");
+		String entYearStr = req.getParameter("ent_year");
+		String classNum = req.getParameter("class_num");
+		String isAttendStr = req.getParameter("is_attend");
+		String schoolCd = req.getParameter("school_cd");
+
+		int entYear = Integer.parseInt(entYearStr);
+		boolean isAttend = "true".equalsIgnoreCase(isAttendStr) || "1".equals(isAttendStr);
+
+		// 入力値を保持するためのStudent生成
+		Student student = new Student();
+		student.setNo(no);
+		student.setName(name);
+		student.setEntYear(entYear);
+		student.setClassNum(classNum);
+		student.setAttend(isAttend);
+		School school = new School();
+		school.setCd(schoolCd);
+		student.setSchool(school);
+
+		// バリデーション
+		Map<String, String> errors = new HashMap<>();
+		if (name == null || name.trim().isEmpty()) {
+			errors.put("name", "氏名を入力してください。");
+		}
+		if (classNum == null || classNum.trim().isEmpty()) {
+			errors.put("class_num", "クラスを選択してください。");
+		}
+
+		if (!errors.isEmpty()) {
+			req.setAttribute("errors", errors);
+			req.setAttribute("student", student);
+
+			ClassNumDao classNumDao = new ClassNumDao();
+			List<String> classList = classNumDao.filter(school);
+			req.setAttribute("classList", classList);
+
+			RequestDispatcher rd = req.getRequestDispatcher("STDM004.jsp");
+			rd.forward(req, resp);
+			return;
+		}
+
 		try {
-			// リクエストパラメータ取得
-			String no = req.getParameter("no");
-			String name = req.getParameter("name");
-			String entYearStr = req.getParameter("ent_year");
-			String classNum = req.getParameter("class_num");
-			String isAttendStr = req.getParameter("is_attend");
-			String schoolCd = req.getParameter("school_cd");
-
-			// 文字列 → 整数、ブール変換
-			int entYear = Integer.parseInt(entYearStr); // hidden項目としてJSPから送られている前提
-			boolean isAttend = "true".equalsIgnoreCase(isAttendStr) || "1".equals(isAttendStr);
-
-			// バリデーション
-			boolean hasError = false;
-
-			if (name == null || name.trim().isEmpty()) {
-				req.setAttribute("nameError", "このフィールドを入力してください。");
-				hasError = true;
-			}
-
-			if (classNum == null || classNum.trim().isEmpty()) {
-				req.setAttribute("classError", "このフィールドを入力してください。");
-				hasError = true;
-			}
-
-			if (hasError) {
-				Student student = new Student();
-				student.setNo(no);
-				student.setName(name);
-				student.setEntYear(entYear);
-				student.setClassNum(classNum);
-				student.setAttend(isAttend);
-
-				School school = new School();
-				school.setCd(schoolCd);
-				student.setSchool(school);
-
-				req.setAttribute("student", student);
-
-				ClassNumDao classNumDao = new ClassNumDao();
-				List<String> classList = classNumDao.filter(school);
-				req.setAttribute("classList", classList);
-
-				RequestDispatcher rd = req.getRequestDispatcher("STDM004.jsp");
-				rd.forward(req, resp);
-				return;
-			}
-
-			// 更新処理
-			Student student = new Student();
-			student.setNo(no);
-			student.setName(name);
-			student.setEntYear(entYear);
-			student.setClassNum(classNum);
-			student.setAttend(isAttend);
-
-			School school = new School();
-			school.setCd(schoolCd);
-			student.setSchool(school);
-
 			StudentDao dao = new StudentDao();
 			dao.update(student);
 
 			RequestDispatcher rd = req.getRequestDispatcher("STDM005.jsp");
 			rd.forward(req, resp);
-
 		} catch (Exception e) {
 			e.printStackTrace();
-
-			req.setAttribute("errorMessage", "更新処理でエラーが発生しました");
-
-			String no = req.getParameter("no");
-			String entYearStr = req.getParameter("ent_year");
-			String name = req.getParameter("name");
-			String classNum = req.getParameter("class_num");
-			String isAttendStr = req.getParameter("is_attend");
-			String schoolCd = req.getParameter("school_cd");
-
-			int entYear = 0;
-			try {
-				entYear = Integer.parseInt(entYearStr);
-			} catch (NumberFormatException ignored) {}
-
-			boolean isAttend = "true".equalsIgnoreCase(isAttendStr) || "1".equals(isAttendStr);
-
-			Student student = new Student();
-			student.setNo(no);
-			student.setName(name);
-			student.setEntYear(entYear);
-			student.setClassNum(classNum);
-			student.setAttend(isAttend);
-
-			School school = new School();
-			school.setCd(schoolCd);
-			student.setSchool(school);
+			req.setAttribute("error", "更新処理でエラーが発生しました");
 
 			req.setAttribute("student", student);
-
 			ClassNumDao classNumDao = new ClassNumDao();
 			List<String> classList = classNumDao.filter(school);
 			req.setAttribute("classList", classList);
