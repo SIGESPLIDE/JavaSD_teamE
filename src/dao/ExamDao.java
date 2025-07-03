@@ -498,7 +498,6 @@ public class ExamDao extends dao {
         return allSuccess;
     }
 
-
     /**
      * Examオブジェクトのリストを受け取り、対応する成績データを一括で削除します。
      * 削除のキーは student_no, subject_cd, school_cd, no です。
