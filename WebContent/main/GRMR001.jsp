@@ -2,10 +2,10 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:import url="/BASE001.jsp" >
+<c:param name="header">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/main/css/style-list.css">
+</c:param>
 <c:param name="body">
-
-
-
 <div class="container mt-4">
 	<%-- ここを修正 --%>
 	<h2 class="mb-4">
@@ -106,7 +106,7 @@
 	</c:if>
 
 	<c:if test="${empty subject && empty student && empty error_student}">
-		<div class="mt-3 text-muted">毎項目を選択または学生情報を入力して検索ボタンをクリックしてください</div>
+		<div class="mt-3 alert-yellow">毎項目を選択または学生情報を入力して検索ボタンをクリックしてください</div>
 	</c:if>
 </div>
 </c:param>

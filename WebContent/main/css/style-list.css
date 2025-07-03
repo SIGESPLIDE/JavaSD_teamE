@@ -1,0 +1,32 @@
+/* 高さ・マージン調整 */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+/* 全体レイアウトを縦に並べる */
+.yohaku {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* メインコンテンツを可変にして、残りをfooterに任せる */
+.main-container {
+  flex: 1;
+}
+
+/* フッターのスタイル */
+.footer {
+  background-color: #c0c0c0;
+  padding: 10px 0;
+  text-align: center;
+  color: #6c757d;
+  font-size: 0.9rem;
+  border-top: 1px solid #c0c0c0;
+}
+
+/* 毎項目メッセージの色変更（青系） */
+.mt-3.alert-yellow {
+  color: #37faff!important;
+}

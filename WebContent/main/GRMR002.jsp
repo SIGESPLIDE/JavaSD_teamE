@@ -6,7 +6,7 @@
 	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
 	crossorigin="anonymous">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/main/css/styles.css">
+	href="${pageContext.request.contextPath}/main/css/style-list.css">
 <c:if test="${not empty testListSubject}">
 	<div class="search-results">
 		<div class="mb-3">
