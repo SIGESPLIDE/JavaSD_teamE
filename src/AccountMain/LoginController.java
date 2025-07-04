@@ -26,5 +26,6 @@ public class LoginController extends CommonServlet {
 
     @Override
     public void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    	get(req, resp);
     }
 }
