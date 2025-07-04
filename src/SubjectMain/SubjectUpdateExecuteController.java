@@ -16,7 +16,7 @@ import tool.CommonServlet;
  *
  */
 @WebServlet(urlPatterns = { "/main/subjectUpdateExecute" })
-public class SubjectUpdateExcuteController extends CommonServlet {
+public class SubjectUpdateExecuteController extends CommonServlet {
 
 	@Override
 	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {

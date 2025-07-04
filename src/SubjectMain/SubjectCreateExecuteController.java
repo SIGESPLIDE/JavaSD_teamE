@@ -20,7 +20,7 @@ import tool.CommonServlet;
  */
 
 @WebServlet(urlPatterns = { "/main/SubjectCreateExcute" })
-public class SubjectCreateExcuteController extends CommonServlet {
+public class SubjectCreateExecuteController extends CommonServlet {
 
 	/**
 	 * POSTリクエストを処理し、科目情報をデータベースに登録する
