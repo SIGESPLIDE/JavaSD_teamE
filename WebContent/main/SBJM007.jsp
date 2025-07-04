@@ -8,7 +8,7 @@
 	<c:param name="body">
 		<label>削除が完了しました。</label>
 
-		<a href="SBJM001.jsp">科目一覧</a>
+		<a href="subject">科目一覧</a>
 
 	</c:param>
 </c:import>
