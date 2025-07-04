@@ -105,16 +105,60 @@ import bean.Subject;
 
 	   }
 
-	   public void delete(int id) throws Exception {
-		   try (Connection con = getConnection()) {
-			   String sql = "DELETE FROM TEAM_E WHERE id = ?";
-			   PreparedStatement st = con.prepareStatement(sql);
-		       st.setInt(1, id);
-		       st.executeUpdate();
+	   public boolean delete(Subject subject) throws Exception {
+		    // データベース接続とステートメントを格納する変数を準備
+		    Connection connection = null;
+		    PreparedStatement statement = null;
+		    // 削除された行数を格納する変数
+		    int count = 0;
 
-		   }
+		    try {
+		        // データベース接続を取得
+		        connection = getConnection();
 
-	   }
+		        // 実行するSQL文を準備（プレースホルダ ? を使用）
+		        // 必ず school_cd も条件に含め、他校のデータを誤って削除しないようにする
+		        String sql = "DELETE FROM subject WHERE cd = ? AND school_cd = ?";
+
+		        // PreparedStatement を作成
+		        statement = connection.prepareStatement(sql);
+
+		        // プレースホルダに値をセット
+		        // 1番目の ? に科目コード(String)をセット
+		        statement.setString(1, subject.getCd());
+		        // 2番目の ? に学校コード(String)をセット
+		        statement.setString(2, subject.getSchool().getCd());
+
+		        // DELETE文を実行し、削除された行数を取得
+		        count = statement.executeUpdate();
+
+		    } catch (Exception e) {
+		        // 例外が発生した場合は、ログに出力して再スローする
+		        System.err.println("科目削除処理中にエラーが発生しました。");
+		        e.printStackTrace();
+		        throw e;
+		    } finally {
+		        // リソースを確実に解放する
+		        if (statement != null) {
+		            try {
+		                statement.close();
+		            } catch (SQLException sqle) {
+		                // クローズ時の例外は握りつぶさず、ログ出力などを行うのが望ましい
+		                sqle.printStackTrace();
+		            }
+		        }
+		        if (connection != null) {
+		            try {
+		                connection.close();
+		            } catch (SQLException sqle) {
+		                sqle.printStackTrace();
+		            }
+		        }
+		    }
+
+		    // 削除された行数が1以上であれば成功（true）、0であれば失敗（false）を返す
+		    return count > 0;
+		}
 
 
        /**

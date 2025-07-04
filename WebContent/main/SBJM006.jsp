@@ -4,23 +4,56 @@
 <!-- 作成者　潟辺　陸 -->
 <c:import url="/BASE001.jsp">
 
-	<c:param name="head">
-		<h2>科目情報削除</h2>
-	</c:param>
+    <%--
+        headパラメータ：ページの主要な見出しとして「科目情報削除」を渡します。
+    --%>
+    <c:param name="head">
+        <h2>科目情報削除</h2>
+    </c:param>
 
-	<c:param name="body">
+    <%--
+        bodyパラメータ：画面の本体となるコンテンツを渡します。
+        ここが改善のメイン部分です。
+    --%>
+    <c:param name="body">
+        <section>
+            <%--
+                [改善点1] ユーザーへの確認メッセージを表示します。
+                SubjectDeleteControllerから渡された 'subject' オブジェクトの情報を使います。
+            --%>
+            <c:if test="${not empty subject}">
+                <p class="mt-4">
+                    「<c:out value="${subject.name}" />(<c:out value="${subject.cd}" />)」を削除してもよろしいですか
+                </p>
 
-		<form action="subjectDeleteExcute" method="post">
-			<label for="id">削除するID:</label> <input type="hidden" name="id"
-				value="${param.id}" />
-			<button type="submit">削除</button>
-		</form>
+                <%--
+                    削除を実行するサーブレット (subjectDeleteExecute) に情報を送るフォームです。
+                --%>
+                <form action="subjectDeleteExecute" method="post" class="mt-3">
+                    <%--
+                        [改善点2] サーブレットに渡すパラメータを修正します。
+                        ・nameを "id" から "cd" に変更。
+                        ・valueをサーブレットから受け取った ${subject.cd} に変更。
+                    --%>
+                    <input type="hidden" name="cd" value="<c:out value="${subject.cd}" />">
 
-		<div>
-			<a href="SBJM001.jsp">戻る</a>
-		</div>
+                    <button type="submit" class="btn btn-danger">削除</button>
+                </form>
+            </c:if>
 
+            <%-- もしsubjectオブジェクトが渡されなかった場合のエラー表示 --%>
+            <c:if test="${empty subject}">
+                <p class="text-danger mt-4">削除対象の科目が指定されていません。</p>
+            </c:if>
 
-	</c:param>
+            <%--
+                [改善点3] 「戻る」リンクの行き先を修正します。
+                JSPファイルに直接ではなく、科目一覧を表示する機能（サーブレットやAction）にリンクします。
+            --%>
+            <div class="mt-3">
+                <a href="SubjectList.action">戻る</a>
+            </div>
+        </section>
+    </c:param>
 
 </c:import>
