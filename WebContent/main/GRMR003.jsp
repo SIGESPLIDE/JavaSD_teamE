@@ -22,10 +22,10 @@
 				<thead>
 					<%-- ヘッダー行の下にだけ線を引く --%>
 					<tr class="border-bottom">
-						<th class="text-center py-2" style="width: 15%;">科目名</th>
-						<th class="text-center py-2" style="width: 15%;">科目コード</th>
-						<th class="text-center py-2" style="width: 20%;">回数</th>
-						<th class="text-center py-2" style="width: 30%;">点数</th>
+						<th class="text-left py-2" style="width: 45%;">科目名</th>
+						<th class="text-left py-2" style="width: 20%;">科目コード</th>
+						<th class="text-left py-2" style="width: 10%;">回数</th>
+						<th class="text-left py-2" style="width: 10%;">点数</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -34,10 +34,10 @@
 						<%-- 各データ行の下に線を引く (最後の行は除く) --%>
 						<tr <c:if test="${!loop.last}">class="border-bottom"</c:if>>
 							<%--科目名と科目コード、回数と点数を表示 --%>
-							<td class="text-center py-2">${tLS.subjectName}</td>
-							<td class="text-center py-2">${tLS.subjectCd}</td>
-							<td class="text-center py-2">${tLS.num}</td>
-							<td class="text-center py-2">${tLS.point}</td>
+							<td class="text-left py-2">${tLS.subjectName}</td>
+							<td class="text-left py-2">${tLS.subjectCd}</td>
+							<td class="text-left py-2">${tLS.num}</td>
+							<td class="text-left py-2">${tLS.point}</td>
 						</tr>
 					</c:forEach>
 				</tbody>

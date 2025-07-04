@@ -11,6 +11,9 @@ html, body {
   min-height: 100vh;
 }
 
+table.table.table-borderless.mb-0 {
+	text-align: left;
+}
 /* メインコンテンツを可変にして、残りをfooterに任せる */
 .main-container {
   flex: 1;

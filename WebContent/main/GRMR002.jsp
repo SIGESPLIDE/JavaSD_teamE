@@ -20,12 +20,12 @@
 				<thead>
 					<%-- ヘッダー行の下にだけ線を引く --%>
 					<tr class="border-bottom">
-						<th class="text-center py-2" style="width: 15%;">入学年度</th>
-						<th class="text-center py-2" style="width: 15%;">クラス</th>
-						<th class="text-center py-2" style="width: 20%;">学生番号</th>
-						<th class="text-center py-2" style="width: 30%;">氏名</th>
-						<th class="text-center py-2" style="width: 10%;">1回</th>
-						<th class="text-center py-2" style="width: 10%;">2回</th>
+						<th class="text-left py-2" style="width: 15%;">入学年度</th>
+						<th class="text-left py-2" style="width: 15%;">クラス</th>
+						<th class="text-left py-2" style="width: 20%;">学生番号</th>
+						<th class="text-left py-2" style="width: 30%;">氏名</th>
+						<th class="text-left py-2" style="width: 10%;">1回</th>
+						<th class="text-left py-2" style="width: 10%;">2回</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -34,11 +34,11 @@
 						<%-- 各データ行の下に線を引く (最後の行は除く) --%>
 						<tr <c:if test="${!loop.last}">class="border-bottom"</c:if>>
 							<%-- 各セルの文字揃えと上下の余白(padding)を調整 --%>
-							<td class="text-center py-2">${tLS.entYear}</td>
-							<td class="text-center py-2">${tLS.classNum}</td>
-							<td class="text-center py-2">${tLS.studentNo}</td>
-							<td class="text-center py-2">${tLS.studentName}</td>
-							<td class="text-center py-2">
+							<td class="text-left py-2">${tLS.entYear}</td>
+							<td class="text-left py-2">${tLS.classNum}</td>
+							<td class="text-left py-2">${tLS.studentNo}</td>
+							<td class="text-left py-2">${tLS.studentName}</td>
+							<td class="text-left py-2">
 								<%-- デフォルト値をハイフンに設定 --%> <c:set var="point1" value="-" /> <%-- 2. Mapをループ --%>
 								<c:forEach var="pointEntry" items="${tLS.points}">
 									<%-- キーが1かどうかチェック --%>
