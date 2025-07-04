@@ -16,8 +16,9 @@
 				<div
 					class="card text-black bg-student position-relative menu-box equal-height-box">
 					<div class="card-body">
-						<h3 class="card-title h5 mb-0">学生管理</h3>
-						<a href="${pageContext.request.contextPath}/main/STDM001"></a>
+						<p class="card-title h5 mb-0">
+							<a href="${pageContext.request.contextPath}/main/STDM001">学生管理</a>
+						</p>
 					</div>
 				</div>
 			</div>
@@ -43,7 +44,9 @@
 				<div
 					class="card text-black bg-subject position-relative menu-box equal-height-box">
 					<div class="card-body">
-						<a href="${pageContext.request.contextPath}/main/subject">科目管理</a>
+						<p class="card-title h5 mb-0">
+							<a href="${pageContext.request.contextPath}/main/subject">科目管理</a>
+						</p>
 					</div>
 				</div>
 			</div>

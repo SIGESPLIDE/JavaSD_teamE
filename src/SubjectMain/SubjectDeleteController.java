@@ -14,6 +14,14 @@ import bean.Subject;
 import bean.Teacher;
 import dao.SubjectDao;
 
+/**
+ * 科目一覧の削除ボタン処理
+ * 
+ * 
+ * @author r_katabe
+ * @author s_saito
+ *
+ */
 @WebServlet("/main/subjectDelete")
 public class SubjectDeleteController extends HttpServlet {
 
