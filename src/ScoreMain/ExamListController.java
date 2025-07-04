@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import bean.ClassNum;
 import bean.School;
@@ -26,15 +27,13 @@ import tool.CommonServlet;
 @WebServlet(urlPatterns={"/main/ExamList"})
 public class ExamListController extends CommonServlet {
 
-//	private Teacher teacher;
-//	private School school;
+	private Teacher teacher;
+	private School school;
 
 	@Override
     protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        // テスト用コード（本番ではセッションから取得）
-        TeacherDao teacherDao = new TeacherDao();
-        Teacher teacher = teacherDao.get("admin");
-        School school = teacher.getSchool();
+
+		this.execute(req, resp);
 
         // マスタ取得
         StudentDao studentDao = new StudentDao();
@@ -49,7 +48,7 @@ public class ExamListController extends CommonServlet {
         }).collect(Collectors.toList());
 
         SubjectDao subjectDao = new SubjectDao();
-        List<Subject> subjectList = subjectDao.filter();
+        List<Subject> subjectList = subjectDao.filter(school);
 
         // 検索条件取得
         String entYear = req.getParameter("enrollmentYear");
@@ -158,17 +157,17 @@ public class ExamListController extends CommonServlet {
      */
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 
-//        HttpSession session = req.getSession();
-//        // Teacherオブジェクトを取得
-//        Teacher teacher = (Teacher) session.getAttribute("session_user");
-//
-//        // teacherがnullの場合はログイン画面にリダイレクト
-//        if (teacher == null) {
-//            resp.sendRedirect(req.getContextPath() + "/login.action");
-//
-//            return;
-//        }
-//        school = teacher.getSchool();
+        HttpSession session = req.getSession();
+        // Teacherオブジェクトを取得
+        teacher = (Teacher) session.getAttribute("user");
+
+        // teacherがnullの場合はログイン画面にリダイレクト
+        if (teacher == null) {
+            resp.sendRedirect(req.getContextPath() + "/login.action");
+
+            return;
+        }
+        school = teacher.getSchool();
     }
 
 }

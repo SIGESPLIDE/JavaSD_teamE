@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import bean.ClassNum;
 import bean.ExamListSubject;
@@ -19,25 +20,18 @@ import dao.ClassNumDao;
 import dao.ExamListSubjectDao;
 import dao.StudentDao;
 import dao.SubjectDao;
-import dao.TeacherDao;
 import tool.CommonServlet;
 
 @WebServlet(urlPatterns={"/main/ExamListSubject"})
 public class ExamListSubjectExecuteController extends CommonServlet {
 
-//	private Teacher teacher;
-//	private School school;
+	private Teacher teacher;
+	private School school;
 
 	@Override
 	protected void get(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		// ログイン確認とTeacherインスタンスからschoolを受け取る
-		// 本番用コード
-//				this.execute(req, resp);
-
-        // テスト用コード（本番ではセッションから取得）
-        TeacherDao teacherDao = new TeacherDao();
-        Teacher teacher = teacherDao.get("admin");
-        School school = teacher.getSchool();
+				this.execute(req, resp);
 
 				SubjectDao subjectDao = new SubjectDao();
 
@@ -116,18 +110,18 @@ public class ExamListSubjectExecuteController extends CommonServlet {
 
 	@Override
 	protected void execute(HttpServletRequest req, HttpServletResponse resp) throws Exception{
-//    	 //現在のセッションを取得（存在しない場合は新規作成）
-//      HttpSession session = req.getSession();
-//      // Teacherオブジェクトを取得
-//      Teacher teacher = (Teacher) session.getAttribute("session_user");
-//
-//      // teacherがnullの場合はログイン画面にリダイレクト
-//      if (teacher == null) {
-//          resp.sendRedirect(req.getContextPath() + "/login.action");
-//
-//          return;
-//      }
-//      school = teacher.getSchool();
+    	 //現在のセッションを取得（存在しない場合は新規作成）
+      HttpSession session = req.getSession();
+      // Teacherオブジェクトを取得
+      teacher = (Teacher) session.getAttribute("user");
+
+      // teacherがnullの場合はログイン画面にリダイレクト
+      if (teacher == null) {
+          resp.sendRedirect(req.getContextPath() + "/login.action");
+
+          return;
+      }
+      school = teacher.getSchool();
 	}
 
 }

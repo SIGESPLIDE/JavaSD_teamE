@@ -185,33 +185,6 @@ import bean.Subject;
 
 
 
-       /**
-        * 全科目を取得する
-        * @return 科目リスト
-        * @throws Exception
-        */
-
-	   public List<Subject> filter() throws Exception {
-		   List<Subject> list = new ArrayList<>();
-		   String sql = "SELECT * FROM SUBJECT";
-
-		   try (Connection con = getConnection();
-				   PreparedStatement st = con.prepareStatement(sql);
-				   ResultSet rs = st.executeQuery()) {
-
-			   while (rs.next()) {
-				   Subject subject = new Subject();
-				   subject.setCd(rs.getString("CD"));
-				   subject.setName(rs.getString("NAME"));
-				   School school = new School();
-                   school.setCd(rs.getString("SCHOOL_CD")); // ← 修正済み
-                   subject.setSchool(school);
-                   list.add(subject);
-	            }
-	        }
-	        return list;
-	    }
-
 	    /**
 	     * 【★新規追加するメソッド★】
 	     * 指定された学校に所属する科目のみを取得する

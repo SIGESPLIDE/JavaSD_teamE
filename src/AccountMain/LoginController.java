@@ -24,12 +24,7 @@ public class LoginController extends CommonServlet {
         req.getRequestDispatcher("/main/LOGI001.jsp").forward(req, resp);
     }
 
-    /**
-     * postメソッドは不要になるため削除するか、
-     * GETメソッドを呼び出すように単純化します。
-     */
     @Override
     public void post(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        get(req, resp);
     }
 }

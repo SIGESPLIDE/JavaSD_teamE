@@ -30,7 +30,6 @@ public class LoginExcuteController extends CommonServlet {
      */
     @Override
     public void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.sendRedirect("login.action");
     }
 
     /**
@@ -38,7 +37,10 @@ public class LoginExcuteController extends CommonServlet {
      */
     @Override
     public void post(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // JSPからのリクエストの文字コードをUTF-8に設定
+
+    	HttpSession session = req.getSession();
+
+    	// JSPからのリクエストの文字コードをUTF-8に設定
         req.setCharacterEncoding("UTF-8");
 
         // リクエストパラメータからIDとパスワードを取得
@@ -53,17 +55,13 @@ public class LoginExcuteController extends CommonServlet {
             teacher = dao.login(id, password);
         } catch (Exception e) {
             // データベース接続などでエラーが発生した場合
-            e.printStackTrace();
-            req.setAttribute("errorMessage", "システムエラーが発生しました。");
-            req.getRequestDispatcher("/main/LOGI001.jsp").forward(req, resp);
+            req.getRequestDispatcher("/ERRO001.jsp").forward(req, resp);
             return;
         }
 
         // 認証結果に基づいて画面遷移を制御
         if (teacher != null) {
             // ログイン成功の場合
-            // セッションを取得（なければ新規作成）
-            HttpSession session = req.getSession();
             // セッションにログインしたユーザーの情報を保存
             session.setAttribute("user", teacher);
 

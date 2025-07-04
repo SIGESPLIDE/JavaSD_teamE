@@ -22,15 +22,15 @@ public class ExamListSubjectDao extends dao {
 
 	// testテーブルとstudentテーブルのjoin
 
-	private String baseSql = "select s.ent_year, t.class_num, s.no as student_no, s.name as student_name, t.no as test_no, t.point from student as s inner join test as t on s.no = t.student_no" ;
+	private String baseSql = "select s.ent_year, t.class_num, s.no as student_no, s.name as student_name, t.no as test_no, t.point from student as s inner join test as t on s.no = t.student_no";
 
 	// 検索結果の格納作業をする
 
 	private List<ExamListSubject> postFilter(ResultSet rSet) throws Exception {
 
-			// 学生番号をキーにして、学生情報を集約する為のMap
+		// 学生番号をキーにして、学生情報を集約する為のMap
 
-			Map<String,ExamListSubject> studentMap = new HashMap<>();
+		Map<String, ExamListSubject> studentMap = new HashMap<>();
 
 		try {
 
@@ -78,7 +78,7 @@ public class ExamListSubjectDao extends dao {
 
 					// 作成した学生データを、学生番号をキーにしてstudentMapに登録
 
-					studentMap.put(studentNo,studentData);
+					studentMap.put(studentNo, studentData);
 
 				}
 
@@ -92,21 +92,20 @@ public class ExamListSubjectDao extends dao {
 
 			}
 
-		}catch (Exception e ) {
+		} catch (Exception e) {
 
 			e.printStackTrace();
 
 		}
 
-			// Mapに集約された全てのTestListSubjectオブジェクトをListに変換して返す
+		// Mapに集約された全てのTestListSubjectオブジェクトをListに変換して返す
 
-			return new ArrayList<>(studentMap.values());
+		return new ArrayList<>(studentMap.values());
 	}
-
 
 	// 入学年度、クラス番号、科目、学校で検索をかける
 
-	public List<ExamListSubject> filter(int entYear,String classNum,Subject subject,School school) throws Exception {
+	public List<ExamListSubject> filter(int entYear, String classNum, Subject subject, School school) throws Exception {
 
 		List<ExamListSubject> list = new ArrayList<>();
 
@@ -120,7 +119,7 @@ public class ExamListSubjectDao extends dao {
 
 		ResultSet rSet = null;
 
-		//SQLの条件 入学年度、クラス番号、科目、学校による条件付け
+		// SQLの条件 入学年度、クラス番号、科目、学校による条件付け
 
 		String condition = " where s.school_cd=? and s.ent_year=? and t.class_num=? and t.subject_cd=?";
 
@@ -142,11 +141,11 @@ public class ExamListSubjectDao extends dao {
 
 			// SQL文に入学年度を入れる
 
-			statement.setInt(2,entYear);
+			statement.setInt(2, entYear);
 
 			// SQLにクラス番号を入れる
 
-			statement.setString(3,classNum);
+			statement.setString(3, classNum);
 
 			// SQLに科目番号を入れる
 
@@ -170,7 +169,7 @@ public class ExamListSubjectDao extends dao {
 
 			if (statement != null) {
 
-				try{
+				try {
 
 					statement.close();
 
@@ -186,7 +185,7 @@ public class ExamListSubjectDao extends dao {
 
 			if (connection != null) {
 
-				try{
+				try {
 
 					connection.close();
 
