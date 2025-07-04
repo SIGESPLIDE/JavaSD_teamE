@@ -32,7 +32,7 @@
 						<td class="text-center"><a
 							href="subjectUpdate?cd=${subject.cd}">変更</a></td>
 						<td class="text-center"><a
-							href="subjectDelete?code=${subject.cd}"
+							href="${pageContext.request.contextPath}/main/subjectDelete?cd=${subject.cd}"
 							onclick="return confirm('本当に削除しますか？');">削除</a></td>
 					</tr>
 				</c:forEach>
