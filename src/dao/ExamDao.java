@@ -13,9 +13,9 @@ import bean.Student;
 import bean.Subject;
 
 /**
+ * 成績の検索・登録・更新・削除・データの取得するメソッドの定義
  *
  * @author a_suzuki
- *
  */
 
 public class ExamDao extends dao {

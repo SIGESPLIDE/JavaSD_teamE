@@ -23,6 +23,12 @@ import dao.StudentDao;
 import dao.SubjectDao;
 import tool.CommonServlet;
 
+/**
+ * 成績の登録・更新・削除機能を実行するシステム
+ *
+ * @author a_suzuki
+ */
+
 @WebServlet(urlPatterns={"/main/ExamRegist"})
 public class ExamRegistController extends CommonServlet {
 
