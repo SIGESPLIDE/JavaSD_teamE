@@ -14,9 +14,8 @@ import dao.SubjectDao;
 import tool.CommonServlet;
 
 /**
- *
+ * 科目を新規登録する入力フォームの表示・登録処理
  * @author a_suzuki
- *
  */
 
 

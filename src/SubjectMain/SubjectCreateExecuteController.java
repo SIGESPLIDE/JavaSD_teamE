@@ -14,9 +14,8 @@ import dao.SubjectDao;
 import tool.CommonServlet;
 
 /**
- *
+ * 科目登録フォームで入力されたデータを受け取り、実際にデータベースに登録する
  * @author a_suzuki
- *
  */
 
 @WebServlet(urlPatterns = { "/main/SubjectCreateExcute" })
