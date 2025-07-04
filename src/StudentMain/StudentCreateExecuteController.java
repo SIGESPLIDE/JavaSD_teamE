@@ -18,6 +18,11 @@ import bean.Student;
 import bean.Teacher;
 import dao.StudentDao;
 
+/**
+ * 学生登録フォームで入力されたデータを受け取り、実際に学生情報をデータベースに登録するシステム
+ * @author a_suzuki
+ */
+
 @WebServlet(urlPatterns = {"/main/StudentCreateExcute"})
 public class StudentCreateExecuteController extends HttpServlet {
 

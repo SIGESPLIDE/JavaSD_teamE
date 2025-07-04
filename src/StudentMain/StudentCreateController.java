@@ -17,9 +17,8 @@ import bean.Teacher;
 import dao.StudentDao;
 
 /**
-*
+* 学生を新しく登録するための入浴フォーム画面を表示する
 * @author a_suzuki
-*
 */
 
 @WebServlet(urlPatterns = {"/main/StudentCreate"})
