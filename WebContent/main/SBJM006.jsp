@@ -46,10 +46,6 @@
                 <p class="text-danger mt-4">削除対象の科目が指定されていません。</p>
             </c:if>
 
-            <%--
-                [改善点3] 「戻る」リンクの行き先を修正します。
-                JSPファイルに直接ではなく、科目一覧を表示する機能（サーブレットやAction）にリンクします。
-            --%>
             <div class="mt-3">
                 <a href="SubjectList.action">戻る</a>
             </div>
