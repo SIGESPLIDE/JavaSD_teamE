@@ -16,7 +16,7 @@ import tool.CommonServlet;
  */
 @WebServlet("/main/logout.action")
 
-public class logoutController extends CommonServlet {
+public class LogoutController extends CommonServlet {
 
     /**
      * GETリクエストでアクセスされた際にログアウト処理を実行します。
