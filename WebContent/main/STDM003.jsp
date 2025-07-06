@@ -25,7 +25,7 @@
              <a href="STDM002.jsp">戻る</a>
 
              <%-- 学生一覧リンク --%>
-             <a href="STDM001.jsp" style="margin-left: 20px;">学生一覧</a>
+             <a href="STDM001" style="margin-left: 20px;">学生一覧</a>
         </div>
 
     </c:param>
