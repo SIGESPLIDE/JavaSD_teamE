@@ -14,7 +14,7 @@ import tool.CommonServlet;
  * ログアウト処理を行うコントローラー
  *@author k_takahashihor
  */
-@WebServlet("/main/logout.action")
+@WebServlet("/logout.action")
 
 public class LogoutController extends CommonServlet {
 
@@ -24,7 +24,7 @@ public class LogoutController extends CommonServlet {
      */
     @Override
     public void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+    	System.out.println("DEBUG-001");
         // 現在のセッションを取得します（存在しない場合はnullを返す）
         HttpSession session = req.getSession(false);
 

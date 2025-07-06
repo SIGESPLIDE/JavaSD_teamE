@@ -10,7 +10,7 @@
 
 				<div class="user-info">
 					<span>${user.name}様</span> <a
-				href="${pageContext.request.contextPath}/main/logout.action">
+				href="${pageContext.request.contextPath}/logout.action">
 					ログアウト
 				</a>
 				</div>
